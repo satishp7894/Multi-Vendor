@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import 'bindings/main_binding.dart';
 import 'routes/navigation.dart';
+//test
 
 void main() {
   runApp(MyApp());
