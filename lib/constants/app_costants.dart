@@ -21,5 +21,5 @@ class AppConstants{
   static const String? prefCreated = "created";
   static const String? prefModified = "modified";
   static const String? prefIsActive = "isActive";
-
+  static const String? prefAddressId = "prefAddressId";
 }

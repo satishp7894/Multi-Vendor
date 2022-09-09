@@ -1,5 +1,7 @@
 import 'package:eshoperapp/config/theme.dart';
 import 'package:eshoperapp/models/cart.dart';
+import 'package:eshoperapp/models/carts.dart';
+import 'package:eshoperapp/models/main_response.dart';
 import 'package:eshoperapp/pages/landing_home/home_controller.dart';
 import 'package:eshoperapp/repository/api_repository.dart';
 import 'package:eshoperapp/repository/local_repository.dart';
@@ -16,7 +18,7 @@ class CartController extends GetxController {
       {required this.apiRepositoryInterface,
       required this.localRepositoryInterface});
 
-  RxInt quantity = 2.obs;
+  RxInt quantity = 0.obs;
   RxBool loading = false.obs;
 
   ScrollController scrollController = ScrollController();
@@ -43,39 +45,61 @@ class CartController extends GetxController {
   }
 
 
-  void selectAllCart() {
-    if (homecontroller.selectedCarts.length == homecontroller.cartList.length) {
+  void selectAllCart(List<Carts> getCartData) {
+    if (homecontroller.selectedCarts.length == getCartData.length) {
       homecontroller.selectedCarts([]);
     } else {
       homecontroller.selectedCarts([]);
-      homecontroller.cartList.forEach((element) {
-        homecontroller.selectedCarts.add(element.id);
+      getCartData.forEach((element) {
+        homecontroller.selectedCarts.add(element.cartId);
       });
     }
     homecontroller.refreshTotal();
   }
 
-  void selectCart(Cart cart) {
-    if (!homecontroller.selectedCarts.contains(cart.id)) {
-      homecontroller.selectedCarts.add(cart.id);
+  // void selectAllCartInit(List<Carts> getCartData) {
+  //
+  //   if (homecontroller.selectedCarts.length == getCartData.length) {
+  //     homecontroller.selectedCarts([]);
+  //   } else {
+  //     homecontroller.selectedCarts([]);
+  //     getCartData.forEach((element) {
+  //       homecontroller.selectedCarts.add(element.cartId);
+  //     });
+  //   }
+  //   homecontroller.refreshTotal();
+  // }
+
+  void selectCart(Carts cart) {
+    if (!homecontroller.selectedCarts.contains(cart.cartId)) {
+      homecontroller.selectedCarts.add(cart.cartId);
     } else {
-      homecontroller.selectedCarts.remove(cart.id);
+      homecontroller.selectedCarts.remove(cart.cartId);
     }
     homecontroller.refreshTotal();
   }
 
-  void addQuantity(int? id, int quantity) async {
-    final token = await localRepositoryInterface.getToken();
-    var result = await apiRepositoryInterface.addQuanity(token, id, quantity);
+  void addQuantity(int? id, int quantity, String customerId) async {
+    // var result = await apiRepositoryInterface.updateProductQty(token, id, quantity);
 
-    if (result == true) {
-      AppWidget.snacbar('Added to cart successfully!');
-      homecontroller.fetchCartList();
+    MainResponse? mainResponse  = await apiRepositoryInterface.updateProductQty(customerId, id.toString(), quantity.toString());
+    if (mainResponse!.status!) {
+      homecontroller.getCartItems(customerId, false);
+      Get.snackbar('Success', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      // Get.offAllNamed(Routes.landingHome);
+
+    } else {
+      Get.snackbar('Error', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
     }
+
+    // if (result == true) {
+    //   AppWidget.snacbar('Added to cart successfully!');
+    //   homecontroller.getCartItems(customerId);
+    // }
   }
 
   void showButtomSheed(
-      BuildContext context, VoidCallback onTap, int? id) async {
+      BuildContext context, VoidCallback onTap, int? id, String customerId) async {
     showModalBottomSheet(
         context: context,
         builder: (context) => SizedBox(
@@ -136,7 +160,7 @@ class CartController extends GetxController {
                   ),
                   InkWell(
                     onTap: () {
-                      addQuantity(id, quantity.value);
+                      addQuantity(id, quantity.value,customerId);
                       Navigator.pop(context);
                     },
                     child: Container(

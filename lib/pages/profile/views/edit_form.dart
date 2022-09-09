@@ -43,13 +43,13 @@ class EditForm extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("title",
-                    style:
-                        const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                const SizedBox(
-                  height: 5,
-                ),
-                Text("primary", style: TextStyle(fontSize: 18)),
+                // Text("Profile",
+                //     style:
+                //         const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                // const SizedBox(
+                //   height: 5,
+                // ),
+                // Text("primary", style: TextStyle(fontSize: 18)),
               ],
             ),
             const SizedBox(

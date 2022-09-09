@@ -48,6 +48,16 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
   var newProductUrl = "$mainUrl/newProduct";
   var bestSellerProductUrl = "$mainUrl/bestSellerProduct";
   var categoryProductUrl = "$mainUrl/categoryProduct";
+  var getCartItemsUrl = "$mainUrl/getCartItems";
+  var removeFromCartUrl = "$mainUrl/removeFromCart";
+  var addToCartUrl = "$mainUrl/addToCart";
+  var emptyCartUrl = "$mainUrl/emptyCart";
+  var updateProductQtyUrl = "$mainUrl/updateProductQty";
+  var addOrderUrl = "$mainUrl/addOrder";
+  var orderHistoryUrl = "$mainUrl/orderHistory";
+  var orderDetailUrl = "$mainUrl/orderDetail";
+  var getOrderInvoiceUrl = "$mainUrl/getOrderInvoice";
+
 
   static Uri getUrl(String endpoind, {String baseUrl = 'fakestoreapi.com'}) {
     var url = Uri.https('${(baseUrl)}', '${(endpoind)}', {'q': '{https}'});
@@ -710,7 +720,7 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
           return MainResponse.fromJson(decodedData);
         }
       } on Exception catch (e) {
-        print("editAddress error ${e}");
+        print("editAddress error $e");
         return MainResponse(status: false, message: e.toString());
       }
     } else {
@@ -756,6 +766,337 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
       return MainResponse(status: false, message: AppConstants.noInternetConn);
     }
   }
+
+
+  @override
+  Future<MainResponse?> getCartItems(String customerId) async {
+    print("url getCartItems $getCartItemsUrl");
+    print("url secretKey ${AppConstants.secretKey}");
+    print("url customerId ${customerId}");
+
+    bool result = await InternetConnectionChecker().hasConnection;
+    print("url getCartItems InternetConnectionChecker ${result}");
+    if (result == true) {
+      try {
+        var response = await http.post(Uri.parse(getCartItemsUrl), body: {
+          'secretkey': AppConstants.secretKey,
+          'customer_id': customerId,
+        });
+
+        var decodedData = json.decode(response.body);
+        print("getCartItems ['status'] ${decodedData['status']}");
+        if (decodedData['status'] == true) {
+          print("getCartItems ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        } else {
+          print("getCartItems else");
+          print("getCartItems ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        }
+      } on Exception catch (e) {
+        print("getCartItems error ${e}");
+        return MainResponse(status: false, message: e.toString());
+      }
+    } else {
+      print("getCartItems  ${AppConstants.noInternetConn}");
+      return MainResponse(status: false, message: AppConstants.noInternetConn);
+    }
+  }
+
+
+  @override
+  Future<MainResponse?> updateProductQty(
+       String customerId,String productId,String quantity) async {
+    print("url updateProductQty $updateProductQtyUrl");
+    print("url secretKey ${AppConstants.secretKey}");
+    print("url customerId $customerId");
+    print("url productId ${productId}");
+    print("url quantity ${quantity}");
+
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == true) {
+      try {
+        var response =
+        await http.post(Uri.parse(updateProductQtyUrl), body: {
+          'secretkey': AppConstants.secretKey,
+          'customer_id': customerId,
+          'quantity': quantity,
+          'product_id': productId,
+        });
+
+        var decodedData = json.decode(response.body);
+        print("updateProductQty ['status'] ${decodedData['status']}");
+        if (decodedData['status'] == true) {
+          print("updateProductQty ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        } else {
+          print("updateProductQty else");
+          print("updateProductQty ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        }
+      } on Exception catch (e) {
+        print("updateProductQty error ${e}");
+        return MainResponse(status: false, message: e.toString());
+      }
+    } else {
+      return MainResponse(status: false, message: AppConstants.noInternetConn);
+    }
+  }
+
+  @override
+  Future<MainResponse?> removeFromCart(
+      String customerId,String productId) async {
+    print("url removeFromCart $removeFromCartUrl");
+    print("url secretKey ${AppConstants.secretKey}");
+    print("url customerId $customerId");
+    print("url productId ${productId}");
+
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == true) {
+      try {
+        var response =
+        await http.post(Uri.parse(removeFromCartUrl), body: {
+          'secretkey': AppConstants.secretKey,
+          'customer_id': customerId,
+          'product_id': productId,
+        });
+
+        var decodedData = json.decode(response.body);
+        print("removeFromCart ['status'] ${decodedData['status']}");
+        if (decodedData['status'] == true) {
+          print("removeFromCart ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        } else {
+          print("removeFromCart else");
+          print("removeFromCart ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        }
+      } on Exception catch (e) {
+        print("removeFromCart error ${e}");
+        return MainResponse(status: false, message: e.toString());
+      }
+    } else {
+      return MainResponse(status: false, message: AppConstants.noInternetConn);
+    }
+  }
+
+  @override
+  Future<MainResponse?> emptyCart(
+      String customerId) async {
+    print("url emptyCart $emptyCartUrl");
+    print("url secretKey ${AppConstants.secretKey}");
+    print("url customerId $customerId");
+
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == true) {
+      try {
+        var response =
+        await http.post(Uri.parse(emptyCartUrl), body: {
+          'secretkey': AppConstants.secretKey,
+          'customer_id': customerId,
+        });
+
+        var decodedData = json.decode(response.body);
+        print("emptyCart ['status'] ${decodedData['status']}");
+        if (decodedData['status'] == true) {
+          print("emptyCart ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        } else {
+          print("emptyCart else");
+          print("emptyCart ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        }
+      } on Exception catch (e) {
+        print("emptyCart error ${e}");
+        return MainResponse(status: false, message: e.toString());
+      }
+    } else {
+      return MainResponse(status: false, message: AppConstants.noInternetConn);
+    }
+  }
+
+  @override
+  Future<MainResponse?> addToCart(
+      String customerId,String productId,String quantity) async {
+    print("url addToCart $addToCartUrl");
+    print("url secretKey ${AppConstants.secretKey}");
+    print("url customerId $customerId");
+    print("url productId ${productId}");
+    print("url quantity ${quantity}");
+
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == true) {
+      try {
+        var response =
+        await http.post(Uri.parse(addToCartUrl), body: {
+          'secretkey': AppConstants.secretKey,
+          'customer_id': customerId,
+          'quantity': quantity,
+          'product_id': productId,
+        });
+
+        var decodedData = json.decode(response.body);
+        print("addToCart ['status'] ${decodedData['status']}");
+        if (decodedData['status'] == true) {
+          print("updateProductQty ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        } else {
+          print("addToCart else");
+          print("addToCart ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        }
+      } on Exception catch (e) {
+        print("addToCart error ${e}");
+        return MainResponse(status: false, message: e.toString());
+      }
+    } else {
+      return MainResponse(status: false, message: AppConstants.noInternetConn);
+    }
+  }
+
+  @override
+  Future<MainResponse?> addOrder(
+      String customerId, String productIds) async {
+    print("url addOrder $addOrderUrl");
+    print("url secretKey ${AppConstants.secretKey}");
+    print("url customerId $customerId");
+    print("url productIds $productIds");
+
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == true) {
+      try {
+        var response =
+        await http.post(Uri.parse(addOrderUrl), body: {
+          'secretkey': AppConstants.secretKey,
+          'customer_id': customerId,
+          'product_id': productIds,
+        });
+
+        var decodedData = json.decode(response.body);
+        print("addOrder ['status'] ${decodedData['status']}");
+        if (decodedData['status'] == true) {
+          print("addOrder ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        } else {
+          print("addOrder else");
+          print("addOrder ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        }
+      } on Exception catch (e) {
+        print("addOrder error ${e}");
+        return MainResponse(status: false, message: e.toString());
+      }
+    } else {
+      return MainResponse(status: false, message: AppConstants.noInternetConn);
+    }
+  }
+
+  @override
+  Future<MainResponse?> orderHistory(
+      String customerId) async {
+    print("url orderHistory $orderHistoryUrl ");
+    print("url secretKey ${AppConstants.secretKey}");
+    print("url customerId $customerId");
+
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == true) {
+      try {
+        var response =
+        await http.post(Uri.parse(orderHistoryUrl), body: {
+          'secretkey': AppConstants.secretKey,
+          'customer_id': customerId,
+        });
+
+        var decodedData = json.decode(response.body);
+        print("orderHistory ['status'] ${decodedData['status']}");
+        if (decodedData['status'] == true) {
+          print("orderHistory ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        } else {
+          print("orderHistory else");
+          print("orderHistory ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        }
+      } on Exception catch (e) {
+        print("orderHistory error ${e}");
+        return MainResponse(status: false, message: e.toString());
+      }
+    } else {
+      return MainResponse(status: false, message: AppConstants.noInternetConn);
+    }
+  }
+
+  @override
+  Future<MainResponse?> orderDetail(
+      String orderId) async {
+    print("url orderDetail $orderDetailUrl ");
+    print("url secretKey ${AppConstants.secretKey}");
+    print("url orderId $orderId");
+
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == true) {
+      try {
+        var response =
+        await http.post(Uri.parse(orderDetailUrl), body: {
+          'secretkey': AppConstants.secretKey,
+          'order_id': orderId,
+        });
+
+        var decodedData = json.decode(response.body);
+        print("orderDetail ['status'] ${decodedData['status']}");
+        if (decodedData['status'] == true) {
+          print("orderDetail ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        } else {
+          print("orderDetail else");
+          print("orderDetail ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        }
+      } on Exception catch (e) {
+        print("orderDetail error ${e}");
+        return MainResponse(status: false, message: e.toString());
+      }
+    } else {
+      return MainResponse(status: false, message: AppConstants.noInternetConn);
+    }
+  }
+
+  @override
+  Future<MainResponse?> getOrderInvoice(
+      String orderId) async {
+    print("url getOrderInvoice $getOrderInvoiceUrl ");
+    print("url secretKey ${AppConstants.secretKey}");
+    print("url orderId $orderId");
+
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == true) {
+      try {
+        var response =
+        await http.post(Uri.parse(getOrderInvoiceUrl), body: {
+          'secretkey': AppConstants.secretKey,
+          'order_id': orderId,
+        });
+
+        var decodedData = json.decode(response.body);
+        print("getOrderInvoice ['status'] ${decodedData['status']}");
+        if (decodedData['status'] == true) {
+          print("getOrderInvoice ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        } else {
+          print("getOrderInvoice else");
+          print("getOrderInvoice ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        }
+      } on Exception catch (e) {
+        print("getOrderInvoice error ${e}");
+        return MainResponse(status: false, message: e.toString());
+      }
+    } else {
+      return MainResponse(status: false, message: AppConstants.noInternetConn);
+    }
+  }
+
+
 
   @override
   Future<LoginResponse?> register(RegisterRequest registerRequest) async {
@@ -872,19 +1213,19 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
     }
   }
 
-  @override
-  Future<bool> addToCart(String token, int? id) async {
-    var result = await client.post(getMainUrl('/api/carts/'), headers: {
-      "Accept": "application/json",
-      "Authorization": "Bearer $token"
-    }, body: {
-      "id": "$id"
-    });
-    if (result.statusCode == 200) {
-      return true;
-    }
-    return false;
-  }
+  // @override
+  // Future<bool> addToCart(String token, int? id) async {
+  //   var result = await client.post(getMainUrl('/api/carts/'), headers: {
+  //     "Accept": "application/json",
+  //     "Authorization": "Bearer $token"
+  //   }, body: {
+  //     "id": "$id"
+  //   });
+  //   if (result.statusCode == 200) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   @override
   Future<bool> deleteCart(String? token, int? id) async {

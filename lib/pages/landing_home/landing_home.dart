@@ -146,23 +146,57 @@ class _LandingHomeState extends State<LandingHome> {
                   type: BottomNavigationBarType.fixed,
                   onTap: homeController.changeTabIndex,
                   currentIndex: homeController.tabIndex,
-                  items: [
+                  items:  [
                     BottomNavigationBarItem(
-                      icon: Icon(CupertinoIcons.home),
+                      icon: Icon(CupertinoIcons.home ,size: 35,),
                       label: 'Home',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(CupertinoIcons.square_grid_2x2_fill),
+                      icon: Icon(CupertinoIcons.square_grid_2x2_fill, size: 35,),
                       label: 'Category',
                     ),
                     BottomNavigationBarItem(
                       // icon: Icon(CupertinoIcons.cart, color: Colors.red),
-                      icon:
-                      Icon(CupertinoIcons.cart),
+                      // icon:
+                      // Icon(CupertinoIcons.cart),
+                      icon:  Stack(
+                        children: <Widget>[
+                          Icon(CupertinoIcons.cart, size: 35,),
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child:  Container(
+                              padding: const EdgeInsets.only(left: 5, right: 5, top: 2,bottom: 2),
+                              decoration:  BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 12,
+                                minHeight: 12,
+                              ),
+                              child:  Center(
+                                child: Obx((){
+                                  return Text(
+                                    homeController.cartList.value.length.toString(),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold
+                                    ),
+                                    // textAlign: TextAlign.center,
+                                  );
+                                })
+                                ,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                       label: 'Cart',
                     ),
-                    const BottomNavigationBarItem(
-                      icon: Icon(CupertinoIcons.person_alt_circle),
+                    BottomNavigationBarItem(
+                      icon: Icon(CupertinoIcons.person_alt_circle, size: 35,),
                       label: 'Profile',
                     ),
                   ],
@@ -191,21 +225,21 @@ class _LandingHomeState extends State<LandingHome> {
             /*defining default style is optional */
             children: <TextSpan>[
               TextSpan(
-                text: 'e',
+                text: 'm',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 35,
                     color: Color(0xFFFC7663)),
               ),
               TextSpan(
-                text: 'S',
+                text: 'V',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 40,
                     color: Color(0xFFFC7663)),
               ),
               TextSpan(
-                text: 'HOP',
+                text: 'ENDOR',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 25,

@@ -8,6 +8,7 @@ import 'package:eshoperapp/utils/check_internet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:eshoperapp/style/theme.dart' as Style;
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ShippingAddressScreen extends StatefulWidget {
@@ -18,11 +19,26 @@ class ShippingAddressScreen extends StatefulWidget {
 }
 
 class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
+  bool? isBool;
+
   final shippingAddressController = Get.put(ShippingAddressController(
       apiRepositoryInterface: Get.find(), editMode: false, shippingAddress: ShippingAddress(),localRepositoryInterface: Get.find()));
+
+
+  @override
+  void initState() {
+    isBool = Get.arguments;
+    print("isBool $isBool");
+    // print("isBool ${shippingAddressController}");
+    // shippingAddressController.getAddressId();
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       // backgroundColor: Colors.green.withOpacity(0.1),
       // appBar: AppBar(
       //   actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
@@ -48,8 +64,9 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
           // profileController.customerProfile();
           return shippingAddressController.getUser();
         },
-        child: Obx(() {
-          if (shippingAddressController.isLoadingGetAddress.value != true) {
+        child:
+        Obx(() {
+          if (shippingAddressController.isLoadingGetAddress.value == true) {
             MainResponse? mainResponse = shippingAddressController.getAddressObj.value;
             List<ShippingAddress>? shippingAddressData = [];
             if(mainResponse.data != null){
@@ -90,7 +107,7 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
              return ListView(
                // shrinkWrap: true,
                children: [
-                 SingleChildScrollView(child: AddressListTile(shippingAddressList: shippingAddressData)),
+                 SingleChildScrollView(child: AddressListTile(shippingAddressList: shippingAddressData,isBool: isBool!,)),
                ],
              );
             }

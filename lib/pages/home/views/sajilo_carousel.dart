@@ -18,12 +18,12 @@ class SajiloCarousel extends StatelessWidget {
               autoPlay: true,
               // enlargeCenterPage: false,
               height: 200.0,
-              viewportFraction: 0.9,
+              viewportFraction: 1.0,
             ),
-            items: getExpenseSliders(sliderList!, imageUrl!)));
+            items: getExpenseSliders(sliderList!, imageUrl!, context)));
   }
 
-  getExpenseSliders(List<GetSliderData> sliderList, String imagePathe) {
+  getExpenseSliders(List<GetSliderData> sliderList, String imagePathe, BuildContext context) {
     return sliderList
         .map(
           (sliderObj) => GestureDetector(
@@ -37,7 +37,7 @@ class SajiloCarousel extends StatelessWidget {
         },
         child: Container(
           padding: EdgeInsets.only(
-              left: 5.0, right: 5.0, top: 10.0, bottom: 10.0),
+              left: 5.0, right: 5.0, top: 10.0, bottom: 5.0),
           child: Stack(
             children: <Widget>[
               sliderObj.sliderImage! == null
@@ -87,14 +87,15 @@ class SajiloCarousel extends StatelessWidget {
                 ),
               ),
               Positioned(
-                  bottom: 10.0,
+                  bottom: 8.0,
                   child: Container(
-                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                    width: 250.0,
+                    padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                    // width: 250.0,
+                    width: MediaQuery.of(context).size.width,
                     child: Text(
                       sliderObj.sliderTitle!,
                       style: TextStyle(
-                          height: 1.5,
+                          // height: 1.5,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 12.0),

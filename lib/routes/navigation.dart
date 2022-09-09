@@ -5,6 +5,8 @@ import 'package:eshoperapp/pages/cart/cart_screen.dart';
 import 'package:eshoperapp/pages/category/categories_binding.dart';
 import 'package:eshoperapp/pages/category/category_products.dart';
 import 'package:eshoperapp/pages/category_product/category_product_screen.dart';
+import 'package:eshoperapp/pages/check_out/check_out_binding.dart';
+import 'package:eshoperapp/pages/check_out/check_out_screen.dart';
 import 'package:eshoperapp/pages/details/prodcut_details_screen.dart';
 import 'package:eshoperapp/pages/details/product_details_binding.dart';
 
@@ -44,6 +46,7 @@ class Routes {
   static const String editProfile = '/editProfile';
   static const String brandProduct = '/brandProduct';
   static const String myOrderDetails = '/myOrderDetails';
+  static const String checkOut = '/checkOut';
   static const String shippingAddress = '/shippingAddress';
   static const String addShippingAddress = '/addShippingAddress';
   static const String imageScreen = '/imageScreen';
@@ -103,6 +106,10 @@ class Pages {
         name: Routes.myOrderDetails,
         page: () => const OrderDetaisScreen(),
         bindings: [MainBinding(), MyOrderBinding()]),
+    GetPage(
+        name: Routes.checkOut,
+        page: () => const CheckOutScreen(),
+        bindings: [MainBinding(), CheckOutBinding()]),
     GetPage(
         name: Routes.changePassword,
         page: () => ChangePasswordScreen(),

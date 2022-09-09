@@ -177,6 +177,8 @@ class ProductDetailsController extends GetxController {
   RxBool isLoadingProductDetail= false.obs;
   var productDetailObj = MainResponse().obs;
 
+  RxBool isRefresh = false.obs;
+
   //Animation Controller for Controll animation
   //Declare
 
@@ -189,7 +191,7 @@ class ProductDetailsController extends GetxController {
     controllerState = PhotoViewScaleStateController();
     // final token = await localRepositoryInterface.getToken();
     // getComments(productid.value, token);
-    productDetails(productDetailId);
+    // productDetails(productDetailId, false);
 
     //Initialize Animation Controller
   }
@@ -219,9 +221,10 @@ class ProductDetailsController extends GetxController {
     initbool(!initbool.value);
   }
 
-  productDetails(String productId) async {
+  productDetails(String productId, bool refresh) async {
     try {
       isLoadingProductDetail(true);
+      isRefresh(refresh);
       await apiRepositoryInterface.productDetails(productId).then((value) {
         productDetailObj(value);
       });

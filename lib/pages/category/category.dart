@@ -8,7 +8,7 @@ import 'package:eshoperapp/utils/check_internet.dart';
 import 'package:eshoperapp/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:eshoperapp/style/theme.dart' as Style;
 import 'categories_controller.dart';
 
 class CategorieScreen extends StatelessWidget {
@@ -232,7 +232,7 @@ class CategorieScreen extends StatelessWidget {
             RefreshIndicator(
           onRefresh: () {
             CheckInternet.checkInternet();
-            return controller.getCategory();
+            return controller.getCategory(true);
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -412,9 +412,22 @@ class CategorieScreen extends StatelessWidget {
               //   },
               // );
               else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                if (controller.isRefresh.value !=
+                    true) {
+                  return Container(
+                    //  height: MediaQuery.of(context).size.height-120,
+                      child: Center(
+                          child: CircularProgressIndicator(
+                              color: Style.Colors.appColor))
+                  );
+                } else {
+                  return Container(
+                    // height: 200,
+                  );
+                }
+                // return const Center(
+                //   child: CircularProgressIndicator(),
+                // );
               }
             }),
           ),

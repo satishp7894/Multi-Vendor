@@ -34,6 +34,7 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
     print("editMode  ${editMode!}");
     if(editMode!){
       shippingAddress = argumentData[1]['addressObj'];
+      print("shippingAddress email ${shippingAddress!.email}");
       print("addressId  ${shippingAddress!.addressId}");
     }else{
       shippingAddress = ShippingAddress();

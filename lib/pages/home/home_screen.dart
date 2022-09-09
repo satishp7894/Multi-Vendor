@@ -1,17 +1,16 @@
-import 'package:eshoperapp/config/theme.dart';
 import 'package:eshoperapp/constants/app_costants.dart';
 import 'package:eshoperapp/models/brand.dart';
-import 'package:eshoperapp/models/products.dart';
 import 'package:eshoperapp/models/get_slider.dart';
 import 'package:eshoperapp/models/main_response.dart';
-import 'package:eshoperapp/pages/category/category_products.dart';
+import 'package:eshoperapp/models/products.dart';
+import 'package:eshoperapp/pages/home/views/all_product.dart';
 import 'package:eshoperapp/pages/home/views/brand.dart';
 
 // import 'package:eshoperapp/pages/home/views/header.dart';
 import 'package:eshoperapp/pages/home/views/populor_product.dart';
 import 'package:eshoperapp/pages/home/views/sajilo_carousel.dart';
 import 'package:eshoperapp/pages/landing_home/home_controller.dart';
-import 'package:eshoperapp/routes/navigation.dart';
+import 'package:eshoperapp/style/theme.dart' as Style;
 import 'package:eshoperapp/utils/check_internet.dart';
 
 // import 'package:eshoperapp/pages/landing_home/home_controller.dart';
@@ -20,7 +19,6 @@ import 'package:eshoperapp/widgets/product_gridview_tile.dart';
 import 'package:eshoperapp/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:eshoperapp/style/theme.dart' as Style;
 
 // class HomeScreen extends StatefulWidget {
 //   const HomeScreen({Key? key}) : super(key: key);
@@ -56,347 +54,381 @@ class Home extends StatelessWidget {
           homeController.getBrand();
           homeController.bestSellerProduct();
           homeController.allProducts();
-          homeController.newProducts();
-          return homeController.getSlider();
-        },        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                // Header(),
-                //  SajiloCarousel(),
-                Obx(() {
-                  GetSlider getSliderObj = homeController.getSliderObj.value;
-                  if (homeController.isLoadingGetSlider.value != true) {
-
-                    List<GetSliderData>? getSliderDataList =
-                    getSliderObj.data ?? [];
-                    String? message = getSliderObj.message ?? AppConstants.noInternetConn;
-                    String? imageUrl = getSliderObj.imageUrl;
-                    if (getSliderDataList.isEmpty) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 200,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              message!,
-                              style: TextStyle(color: Colors.black45),
+          homeController.getSlider();
+          return homeController.newProducts(true);
+        },
+        child: SafeArea(
+          child: Obx(() {
+            if (homeController.isLoadingNewProducts.value != true) {
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    // Header(),
+                    //  SajiloCarousel(),
+                    Obx(() {
+                      GetSlider getSliderObj =
+                          homeController.getSliderObj.value;
+                      if (homeController.isLoadingGetSlider.value != true) {
+                        List<GetSliderData>? getSliderDataList =
+                            getSliderObj.data ?? [];
+                        String? message =
+                            getSliderObj.message ?? AppConstants.noInternetConn;
+                        String? imageUrl = getSliderObj.imageUrl;
+                        if (getSliderDataList.isEmpty) {
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: 200,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  message!,
+                                  style: const TextStyle(color: Colors.black45),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return SajiloCarousel(
-                        sliderList: getSliderDataList,
-                        imageUrl: imageUrl,
-                      );
-                    }
-                    // String? message = getTodayNewsObj.message ?? AppConstants.noInternetConn;
+                          );
+                        } else {
+                          return SajiloCarousel(
+                            sliderList: getSliderDataList,
+                            imageUrl: imageUrl,
+                          );
+                        }
+                        // String? message = getTodayNewsObj.message ?? AppConstants.noInternetConn;
 
-                  } else {
-                    if (getSliderObj != true) {
-                      return Container(
+                      } else {
+                        if (getSliderObj != true) {
+                          return Container(
+                            height: 90,
+                            // child: Center(
+                            //     child:
+                            //     CircularProgressIndicator(color: Colors.red))
+                          );
+                        } else {
+                          return Container(
+                            height: 90,
+                          );
+                        }
+                      }
+                    }),
+
+                    BlockHeader(
+                      title: 'Brand',
+                      // linkText: 'View all',
+                      linkText: '',
+                      onLinkTap: () {
+                        // navigator!.pushNamed(Routes.categoryProduct,
+                        //     arguments: CategoryArguments(
+                        //         product: homeController.productList,
+                        //         categoryName: 'Popular Product'));
+                      },
+                    ),
+                    // Obx(() {
+                    //   final list = controller.productList.toList();
+                    //   return Padding(
+                    //     padding: const EdgeInsets.all(6.0),
+                    //     child: PopulorProduct(
+                    //       products: controller.isLoading.isTrue ? list : null,
+                    //     ),
+                    //   );
+                    // }),
+                    Obx(() {
+                      if (homeController.isLoadingGetBrand.value != true) {
+                        MainResponse? mainResponse =
+                            homeController.getBrandObj.value;
+                        List<Brand>? getBrandData = [];
+                        if (mainResponse.data != null) {
+                          mainResponse.data!.forEach((v) {
+                            getBrandData.add(Brand.fromJson(v));
+                          });
+                        }
+                        // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
+
+                        String? imageUrl = mainResponse.imageUrl ?? "";
+                        String? message =
+                            mainResponse.message ?? AppConstants.noInternetConn;
+                        if (getBrandData.isEmpty) {
+                          return SizedBox(
+                            height: 90.0,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    Text(
+                                      message!,
+                                      style: const TextStyle(
+                                          color: Colors.black45),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        } else {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                left: 4.0, top: 5, right: 4.0),
+                            child: BrandWidget(
+                              brands: getBrandData,
+                              imageUrl: imageUrl,
+                            ),
+                          );
+                        }
+                      } else {
+                        return Container(
                           height: 90,
-                          child: Center(
-                              child:
-                                  CircularProgressIndicator(color: Colors.red)));
-                    } else {
-                      return Container(
-                        height: 90,
-                      );
-                    }
-                  }
-                }),
-
-                BlockHeader(
-                  title: 'Brand',
-                  // linkText: 'View all',
-                  linkText: '',
-                  onLinkTap: () {
-                    // navigator!.pushNamed(Routes.categoryProduct,
-                    //     arguments: CategoryArguments(
-                    //         product: homeController.productList,
-                    //         categoryName: 'Popular Product'));
-                  },
-                ),
-                // Obx(() {
-                //   final list = controller.productList.toList();
-                //   return Padding(
-                //     padding: const EdgeInsets.all(6.0),
-                //     child: PopulorProduct(
-                //       products: controller.isLoading.isTrue ? list : null,
-                //     ),
-                //   );
-                // }),
-                Obx(() {
-                  if (homeController.isLoadingGetBrand.value != true) {
-                    MainResponse? mainResponse = homeController.getBrandObj.value;
-                    List<Brand>? getBrandData = [];
-                    if(mainResponse.data != null){
-                      mainResponse.data!.forEach((v) {
-                        getBrandData.add( Brand.fromJson(v));
-                      });
-                    }
-                    // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
-
-
-                    String? imageUrl = mainResponse.imageUrl ?? "";
-                    String? message = mainResponse.message ?? AppConstants.noInternetConn;
-                    if (getBrandData.isEmpty) {
-                      return Container(
-                        height: 90.0,
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Text(
-                                  message!,
-                                  style: TextStyle(color: Colors.black45),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      );
-                    }else{
-                      return Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: BrandWidget(
-                          brands: getBrandData,
-                          imageUrl: imageUrl,
-                        ),
-                      );
-                    }
-
-                  } else {
-                    return  Container(
-                        height: 90,
-                        child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor)));
-
-                  }
-                }),
-                BlockHeader(
-                  title: 'All Product',
-                  // linkText: 'View all',
-                  linkText: '',
-                  onLinkTap: () {
-                    // navigator!.pushNamed(Routes.categoryProduct,
-                    //     arguments: CategoryArguments(
-                    //         product: homeController.productList,
-                    //         categoryName: 'Popular Product'));
-                  },
-                ),
-                // Obx(() {
-                //   final list = controller.productList.toList();
-                //   return Padding(
-                //     padding: const EdgeInsets.all(6.0),
-                //     child: PopulorProduct(
-                //       products: controller.isLoading.isTrue ? list : null,
-                //     ),
-                //   );
-                // }),
-                Obx(() {
-                  if (homeController.isLoadingAllProducts.value != true) {
-                    MainResponse? mainResponse = homeController.allProductsObj.value;
-                    List<Products>? allProductsData = [];
-
-                    if(mainResponse.data != null){
-                      mainResponse.data!.forEach((v) {
-                        allProductsData.add( Products.fromJson(v));
-                      });
-                    }
-                    // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
-
-
-                    String? imageUrl = mainResponse.imageUrl ?? "";
-                    String? message = mainResponse.message ?? AppConstants.noInternetConn;
-                    if (allProductsData.isEmpty) {
-                      return Container(
-                        height: 200.0,
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Text(
-                                  message!,
-                                  style: TextStyle(color: Colors.black45),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      );
-                    }else{
-                      return Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: PopulorProduct(
-                          products: allProductsData,
-                          imageUrl: imageUrl,
-                        ),
-                      );
-                    }
-
-                  } else {
-                    return const SizedBox(
-                        height: 200,
-                        child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor)));
-                  }
-                }),
-
-                BlockHeader(
-                  title: 'Best Seller Product',
-                  // linkText: 'View all',
-                  linkText: '',
-                  onLinkTap: () {
-                    // navigator!.pushNamed(Routes.categoryProduct,
-                    //     arguments: CategoryArguments(
-                    //         product: homeController.productList,
-                    //         categoryName: 'Popular Product'));
-                  },
-                ),
-                // Obx(() {
-                //   final list = controller.productList.toList();
-                //   return Padding(
-                //     padding: const EdgeInsets.all(6.0),
-                //     child: PopulorProduct(
-                //       products: controller.isLoading.isTrue ? list : null,
-                //     ),
-                //   );
-                // }),
-                Obx(() {
-                  if (homeController.isLoadingBestSellerProducts.value != true) {
-                    MainResponse? mainResponse = homeController.bestSellerProductObj.value;
-                    List<Products>? bestSellerProductsData = [];
-                    if(mainResponse.data != null){
-                      mainResponse.data!.forEach((v) {
-                        bestSellerProductsData.add( Products.fromJson(v));
-                      });
-                    }
-                    // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
-
-
-                    String? imageUrl = mainResponse.imageUrl ?? "";
-                    String? message = mainResponse.message ?? AppConstants.noInternetConn;
-                    if (bestSellerProductsData.isEmpty) {
-                      return Container(
-                        height: 200.0,
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Text(
-                                  message!,
-                                  style: TextStyle(color: Colors.black45),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      );
-                    }else{
-                      return Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: PopulorProduct(
-                          products: bestSellerProductsData,
-                          imageUrl: imageUrl,
-                        ),
-                      );
-                    }
-
-                  } else {
-                    return  Container(
-                        height: 200,
-                        child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor)));
-
-                  }
-                }),
-
-
-                BlockHeader(
-                  title: 'New Product',
-                  // linkText: 'View all'
-                  linkText: '',
-                  onLinkTap: () {
-                    print(homeController.productList);
-                    print('ohmygod');
-                    // navigator!.pushNamed(Routes.categoryProduct,
-                    //     arguments: CategoryArguments(
-                    //         product: homeController.productList,
-                    //         categoryName: 'New Products'));
-                  },
-                ),
-                // Obx(() {
-                //   final list = homeController.productList.toList();
-                //   return ProductGridviewTile(
-                //     productList: homeController.isLoading.value ? list : null,
-                //   );
-                // }),
-
-                Obx(() {
-                  if (homeController.isLoadingNewProducts.value != true) {
-                    MainResponse? mainResponse = homeController.newProductsObj.value;
-                    List<Products>? newProductsData = [];
-                    if(mainResponse.data != null){
-                      mainResponse.data!.forEach((v) {
-                        newProductsData.add( Products.fromJson(v));
-                      });
-                    }
-                    // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
-
-
-                    String? imageUrl = mainResponse.imageUrl ?? "";
-                    String? message = mainResponse.message ?? AppConstants.noInternetConn;
-                    if (newProductsData.isEmpty) {
-                      return Container(
-                        height: 200.0,
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Text(
-                                  message!,
-                                  style: TextStyle(color: Colors.black45),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      );
-                    }else{
-                        return ProductGridviewTile(
-                          products: newProductsData,
-                          imageUrl: imageUrl,
+                          // child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor))
                         );
-                    }
+                      }
+                    }),
+                    BlockHeader(
+                      title: 'All Product',
+                      // linkText: 'View all',
+                      linkText: '',
+                      onLinkTap: () {
+                        // navigator!.pushNamed(Routes.categoryProduct,
+                        //     arguments: CategoryArguments(
+                        //         product: homeController.productList,
+                        //         categoryName: 'Popular Product'));
+                      },
+                    ),
+                    // Obx(() {
+                    //   final list = controller.productList.toList();
+                    //   return Padding(
+                    //     padding: const EdgeInsets.all(6.0),
+                    //     child: PopulorProduct(
+                    //       products: controller.isLoading.isTrue ? list : null,
+                    //     ),
+                    //   );
+                    // }),
+                    Obx(() {
+                      if (homeController.isLoadingAllProducts.value != true) {
+                        MainResponse? mainResponse =
+                            homeController.allProductsObj.value;
+                        List<Products>? allProductsData = [];
 
-                  } else {
-                    return  Container(
-                        height: 200,
-                        child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor)));
+                        if (mainResponse.data != null) {
+                          mainResponse.data!.forEach((v) {
+                            allProductsData.add(Products.fromJson(v));
+                          });
+                        }
+                        // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
 
-                  }
-                }),
-              ],
-            ),
-          ),
+                        String? imageUrl = mainResponse.imageUrl ?? "";
+                        String? message =
+                            mainResponse.message ?? AppConstants.noInternetConn;
+                        if (allProductsData.isEmpty) {
+                          return SizedBox(
+                            height: 200.0,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    Text(
+                                      message!,
+                                      style: const TextStyle(
+                                          color: Colors.black45),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        } else {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(left: 5.0, right: 5.0),
+                            child: AllProduct(
+                              products: allProductsData,
+                              imageUrl: imageUrl,
+                            ),
+                          );
+                        }
+                      } else {
+                        return const SizedBox(
+                          height: 200,
+                          // child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor))
+                        );
+                      }
+                    }),
+
+                    BlockHeader(
+                      title: 'Best Seller Product',
+                      // linkText: 'View all',
+                      linkText: '',
+                      onLinkTap: () {
+                        // navigator!.pushNamed(Routes.categoryProduct,
+                        //     arguments: CategoryArguments(
+                        //         product: homeController.productList,
+                        //         categoryName: 'Popular Product'));
+                      },
+                    ),
+                    // Obx(() {
+                    //   final list = controller.productList.toList();
+                    //   return Padding(
+                    //     padding: const EdgeInsets.all(6.0),
+                    //     child: PopulorProduct(
+                    //       products: controller.isLoading.isTrue ? list : null,
+                    //     ),
+                    //   );
+                    // }),
+                    Obx(() {
+                      if (homeController.isLoadingBestSellerProducts.value !=
+                          true) {
+                        MainResponse? mainResponse =
+                            homeController.bestSellerProductObj.value;
+                        List<Products>? bestSellerProductsData = [];
+                        print(
+                            "bestSellerProductObj.data! ${mainResponse.data!}");
+                        if (mainResponse.data != null) {
+                          mainResponse.data!.forEach((v) {
+                            bestSellerProductsData.add(Products.fromJson(v));
+                          });
+                        }
+                        // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
+
+                        String? imageUrl = mainResponse.imageUrl ?? "";
+                        String? message =
+                            mainResponse.message ?? AppConstants.noInternetConn;
+                        if (bestSellerProductsData.isEmpty) {
+                          return SizedBox(
+                            height: 200.0,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    Text(
+                                      message!,
+                                      style: const TextStyle(
+                                          color: Colors.black45),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        } else {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                left: 5.0, bottom: 3, right: 5.0),
+                            child: PopulorProduct(
+                              products: bestSellerProductsData,
+                              imageUrl: imageUrl,
+                            ),
+                          );
+                        }
+                      } else {
+                        return Container(
+                          height: 200,
+                          // child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor))
+                        );
+                      }
+                    }),
+
+                    BlockHeader(
+                      title: 'New Product',
+                      // linkText: 'View all'
+                      linkText: '',
+                      onLinkTap: () {
+                        print(homeController.productList);
+                        print('ohmygod');
+                        // navigator!.pushNamed(Routes.categoryProduct,
+                        //     arguments: CategoryArguments(
+                        //         product: homeController.productList,
+                        //         categoryName: 'New Products'));
+                      },
+                    ),
+                    // Obx(() {
+                    //   final list = homeController.productList.toList();
+                    //   return ProductGridviewTile(
+                    //     productList: homeController.isLoading.value ? list : null,
+                    //   );
+                    // }),
+
+                    Obx(() {
+                      if (homeController.isLoadingNewProducts.value != true) {
+                        MainResponse? mainResponse =
+                            homeController.newProductsObj.value;
+                        List<Products>? newProductsData = [];
+                        print("mainResponse.data! ${mainResponse.data!}");
+                        if (mainResponse.data != null) {
+                          mainResponse.data!.forEach((v) {
+                            newProductsData.add(Products.fromJson(v));
+                          });
+                        }
+                        // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
+
+                        String? imageUrl = mainResponse.imageUrl ?? "";
+                        String? message =
+                            mainResponse.message ?? AppConstants.noInternetConn;
+                        if (newProductsData.isEmpty) {
+                          return SizedBox(
+                            height: 200.0,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    Text(
+                                      message!,
+                                      style: const TextStyle(
+                                          color: Colors.black45),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        } else {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                left: 5.0, right: 5.0, bottom: 5.0),
+                            child: ProductGridviewTile(
+                              products: newProductsData,
+                              imageUrl: imageUrl,
+                            ),
+                          );
+                        }
+                      } else {
+                        return Container(
+                          height: 200,
+                          // child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor))
+                        );
+                      }
+                    }),
+                  ],
+                ),
+              );
+            } else {
+              if (homeController.isRefresh.value != true) {
+                return SizedBox(
+                    height: MediaQuery.of(context).size.height - 120,
+                    child: const Center(
+                        child: const CircularProgressIndicator(
+                            color: Style.Colors.appColor)));
+              } else {
+                return Container(
+                  height: 200,
+                );
+              }
+            }
+          }),
         ),
       ),
     );

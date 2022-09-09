@@ -127,7 +127,7 @@ class _CategoryProductScreenState extends State<CategoryProductScreen> {
                   return ListView(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
+                        padding: const EdgeInsets.all(5.0),
                         child: ProductGridviewTile(
                           products: categoryProductData,
                           imageUrl: imageUrl,

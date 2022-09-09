@@ -257,7 +257,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.badge,
                       title: 'My Orders',
                       onPressed: () {
-                        Get.toNamed(Routes.myOrder);
+                        AlertDialogs.showLoginRequiredDialog();
                       },
                     ),
                     ListItemCart(
@@ -316,7 +316,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.location_city,
                       title: 'Shipping Address',
                       onPressed: () {
-                        Get.toNamed(Routes.shippingAddress);
+                        Get.toNamed(Routes.shippingAddress, arguments: false);
                       },
                     ),
                     ListItemCart(

@@ -4,13 +4,18 @@ import 'package:eshoperapp/repository/api_repository.dart';
 import 'package:eshoperapp/repository/local_repository.dart';
 import 'package:eshoperapp/routes/navigation.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class MyOrderController extends GetxController {
+import '../../constants/app_costants.dart';
+
+class CheckOutController extends GetxController {
   final LocalRepositoryInterface localRepositoryInterface;
   final ApiRepositoryInterface apiRepositoryInterface;
 
   var productList = <Product>[].obs;
   RxBool isLoading = true.obs;
+
+  // RxInt index = 0.obs;
 
   RxBool isLoadingGetOrderHistory = false.obs;
   var getOrderHistoryObj = MainResponse().obs;
@@ -18,16 +23,36 @@ class MyOrderController extends GetxController {
   RxBool isLoadingOrderDetail = false.obs;
   var orderDetailObj = MainResponse().obs;
 
-  MyOrderController({required this.localRepositoryInterface, required this.apiRepositoryInterface});
+  CheckOutController({required this.localRepositoryInterface, required this.apiRepositoryInterface});
 
 
   @override
   void onInit() {
     // TODO: implement onInit
+    // getAddressId();
     super.onInit();
     // fetchProduct();
-    loadUser();
+    // loadUser();
   }
+
+  // getAddressId() async {
+  //   await SharedPreferences.getInstance().then((value) {
+  //     final addressId = value.getInt(AppConstants.prefAddressId!);
+  //     print("addressId CheckOutController ${addressId}");
+  //     if(addressId != null){
+  //       index(addressId);
+  //     }else{
+  //       index(0);
+  //     }
+  //   });
+  //
+  //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  //
+  //
+  //
+  //   // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  //   // sharedPreferences.setString(AppConstants.prefCustomerId!, checkLoginData!.customerId!);
+  // }
 
 
   loadUser() async {

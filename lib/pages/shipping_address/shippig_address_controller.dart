@@ -1,4 +1,5 @@
 import 'package:eshoperapp/models/address_request.dart';
+import 'package:eshoperapp/models/check_login.dart';
 import 'package:eshoperapp/models/main_response.dart';
 import 'package:eshoperapp/models/shipping_address.dart';
 import 'package:eshoperapp/repository/api_repository.dart';
@@ -6,6 +7,9 @@ import 'package:eshoperapp/repository/local_repository.dart';
 import 'package:eshoperapp/utils/check_internet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../constants/app_costants.dart';
 
 class ShippingAddressController extends GetxController {
   final LocalRepositoryInterface localRepositoryInterface;
@@ -24,6 +28,9 @@ class ShippingAddressController extends GetxController {
   var addAddressObj = MainResponse().obs;
 
   RxString customerId = "".obs;
+  var checkLoginData = CheckLoginData().obs;
+
+  RxInt index = 0.obs;
 
   TextEditingController? firstNameTextController;
   TextEditingController? lastNameTextController;
@@ -41,8 +48,10 @@ class ShippingAddressController extends GetxController {
   @override
   void onInit() {
     CheckInternet.checkInternet();
+    getAddressId();
     getUser();
     if(editMode){
+      print("shippingAddress.firstName ${shippingAddress.firstName}");
       firstNameTextController = TextEditingController(text: shippingAddress.firstName);
       lastNameTextController = TextEditingController(text: shippingAddress.lastName);
       emailTextController = TextEditingController(text: shippingAddress.email);
@@ -74,16 +83,37 @@ class ShippingAddressController extends GetxController {
     super.onInit();
   }
 
+  getAddressId() async {
+    await SharedPreferences.getInstance().then((value) {
+      final addressId = value.getInt(AppConstants.prefAddressId!);
+      print("addressId ShippingAddressController ${addressId}");
+      if(addressId != null){
+        index(addressId);
+      }else{
+        index(0);
+      }
+    });
+
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+
+
+    // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    // sharedPreferences.setString(AppConstants.prefCustomerId!, checkLoginData!.customerId!);
+  }
+
   getUser() async {
     try {
       // isLoadingCustomerProfile(true);
       await localRepositoryInterface.getUser().then((value) {
         print("getUser customerId ${value!.customerId}");
         if (value.customerId != null) {
+          checkLoginData(value);
           customerId(value.customerId!);
           getAddress(value.customerId!);
         }else{
           customerId("");
+          checkLoginData();
         }
       });
     } on Exception {
@@ -97,12 +127,12 @@ class ShippingAddressController extends GetxController {
 
   getAddress(String customerId) async {
     try {
-      isLoadingGetAddress(true);
+      isLoadingGetAddress(false);
       await apiRepositoryInterface.getAddress(customerId).then((value) {
         getAddressObj(value);
       });
     } finally {
-      isLoadingGetAddress(false);
+      isLoadingGetAddress(true);
     }
   }
 

@@ -12,22 +12,19 @@ class ProductGridviewTile extends StatelessWidget {
   ProductGridviewTile({this.products, this.imageUrl,this.brandProductPage});
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
-      child: StaggeredGridView.countBuilder(
-          shrinkWrap: true,
-          primary: false,
-          crossAxisCount: 2,
-          itemCount: products!.length ,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          itemBuilder: (context, index) => ProductTile(
-                // product: productList != null ? productList![index] : null,
-            products: products![index],
-            imageUrl: imageUrl,
+    return StaggeredGridView.countBuilder(
+        shrinkWrap: true,
+        primary: false,
+        crossAxisCount: 2,
+        itemCount: products!.length ,
+        mainAxisSpacing: 0,
+        crossAxisSpacing: 0,
+        itemBuilder: (context, index) => ProductTile(
+              // product: productList != null ? productList![index] : null,
+          products: products![index],
+          imageUrl: imageUrl,
 
-              ),
-          staggeredTileBuilder: (index) => StaggeredTile.fit(1)),
-    );
+            ),
+        staggeredTileBuilder: (index) => StaggeredTile.fit(1));
   }
 }

@@ -21,6 +21,8 @@ class CatergoriesController extends GetxController {
   RxBool isLoadingGetCategory = false.obs;
   var getCategoryObj = MainResponse().obs;
 
+
+  RxBool isRefresh = false.obs;
   final box = GetStorage();
 
   RxBool isGrid = false.obs;
@@ -33,13 +35,14 @@ class CatergoriesController extends GetxController {
 
   @override
   void onInit() {
-    getCategory();
+    getCategory(false);
     super.onInit();
   }
 
-  getCategory() async {
+  getCategory(bool refresh) async {
     try {
       isLoadingGetCategory(true);
+      isRefresh(refresh);
       await apiRepositoryInterface.getCategory().then((value) {
         getCategoryObj(value);
       });

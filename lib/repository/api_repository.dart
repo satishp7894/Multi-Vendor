@@ -33,6 +33,16 @@ abstract class ApiRepositoryInterface {
   Future<MainResponse?> allProducts();
   Future<MainResponse?> newProducts();
   Future<LoginResponse?> getUserFromToken(String token);
+  Future<MainResponse?> getCartItems(String customerId);
+  Future<MainResponse?> updateProductQty(String customerId,String productId,String quantity);
+  Future<MainResponse?> removeFromCart(String customerId,String productId);
+  Future<MainResponse?> emptyCart(String customerId );
+  Future<MainResponse?> addToCart(String customerId,String productId,String quantity);
+
+  Future<MainResponse?> addOrder(String customerId , String productIds);
+  Future<MainResponse?> orderHistory(String customerId );
+  Future<MainResponse?> orderDetail(String orderId );
+  Future<MainResponse?> getOrderInvoice(String orderId );
 
   Future<MainResponse?> getAddress(String customerId);
   Future<MainResponse?> addAddress(AddressRequest addressRequest, String customerId);
@@ -48,7 +58,7 @@ abstract class ApiRepositoryInterface {
   Future getCategories();
   Future<List<Product>?> getCategorieProduct(String? categoryName);
   Future<List<Cart>?> getCartList(String? token);
-  Future<bool> addToCart(String token, int? id);
+  // Future<bool> addToCart(String token, int? id);
   Future<bool> deleteCart(String? token, int? id);
   Future<bool> makeFavorite(String token, int? id);
   Future<List<ProductComment>?> getComments(String? token, int? id);

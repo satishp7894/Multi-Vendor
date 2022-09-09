@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:shimmer/shimmer.dart';
 
-class ProductTile extends StatelessWidget {
+class AllProductTile extends StatelessWidget {
   final Products? products;
   final String? imageUrl;
   final VoidCallback? onTap;
   final bool? brandProductPage;
-  ProductTile({this.products, this.onTap, this.imageUrl, this.brandProductPage});
+  AllProductTile({this.products, this.onTap, this.imageUrl, this.brandProductPage});
 
   @override
   Widget build(BuildContext context) {
@@ -42,99 +42,81 @@ class ProductTile extends StatelessWidget {
             //
             // },
             child: SizedBox(
-              width: 170,
-              height: 226,
-              child: Stack(
-                children: [
-                  Card(
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
+              width: MediaQuery.of(context).size.width-10,
+              // height: 300,
+              child: Card(
+                elevation: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+
+                    children: [
+                      Container(
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: products!.coverImage != null
+                            ? Center(
+                            child: Image.network(
+                              imageUrl! + products!.productId! + "/" + products!.coverImage!,
+                              height: 100,
+                              width: 130,
+                              fit: BoxFit.fill,
+                            ))
+                            : Center(
+                          child: Image.asset("assets/img/placeholder.jpg",
+                            height: 100,
+                            width: 130,
+
+                            fit: BoxFit.fill,
+                            // height: 170,
+                            // decoration: BoxDecoration(
+                            //     color: AppColors.darkGray
+                            //         .withOpacity(0.2),
+                            //     borderRadius:
+                            //         BorderRadius.circular(6)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+
+                          SizedBox(height: 2),
                           Container(
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
+                            // width: 100,
+                            width: MediaQuery.of(context).size.width-175,
+                            child: Text(
+                              products!.productName!,
+                              maxLines: 1,
+                              //  style: GoogleFonts.ptSans(),
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            child: products!.coverImage != null
-                                ? Center(
-                                    child: Image.network(
-                                    imageUrl! + products!.productId! + "/" + products!.coverImage!,
-                                    height: 100,
-                                    // width: 130,
-                                    fit: BoxFit.fill,
-                                  ))
-                                : Center(
-                                    child: Image.asset("assets/img/placeholder.jpg", height: 100,
-                                      // width: 130,
+                          ),
 
-                                      fit: BoxFit.fill,
-
-
-
-
-                                      // height: 170,
-                                      // decoration: BoxDecoration(
-                                      //     color: AppColors.darkGray
-                                      //         .withOpacity(0.2),
-                                      //     borderRadius:
-                                      //         BorderRadius.circular(6)),
-                                    ),
-                                  ),
+                          SizedBox(height: 2),
+                          Container(
+                            // width: 100,
+                            width: MediaQuery.of(context).size.width-175,
+                            child: Text(
+                              products!.shortDescription!,
+                              maxLines: 2,
+                              //  style: GoogleFonts.ptSans(),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                           SizedBox(height: 2),
-                          products!.productName! != null
-                              ? Text(
-                            products!.productName!,
-                                  maxLines: 1,
-                                //  style: GoogleFonts.ptSans(),
-                                  overflow: TextOverflow.ellipsis,
-                                )
-                              : Container(
-                                  height: 20,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                      color:
-                                          AppColors.darkGray.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(6)),
-                                ),
-
-                          // SizedBox(height: 2),
-                          products!.shortDescription! != null
-                              ? Text(
-                            products!.shortDescription!,
-                            maxLines: 2,
-                            //  style: GoogleFonts.ptSans(),
-                            overflow: TextOverflow.ellipsis,
-                          )
-                              : Container(
-                            height: 20,
-                            width: 120,
-                            decoration: BoxDecoration(
-                                color:
-                                AppColors.darkGray.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(6)),
-                          ),
-                          SizedBox(height: 2),
-                          products!.mrpPrice != null
-                              ? Text('\u{20B9} ' + '${double.parse(products!.mrpPrice!).toStringAsFixed(0)}',
+                          Text('\u{20B9} ' + '${double.parse(products!.mrpPrice!).toStringAsFixed(0)}',
                               style:  TextStyle(
                                   decoration: TextDecoration.combine(
                                       [ TextDecoration.lineThrough]),
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.grey))
-                              : Container(
-                                  height: 15,
-                                  decoration: BoxDecoration(
-                                      color:
-                                          AppColors.darkGray.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(6)),
-                                ),
+                                  color: Colors.grey)),
                           SizedBox(height: 2),
-                         Wrap(
+                         Row(
                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                            children: [
                            products!.netPrice != null
@@ -189,27 +171,9 @@ class ProductTile extends StatelessWidget {
                           //       ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
-                  // product != null
-                  //     ? Positioned(
-                  //         top: 0,
-                  //         left: 0,
-                  //         child: Container(
-                  //           height: 20,
-                  //           width: 40,
-                  //           decoration: BoxDecoration(
-                  //               borderRadius: BorderRadius.circular(5),
-                  //               color: Colors.red),
-                  //           child: Center(
-                  //             child: Text(
-                  //               product!.price! <= 5000 ? 'New' : '-30%',
-                  //               style: TextStyle(color: Colors.white),
-                  //             ),
-                  //           ),
-                  //         ))
-                  //     : const SizedBox.shrink(),
-                ],
+                ),
               ),
             ),
           )

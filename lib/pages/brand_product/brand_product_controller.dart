@@ -15,17 +15,21 @@ class BrandProductController extends GetxController {
 
   RxBool isLoadingBrandProduct= false.obs;
   var brandProductObj = MainResponse().obs;
+
+  RxBool isRefresh = false.obs;
+
   @override
   void onInit() {
     CheckInternet.checkInternet();
-    brandProduct(brandId);
+    brandProduct(brandId, false);
     super.onInit();
   }
 
 
-  brandProduct(String brandId) async {
+  brandProduct(String brandId,bool refresh) async {
     try {
       isLoadingBrandProduct(true);
+      isRefresh(refresh);
       await apiRepositoryInterface.brandProduct(brandId).then((value) {
         brandProductObj(value);
       });

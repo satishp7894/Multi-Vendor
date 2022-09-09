@@ -17,6 +17,7 @@ class Products {
   String? netPrice;
   String? isNew;
   String? isBestSeller;
+  String? coverImage;
   List<String>? image;
 
   Products(
@@ -36,6 +37,7 @@ class Products {
         this.netPrice,
         this.isNew,
         this.isBestSeller,
+        this.coverImage,
         this.image});
 
   Products.fromJson(Map<String, dynamic> json) {
@@ -55,6 +57,7 @@ class Products {
     netPrice = json['net_price'];
     isNew = json['is_new'];
     isBestSeller = json['is_best_seller'];
+    coverImage = json['cover_img'];
     image = json['image'].cast<String>();
   }
 
@@ -76,6 +79,7 @@ class Products {
     data['net_price'] = this.netPrice;
     data['is_new'] = this.isNew;
     data['is_best_seller'] = this.isBestSeller;
+    data['cover_img'] = this.coverImage;
     data['image'] = this.image;
     return data;
   }

@@ -67,7 +67,7 @@ class _BrandProductScreenState extends State<BrandProductScreen> {
         body: RefreshIndicator(
           onRefresh: () {
             CheckInternet.checkInternet();
-            return brandProductController!.brandProduct(brand!.brandId!);
+            return brandProductController!.brandProduct(brand!.brandId!, true);
           },
           child: Obx(() {
             if (brandProductController!.isLoadingBrandProduct.value != true) {
@@ -112,7 +112,7 @@ class _BrandProductScreenState extends State<BrandProductScreen> {
                   shrinkWrap: true,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
+                      padding: const EdgeInsets.all( 5.0),
                       child: ProductGridviewTile(
                         products: brandProductData,
                         imageUrl: imageUrl,
@@ -124,10 +124,20 @@ class _BrandProductScreenState extends State<BrandProductScreen> {
               }
 
             } else {
-              return  Container(
+
+
+              if (brandProductController!.isRefresh.value !=
+                  true) {
+                return  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor)));
+              } else {
+                return Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor)));
+                );
+              }
 
             }
           }),
