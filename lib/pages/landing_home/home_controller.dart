@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
+import '../../utils/snackbar_dialog.dart';
+
 class HomeController extends GetxController {
   final ApiRepositoryInterface apiRepositoryInterface;
   final LocalRepositoryInterface localRepositoryInterface;
@@ -184,13 +186,16 @@ class HomeController extends GetxController {
 
           if(isBool){
             selectAllCart(getCartData);
-
             productIds.clear();
             getCartData.forEach((element) {
               productIds.add(element.productId);
             });
           }
 
+        }else{
+          cartList([]);
+          productIds.clear();
+          totalAmount(0.0);
         }
         // refreshTotal();
       });
@@ -257,9 +262,10 @@ class HomeController extends GetxController {
    double total = 0.0;
    // print("cartList total ------------- ${cartList[0].totalAmt!}");
     cartList.forEach((element) {
+      double totalQty = double.parse(element.netPrice!) * double.parse(element.quantity!);
       if (selectedCarts.contains(element.cartId)) {
-        total += double.parse(element.totalAmt!);
-        print("total ------------- ${element.totalAmt!}");
+        total += totalQty;
+        print("total ------------- ${totalQty}");
         print("total ------------- $total");
       }
     });
@@ -299,11 +305,11 @@ class HomeController extends GetxController {
     MainResponse? mainResponse  = await apiRepositoryInterface.addToCart(customerId.value, productId,quantity);
     if (mainResponse!.status!) {
       getCartItems(customerId.value, true);
-      Get.snackbar('Success', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Success',mainResponse.message!);
       // Get.offAllNamed(Routes.landingHome);
 
     } else {
-      Get.snackbar('Error', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Error',mainResponse.message!);
     }
 
     // if (result == true) {
@@ -343,14 +349,17 @@ class HomeController extends GetxController {
     MainResponse? mainResponse  = await apiRepositoryInterface.removeFromCart(customerId, productId);
     if (mainResponse!.status!) {
       removeProduct(cartIndex!);
-      getCartItems(customerId, false);
-      
-      Get.snackbar('Success', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      getCartItems(customerId, true);
+
+
+      // Get.snackbar('Success', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Success',mainResponse.message!);
       // Get.offAllNamed(Routes.landingHome);
       return true;
 
     } else {
-      Get.snackbar('Error', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      // Get.snackbar('Error', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Error',mainResponse.message!);
       return false;
     }
 
@@ -360,18 +369,20 @@ class HomeController extends GetxController {
     // }
   }
 
-  void checkOut(String productIds) async {
+   placeOrder(String paymentType) async {
     // var result = await apiRepositoryInterface.updateProductQty(token, id, quantity);
 
-    MainResponse? mainResponse  = await apiRepositoryInterface.addOrder(customerId.value, productIds);
+    MainResponse? mainResponse  = await apiRepositoryInterface.placeOrder(customerId.value, paymentType);
     if (mainResponse!.status!) {
+
+
+
+
       getCartItems(customerId.value, false);
-
-      Get.snackbar('Success', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
-      // Get.offAllNamed(Routes.landingHome);
-
+      Get.back();
+      SnackBarDialog.showSnackbar('Success',mainResponse.message!);
     } else {
-      Get.snackbar('Error', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Error',mainResponse.message!);
     }
 
     // if (result == true) {
@@ -380,18 +391,18 @@ class HomeController extends GetxController {
     // }
   }
 
-  void emptyCart( String customerId) async {
+   emptyCart( String customerId) async {
     // var result = await apiRepositoryInterface.updateProductQty(token, id, quantity);
 
     MainResponse? mainResponse  = await apiRepositoryInterface.emptyCart(customerId);
     if (mainResponse!.status!) {
       getCartItems(customerId, false);
       cartList.clear();
-      Get.snackbar('Success', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Success',mainResponse.message!);
       // Get.offAllNamed(Routes.landingHome);
 
     } else {
-      Get.snackbar('Error', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Error',mainResponse.message!);
     }
 
     // if (result == true) {

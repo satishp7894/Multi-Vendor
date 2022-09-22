@@ -8,6 +8,8 @@ import 'package:eshoperapp/repository/local_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../utils/snackbar_dialog.dart';
+
 class CartController extends GetxController {
   final ApiRepositoryInterface apiRepositoryInterface;
   final LocalRepositoryInterface localRepositoryInterface;
@@ -85,11 +87,11 @@ class CartController extends GetxController {
     MainResponse? mainResponse  = await apiRepositoryInterface.updateProductQty(customerId, id.toString(), quantity.toString());
     if (mainResponse!.status!) {
       homecontroller.getCartItems(customerId, false);
-      Get.snackbar('Success', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Success',mainResponse.message!);
       // Get.offAllNamed(Routes.landingHome);
 
     } else {
-      Get.snackbar('Error', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Error',mainResponse.message!);
     }
 
     // if (result == true) {

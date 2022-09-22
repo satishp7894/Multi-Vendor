@@ -3,9 +3,10 @@ class MainResponse {
   String? message;
   String? imageUrl;
   List<dynamic>? data;
+  List<dynamic>? productElement;
 
 
-  MainResponse({this.status, this.message, this.data});
+  MainResponse({this.status, this.message, this.data, this.productElement});
 
   MainResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -18,6 +19,13 @@ class MainResponse {
       //   data!.add(new UpdateCustomerPasswordData.fromJson(v));
       // });
     }
+    if (json['product_element'] != null) {
+      productElement = json['product_element'];
+      // productElement = <ProductElement>[];
+      // json['product_element'].forEach((v) {
+      //   productElement!.add(new ProductElement.fromJson(v));
+      // });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -27,6 +35,10 @@ class MainResponse {
     data['image_url'] = this.imageUrl;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    if (this.productElement != null) {
+      data['product_element'] =
+          this.productElement!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -61,6 +73,25 @@ class UpdateCustomerPasswordData {
     data['gender'] = this.gender;
     data['email'] = this.email;
     data['mobile'] = this.mobile;
+    return data;
+  }
+}
+
+class ProductElement {
+  String? elemant;
+  List<String>? value;
+
+  ProductElement({this.elemant, this.value});
+
+  ProductElement.fromJson(Map<String, dynamic> json) {
+    elemant = json['elemant'];
+    value = json['value'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['elemant'] = this.elemant;
+    data['value'] = this.value;
     return data;
   }
 }

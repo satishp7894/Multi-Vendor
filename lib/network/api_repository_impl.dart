@@ -20,10 +20,13 @@ import 'package:eshoperapp/repository/api_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
+import '../models/country_and_state.dart';
+
 class ApiRepositoryImpl extends ApiRepositoryInterface {
   static var client = http.Client();
 
   static String mainUrl = "http://proactii.com/MultiVendor/api/MultivendorApi";
+  static String countryMainUrl = "https://api.countrystatecity.in/v1";
 
   // final String secretKey = '12!@34#\$5%';
   // String secretKey = r'12!@34#$5%';
@@ -38,6 +41,7 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
   var getAddressUrl = "$mainUrl/getAddress";
   var addAddressUrl = "$mainUrl/addAddress";
   var editAddressUrl = "$mainUrl/editAddress";
+  var changeDeliveryAddressUrl = "$mainUrl/changeDeliveryAddress";
   var deleteAddressUrl = "$mainUrl/deleteAddress";
   var getCategoryUrl = "$mainUrl/getCategory";
   var getSliderUrl = "$mainUrl/getSlider";
@@ -53,10 +57,11 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
   var addToCartUrl = "$mainUrl/addToCart";
   var emptyCartUrl = "$mainUrl/emptyCart";
   var updateProductQtyUrl = "$mainUrl/updateProductQty";
-  var addOrderUrl = "$mainUrl/addOrder";
+  var placeOrderUrl = "$mainUrl/placeOrder";
   var orderHistoryUrl = "$mainUrl/orderHistory";
   var orderDetailUrl = "$mainUrl/orderDetail";
   var getOrderInvoiceUrl = "$mainUrl/getOrderInvoice";
+  var getCountryUrl = "$countryMainUrl/countries";
 
 
   static Uri getUrl(String endpoind, {String baseUrl = 'fakestoreapi.com'}) {
@@ -638,6 +643,7 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
     print("url secretKey ${AppConstants.secretKey}");
     print("url customerId ${customerId}");
     print("url addressType ${addressRequest.addressType}");
+    print("url setDefault ${addressRequest.setDefault}");
 
     bool result = await InternetConnectionChecker().hasConnection;
     print("url addAddress InternetConnectionChecker ${result}");
@@ -657,6 +663,7 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
           'state': addressRequest.state,
           'pincode': addressRequest.pincode,
           'country': addressRequest.country,
+          'set_default': addressRequest.setDefault.toString(),
           'address_type': addressRequest.addressType,
         });
 
@@ -682,11 +689,13 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
 
   @override
   Future<MainResponse?> editAddress(
-      AddressRequest addressRequest, String addressId) async {
+      AddressRequest addressRequest, String addressId, String customerId) async {
     print("url editAddress $editAddressUrl");
     print("url secretKey ${AppConstants.secretKey}");
     print("url addressId ${addressId}");
+    print("url customerId ${customerId}");
     print("url addressType ${addressRequest.addressType}");
+    print("url setDefault ${addressRequest.setDefault}");
 
     bool result = await InternetConnectionChecker().hasConnection;
     print("url editAddress InternetConnectionChecker ${result}");
@@ -694,6 +703,7 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
       try {
         var response = await http.post(Uri.parse(editAddressUrl), body: {
           'secretkey': AppConstants.secretKey,
+          'customer_id': customerId,
           'address_id': addressId,
           'first_name': addressRequest.firstName,
           'last_name': addressRequest.lastName,
@@ -706,6 +716,7 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
           'state': addressRequest.state,
           'pincode': addressRequest.pincode,
           'country': addressRequest.country,
+          'set_default': addressRequest.setDefault.toString(),
           'address_type': addressRequest.addressType,
         });
 
@@ -766,6 +777,46 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
       return MainResponse(status: false, message: AppConstants.noInternetConn);
     }
   }
+
+  @override
+  Future<MainResponse?> changeDeliveryAddress(
+      String customerId, String addressId) async {
+    print("url changeDeliveryAddress $changeDeliveryAddressUrl");
+    print("url secretKey ${AppConstants.secretKey}");
+    print("url addressId ${addressId}");
+    print("url customerId ${customerId}");
+
+    bool result = await InternetConnectionChecker().hasConnection;
+    print("url changeDeliveryAddress InternetConnectionChecker ${result}");
+    if (result == true) {
+      try {
+        var response = await http.post(Uri.parse(changeDeliveryAddressUrl), body: {
+          'secretkey': AppConstants.secretKey,
+          'address_id': addressId,
+          'customer_id': customerId,
+        });
+
+        var decodedData = json.decode(response.body);
+        print("changeDeliveryAddress ['status'] ${decodedData['status']}");
+        if (decodedData['status'] == true) {
+          print("changeDeliveryAddress ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        } else {
+          print("changeDeliveryAddress else");
+          print("changeDeliveryAddress ${response.body}");
+          return MainResponse.fromJson(decodedData);
+        }
+      } on Exception catch (e) {
+        print("changeDeliveryAddress error ${e}");
+        return MainResponse(status: false, message: e.toString());
+      }
+    } else {
+      print("changeDeliveryAddress  ${AppConstants.noInternetConn}");
+      return MainResponse(status: false, message: AppConstants.noInternetConn);
+    }
+  }
+
+
 
 
   @override
@@ -955,21 +1006,21 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
   }
 
   @override
-  Future<MainResponse?> addOrder(
-      String customerId, String productIds) async {
-    print("url addOrder $addOrderUrl");
+  Future<MainResponse?> placeOrder(
+      String customerId, String paymentType) async {
+    print("url placeOrder $placeOrderUrl");
     print("url secretKey ${AppConstants.secretKey}");
     print("url customerId $customerId");
-    print("url productIds $productIds");
+    print("url paymentType $paymentType");
 
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == true) {
       try {
         var response =
-        await http.post(Uri.parse(addOrderUrl), body: {
+        await http.post(Uri.parse(placeOrderUrl), body: {
           'secretkey': AppConstants.secretKey,
           'customer_id': customerId,
-          'product_id': productIds,
+          'payment_type': paymentType,
         });
 
         var decodedData = json.decode(response.body);
@@ -990,6 +1041,105 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
       return MainResponse(status: false, message: AppConstants.noInternetConn);
     }
   }
+
+  @override
+  Future<List<CountryAndState>> countries() async {
+    print("url countries $getCountryUrl");
+    print("url countryAndStateKey ${AppConstants.countryAndStateKey}");
+
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == true) {
+      try {
+        var response = await http.get(Uri.parse(getCountryUrl), headers: {
+          'X-CSCAPI-KEY': AppConstants.countryAndStateKey!,
+        });
+
+        // List<CountryAndState> decodedData = json.decode(response.body);
+        // print("countries ${response.body}");
+        // List<CountryAndState> listCountries;
+        //
+        // listCountries = decodedData
+        //     .map((CountryAndState data) => CountryAndState.fromJson(data.toJson()))
+        //     .toList();
+        //
+        // print("countries toString ${listCountries.toString()}");
+        //
+        // return listCountries;
+
+
+        //
+        // final body = json.decode(response.body);
+        // print("countries ${response.body}");
+        // print("json.decode(response.body) ${json.decode(response.body)}");
+        // List<CountryAndState> mstdebitur =
+        // body.map((dynamic item) => CountryAndState.fromJson(item)).toList();
+        // print("countries mstdebitur ${mstdebitur}");
+
+        List<CountryAndState> listCountries;
+        final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+        print("countries ${parsed.map<CountryAndState>((json) => CountryAndState.fromJson(json)).toList()}");
+        listCountries = parsed.map<CountryAndState>((json) => CountryAndState.fromJson(json)).toList();
+        print("countries list ${listCountries[0].name}");
+        return listCountries;
+        // return mstdebitur;
+          // return List<CountryAndState?>.fromJson(decodedData);
+
+      } on Exception catch (e) {
+
+
+
+        print("countries error ${e}");
+        List<CountryAndState> listCountries = [];
+        return listCountries;
+      }
+    } else {
+      List<CountryAndState> listCountries = [];
+      return listCountries;
+    }
+  }
+
+
+  @override
+  Future<List<CountryAndState>> states(String countryCode) async {
+    print("url states $countryMainUrl/countries/$countryCode/states");
+    print("url countryAndStateKey ${AppConstants.countryAndStateKey}");
+    print("url countryCode ${countryCode}");
+
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == true) {
+      try {
+        var response = await http.get(Uri.parse("$countryMainUrl/countries/$countryCode/states"), headers: {
+          'X-CSCAPI-KEY': AppConstants.countryAndStateKey!,
+        });
+
+        // var decodedData = json.decode(response.body);
+        //
+        //   print("states ${response.body}");
+        // List<CountryAndState> listStates;
+        // listStates = decodedData
+        //     .map((data) => CountryAndState.fromJson(data))
+        //     .toList();
+        //
+        // return listStates;
+        print("response.body ${response.body}");
+        List<CountryAndState> listStates;
+        final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+        print("states ${parsed.map<CountryAndState>((json) => CountryAndState.fromJson(json)).toList()}");
+        listStates = parsed.map<CountryAndState>((json) => CountryAndState.fromJson(json)).toList();
+        // print("states list ${listStates[0].name}");
+        return listStates;
+
+      } on Exception catch (e) {
+        print("states error ${e}");
+        List<CountryAndState> listStates = [];
+        return listStates;
+      }
+    } else {
+      List<CountryAndState> listStates = [];
+      return listStates;
+    }
+  }
+
 
   @override
   Future<MainResponse?> orderHistory(

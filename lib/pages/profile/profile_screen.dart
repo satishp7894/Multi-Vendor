@@ -74,6 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // mainResponse.data != null ? mainResponse.data : [];
                   String? message = mainResponse.message ?? "";
                   if (customerProfileData.isEmpty) {
+                    profileController.logout();
                     return SizedBox(
                       height: 150.0,
                       width: MediaQuery.of(context).size.width,
@@ -223,6 +224,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
                   }
                 } else {
+                  // profileController.logout();
                   return const SizedBox(
                       height: 150,
                       child: Center(

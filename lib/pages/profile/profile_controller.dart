@@ -197,6 +197,8 @@ class ProfileController extends GetxController {
     try {
       // isLoadingCustomerProfile(true);
       await localRepositoryInterface.clearAllData();
+      homecontroller.cartList([]);
+      homecontroller.getCartItems("", false);
       print("clearAllData");
       return true;
 

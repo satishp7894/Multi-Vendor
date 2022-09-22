@@ -1,15 +1,18 @@
 import 'package:eshoperapp/models/check_login.dart';
 import 'package:eshoperapp/models/register_customer.dart';
+import 'package:eshoperapp/pages/landing_home/home_controller.dart';
 import 'package:eshoperapp/pages/login/views/form.dart';
 import 'package:eshoperapp/pages/profile/profile_controller.dart';
 import 'package:eshoperapp/routes/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../utils/snackbar_dialog.dart';
 import 'login_controller.dart';
 
 class LoginScreen extends GetWidget<LoginController> {
   final profileController = Get.find<ProfileController>();
+  final homeController = Get.find<HomeController>();
   void login() async {
     CheckLogin? checkLogin = await controller.checkLogin();
     if (checkLogin.status!) {
@@ -20,9 +23,14 @@ class LoginScreen extends GetWidget<LoginController> {
       controller.mobileTextController.clear();
       controller.passwordTextController.clear();
       profileController.isUserDataRefresh(true);
-      Get.snackbar('Success', checkLogin.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      // Get.snackbar('Success', checkLogin.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Success',checkLogin.message!);
+      await profileController.getUser();
+      await homeController.loadUser(true);
+      homeController.getCartItems(profileController.customerId.value, true);
     } else {
-      Get.snackbar('Error', checkLogin.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      // Get.snackbar('Error', checkLogin.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Error',checkLogin.message!);
     }
   }
 
@@ -38,7 +46,8 @@ class LoginScreen extends GetWidget<LoginController> {
       // Get.toNamed(Routes.login);
       //Get.offNamed(Routes.login);
       controller.toggleFormType();
-      Get.snackbar('Success', registerCustomer.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      // Get.snackbar('Success', registerCustomer.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Success',registerCustomer.message!);
     } else {
       // Get.offNamed(Routes.login);
       // controller.toggleFormType();
@@ -48,7 +57,9 @@ class LoginScreen extends GetWidget<LoginController> {
       // controller.mobileTextController.clear();
       // controller.passwordTextController.clear();
       // controller.toggleFormType();
-      Get.snackbar('Error', registerCustomer.message!);
+      // Get.snackbar('Error', registerCustomer.message!);
+      SnackBarDialog.showSnackbar('Error',registerCustomer.message!);
+
     }
   }
 

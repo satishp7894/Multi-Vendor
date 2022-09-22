@@ -16,6 +16,8 @@ import 'package:eshoperapp/models/register_customer.dart';
 import 'package:eshoperapp/models/register_request.dart';
 import 'package:eshoperapp/models/update_customer_password.dart';
 
+import '../models/country_and_state.dart';
+
 abstract class ApiRepositoryInterface {
   Future<RegisterCustomer?> registerCustomer(RegisterRequest register);
   Future<CheckLogin?> checkLogin(LoginRequest login);
@@ -39,15 +41,19 @@ abstract class ApiRepositoryInterface {
   Future<MainResponse?> emptyCart(String customerId );
   Future<MainResponse?> addToCart(String customerId,String productId,String quantity);
 
-  Future<MainResponse?> addOrder(String customerId , String productIds);
+  Future<MainResponse?> placeOrder(String customerId , String paymentType);
   Future<MainResponse?> orderHistory(String customerId );
   Future<MainResponse?> orderDetail(String orderId );
   Future<MainResponse?> getOrderInvoice(String orderId );
 
   Future<MainResponse?> getAddress(String customerId);
   Future<MainResponse?> addAddress(AddressRequest addressRequest, String customerId);
-  Future<MainResponse?> editAddress(AddressRequest addressRequest, String addressId);
+  Future<MainResponse?> editAddress(AddressRequest addressRequest, String addressId, String customerId);
   Future<MainResponse?> deleteAddress(String customerId, String addressId);
+  Future<MainResponse?> changeDeliveryAddress(String customerId, String addressId);
+
+  Future<List<CountryAndState>> countries( );
+  Future<List<CountryAndState>> states(String countryCode );
 
   Future<LoginResponse?> login(LoginRequest login);
   Future<LoginResponse?> register(RegisterRequest register);

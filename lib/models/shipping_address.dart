@@ -11,6 +11,7 @@ class ShippingAddress {
   String? pincode;
   String? country;
   String? addressType;
+  String? setDefault;
   // String? createdBy;
   // String? modifiedBy;
   String? created;
@@ -30,6 +31,7 @@ class ShippingAddress {
         this.pincode,
         this.country,
         this.addressType,
+        this.setDefault,
         // this.createdBy,
         // this.modifiedBy,
         this.created,
@@ -49,6 +51,7 @@ class ShippingAddress {
     pincode = json['pincode'];
     country = json['country'];
     addressType = json['address_type'];
+    setDefault = json['set_default'];
     // createdBy = json['created_by'];
     // modifiedBy = json['modified_by'];
     created = json['created'];
@@ -70,6 +73,7 @@ class ShippingAddress {
     data['pincode'] = this.pincode;
     data['country'] = this.country;
     data['address_type'] = this.addressType;
+    data['set_default'] = this.setDefault;
     // data['created_by'] = this.createdBy;
     // data['modified_by'] = this.modifiedBy;
     data['created'] = this.created;

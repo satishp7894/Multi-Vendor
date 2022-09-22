@@ -161,6 +161,8 @@ class _CartScreenState extends State<CartScreen> {
                                               onPressed: () {
                                                 cardController.homecontroller.productIds.clear();
                                                 AlertDialogs.showAlertDialog("Delete?", "Are you sure you want to delete from all Items?", () async {
+                                                  // Get.back();
+                                                  Navigator.pop(context);
                                                   cardController.homecontroller.emptyCart(cardController.homecontroller.customerId.value);
                                                 });
                                               },
@@ -216,7 +218,8 @@ class _CartScreenState extends State<CartScreen> {
                                     ...List.generate(
                                         getCartData.length,
                                             (index) {
-                                              double mrp = double.parse(getCartData[index].mrp!) * double.parse(getCartData[index].quantity!);
+                                              double mrp = double.parse(getCartData[index].mrpPrice!) * double.parse(getCartData[index].quantity!);
+                                              double totalQty = double.parse(getCartData[index].netPrice!) * double.parse(getCartData[index].quantity!);
                                             return Row(
                                             children: [
                                               Obx(() {
@@ -312,7 +315,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                 // 'https://onlinehatiya.herokuapp.com' +
                                                                 //     cart!.product!.image!,
 
-                                                                imageUrl + getCartData[index].productId! + "/" + getCartData[index].image!,
+                                                                imageUrl + getCartData[index].productId! + "/" + getCartData[index].coverImg!,
                                                                 fit: BoxFit.fill,),
                                                             ),
                                                           ),
@@ -345,7 +348,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                                         children: [
                                                                           Text(
-                                                                            '\u{20B9} ' + "${double.parse(getCartData[index].mrp!).toStringAsFixed(0)}",
+                                                                            '\u{20B9} ' + "${mrp.toStringAsFixed(0)}",
                                                                             style:  TextStyle(
                                                                                 decoration: TextDecoration.combine(
                                                                                     [ TextDecoration.lineThrough]),
@@ -356,7 +359,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                           Row(
                                                                             children: [
                                                                               Text(
-                                                                                '\u{20B9} ' + "${double.parse(getCartData[index].totalAmt!).toStringAsFixed(0)}",
+                                                                                '\u{20B9} ' + "${totalQty.toStringAsFixed(0)}",
                                                                                 style: const TextStyle(
                                                                                     fontSize: 16,
                                                                                     fontWeight: FontWeight.bold,
@@ -396,6 +399,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                 // homeController.removeProductFromCart(int.parse(cart!.cartId!));
 
                                                                 AlertDialogs.showAlertDialog("Delete?", "Are you sure you want to delete from this Item?", () async {
+                                                                  Navigator.pop(context);
                                                                   print("productIds ${cardController.homecontroller.productIds}");
                                                                   var contain = cardController.homecontroller.productIds.where((item) => item.contains(getCartData[index].productId!));
                                                                   if (contain.isEmpty){
@@ -406,7 +410,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                     // productIds.removeAt(index);
                                                                     print("productIds cancel ${cardController.homecontroller.productIds}");
                                                                   }
-                                                                  var isBool = await cardController.homecontroller.removeFromCart(getCartData[index].productId!,cardController.homecontroller.customerId.value,index);
+                                                                   cardController.homecontroller.removeFromCart(getCartData[index].productId!,cardController.homecontroller.customerId.value,index);
                                                                   // if(isBool){
                                                                   //
                                                                   //

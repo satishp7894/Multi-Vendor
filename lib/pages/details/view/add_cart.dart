@@ -1,10 +1,19 @@
 import 'package:eshoperapp/models/product.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../../models/customer.dart';
+import '../../profile/profile_controller.dart';
 
 class AddToCard extends StatelessWidget {
   final VoidCallback? onChanged;
-  AddToCard({this.onChanged, this.product});
+  AddToCard({this.onChanged, this.product, });
   final Product? product;
+  // final String? customerId;
+  final profileController = Get.put(ProfileController(
+      apiRepositoryInterface: Get.find(),
+      customer: Customer(),
+      localRepositoryInterface: Get.find()));
   @override
   Widget build(BuildContext context) {
     return Container(

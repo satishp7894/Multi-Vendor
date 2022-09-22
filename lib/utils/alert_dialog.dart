@@ -61,8 +61,8 @@ class AlertDialogs{
           ),
           TextButton(
             // style: flatButtonStyle,
-            onPressed: () async {
-              Get.back();
+            onPressed: ()  {
+              // Get.back();
               onTap!();
               // controller.logout();
             },
@@ -215,5 +215,88 @@ class AlertDialogs{
     //     );
     //   },
     // );
+  }
+
+  static showSimpleDialog( String title, String message) {
+
+
+
+    Get.defaultDialog(
+      title: title,
+      barrierDismissible: false,
+      middleText:
+      message,
+      titleStyle: const TextStyle(color: Colors.black),
+      middleTextStyle: const TextStyle(color: Colors.black),
+      confirm: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          TextButton(
+            // style: flatButtonStyle,
+            onPressed: () {
+              Get.back();
+            },
+            child: const Text(
+              "",
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+          TextButton(
+            // style: flatButtonStyle,
+            onPressed: ()  {
+              Get.back();
+
+            },
+            child: const Text(
+              "OK",
+              style: TextStyle(color: Colors.red),
+            ),
+          )
+        ],
+      ),
+    );
+
+    // showDialog(context: context,
+    //   builder: (BuildContext c) {
+    //     return
+    //       Container(
+    //       height: 150,
+    //       width: 80,
+    //       alignment: Alignment.center,
+    //       decoration:BoxDecoration(
+    //           color: Colors.transparent,
+    //           borderRadius: BorderRadius.circular(30)
+    //       ),
+    //       child: CupertinoAlertDialog(
+    //         content: Column(
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           crossAxisAlignment: CrossAxisAlignment.center,
+    //           children: [
+    //             Text(title,style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),),
+    //             SizedBox(height: 10,),
+    //             Text(message,style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.normal),),
+    //             Divider(thickness: 1, color: Colors.grey,),
+    //             SizedBox(height: 10,),
+    //             TextButton(
+    //                 onPressed: ()async{
+    //                   Get.back();
+    //                   // Navigator.pop(context);
+    //                 },
+    //                 child: Text("Okay", style: TextStyle(color: Colors.red, fontSize: 18, fontWeight: FontWeight.normal), textAlign: TextAlign.center,))
+    //           ],
+    //         ),
+    //       ),
+    //     );
+    //   },
+    // );
+  }
+
+  static showSnackbar( String title,String message) {
+
+    Get.snackbar(title, message,duration: const Duration(seconds: 4), snackPosition: SnackPosition.BOTTOM,);
+
+
+
+
   }
 }

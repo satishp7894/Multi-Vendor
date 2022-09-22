@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:eshoperapp/style/theme.dart' as Style;
 
+import '../../utils/snackbar_dialog.dart';
+
 
 class ChangePasswordScreen extends GetWidget<ProfileController> {
   void submit() async {
@@ -20,14 +22,16 @@ class ChangePasswordScreen extends GetWidget<ProfileController> {
       controller.confirmPasswordTexcontroller!.clear();
       controller.isUserDataRefresh(true);
       controller.logout();
-      Get.snackbar('Success', updateCustomerPassword.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      // Get.snackbar('Success', updateCustomerPassword.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Success',updateCustomerPassword.message!);
       Get.offNamed(Routes.login);
     } else {
       // controller.currentPasswordTexcontroller!.clear();
       // controller.newPasswordTexcontroller!.clear();
       // controller.confirmPasswordTexcontroller!.clear();
       // Get.offNamed(Routes.login);
-      Get.snackbar('Error', updateCustomerPassword.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      // Get.snackbar('Error', updateCustomerPassword.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Error',updateCustomerPassword.message!);
     }
   }
 

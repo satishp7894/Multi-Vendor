@@ -8,6 +8,7 @@ class AppConstants{
   static const String? changePassword = "Change Password";
   static const String? forgetPassword = "Forget Password";
   static const String? secretKey = "12!@34#\$5%";
+  static const String? countryAndStateKey = "SEpBUEhjZ1UzU2hyU3dPQm1oSUNkUjdMZlNlSlI0cmlHb29NVW9SZA==";
   static const String? noInternetConn = "No Internet Connection";
   static const String? prefCustomerId = "customerId";
   static const String? prefCustomerName = "customerName";

@@ -5,6 +5,7 @@ import 'package:eshoperapp/pages/profile/views/edit_form.dart';
 import 'package:eshoperapp/routes/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../utils/snackbar_dialog.dart';
 import 'profile_controller.dart';
 
 
@@ -59,11 +60,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     MainResponse? mainResponse  = await profileController!.updateCustomerProfile();
     if (mainResponse.status!) {
       Get.back(result: "back");
-     Get.snackbar('Success', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+     SnackBarDialog.showSnackbar('Success',mainResponse.message!);
       // Get.offAllNamed(Routes.landingHome);
 
     } else {
-      Get.snackbar('Error', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Error',mainResponse.message!);
     }
   }
 }

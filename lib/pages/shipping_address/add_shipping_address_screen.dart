@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:eshoperapp/style/theme.dart' as Style;
 
+import '../../utils/snackbar_dialog.dart';
+
 class AddShippingAddressScreen extends StatefulWidget {
   const AddShippingAddressScreen({Key? key}) : super(key: key);
 
@@ -35,7 +37,7 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
     if(editMode!){
       shippingAddress = argumentData[1]['addressObj'];
       print("shippingAddress email ${shippingAddress!.email}");
-      print("addressId  ${shippingAddress!.addressId}");
+      print("country  ${shippingAddress!.country}");
     }else{
       shippingAddress = ShippingAddress();
     }
@@ -44,6 +46,7 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
     // print("editMode  ${editMode!}");
     shippingAddressController = Get.put(ShippingAddressController(
         apiRepositoryInterface: Get.find(), editMode: editMode!, shippingAddress: shippingAddress!,localRepositoryInterface: Get.find()));
+
     super.initState();
   }
 
@@ -62,6 +65,9 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
           shippingAddressController!.pincodeTextController!.clear();
           shippingAddressController!.countryTextController!.clear();
           shippingAddressController!.addressTypeTextController!.clear();
+          shippingAddressController!.checkBoxValue=0;
+          shippingAddressController!.countryList([]);
+          shippingAddressController!.stateList([]);
 
           return true;
         },
@@ -77,36 +83,39 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
             ),
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
-          title: Text("${editMode==true?AppConstants.editAddress:AppConstants.addAddress}", style: TextStyle(fontSize: 20,color: Style.Colors.appColor)),
+          title: InkWell(
+              onTap: (){
+                print("shippingAddressController!.firstNameTextController ${shippingAddressController!.firstNameTextController}");
+                print("shippingAddressController!.checkBoxValue ${shippingAddressController!.checkBoxValue}");
+              },
+              child: Text("${editMode==true?AppConstants.editAddress:AppConstants.addAddress}", style: TextStyle(fontSize: 20,color: Style.Colors.appColor))),
         ),
         body: SafeArea(
           child: Container(
             alignment: Alignment.center,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ShippingAddressForm(
-                      firstNameTextController: shippingAddressController!.firstNameTextController,
-                      lastNameTextController: shippingAddressController!.lastNameTextController,
-                      emailTextController: shippingAddressController!.emailTextController,
-                      mobileTextController: shippingAddressController!.mobileTextController,
-                      addressTextController: shippingAddressController!.addressTextController,
-                      localityTextController: shippingAddressController!.localityTextController,
-                      landmarkTextController: shippingAddressController!.landmarkTextController,
-                      cityTextController: shippingAddressController!.cityTextController,
-                      stateTextController: shippingAddressController!.stateTextController,
-                      pincodeTextController: shippingAddressController!.pincodeTextController,
-                      countryTextController: shippingAddressController!.countryTextController,
-                      addressTypeTextController: shippingAddressController!.addressTypeTextController,
-                      saveAddress:editMode! == true ? editAddress:saveAddress,
-                    )
-                  ],
-                ),
-              ),
+            child: ShippingAddressForm(
+              firstNameTextController: shippingAddressController!.firstNameTextController,
+              lastNameTextController: shippingAddressController!.lastNameTextController,
+              emailTextController: shippingAddressController!.emailTextController,
+              mobileTextController: shippingAddressController!.mobileTextController,
+              addressTextController: shippingAddressController!.addressTextController,
+              // localityTextController: shippingAddressController!.localityTextController,
+              // landmarkTextController: shippingAddressController!.landmarkTextController,
+              cityTextController: shippingAddressController!.cityTextController,
+              stateTextController: shippingAddressController!.stateTextController,
+              pincodeTextController: shippingAddressController!.pincodeTextController,
+              countryTextController: shippingAddressController!.countryTextController,
+              addressTypeTextController: shippingAddressController!.addressTypeTextController,
+              editMode: shippingAddressController!.editMode,
+              checkBox: shippingAddressController!.checkBoxValue,
+              checkBoxValue: (){
+                if(shippingAddressController!.checkBoxValue==0){
+                  shippingAddressController!.checkBoxValue = 1;
+                }else{
+                  shippingAddressController!.checkBoxValue = 0;
+                }
+              },
+              saveAddress:editMode! == true ? editAddress:saveAddress,
             ),
           ),
         ),
@@ -119,9 +128,9 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
     // if (mainResponse.status! == true) {
     //   // Get.offAllNamed(Routes.login);
     //   Get.back(result: "back");
-    //   Get.snackbar('Success', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+    //   SnackBarDialog.showSnackbar('Success',mainResponse.message!);
     // } else {
-    //   Get.snackbar('Error', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+    //   SnackBarDialog.showSnackbar('Error',mainResponse.message!);
     // }
 
     MainResponse? mainResponse  = await shippingAddressController!.addAddress();
@@ -138,12 +147,13 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
         shippingAddressController!.pincodeTextController!.clear();
         shippingAddressController!.countryTextController!.clear();
         shippingAddressController!.addressTypeTextController!.clear();
+        shippingAddressController!.checkBoxValue=0;
         Get.back(result: "back");
-        Get.snackbar('Success', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+        SnackBarDialog.showSnackbar('Success',mainResponse.message!);
         // Get.offAllNamed(Routes.landingHome);
 
       } else {
-        Get.snackbar('Error', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+        SnackBarDialog.showSnackbar('Error',mainResponse.message!);
       }
     }else{
       print("elseeeeee");
@@ -156,9 +166,9 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
     // if (mainResponse.status! == true) {
     //   // Get.offAllNamed(Routes.login);
     //   Get.back(result: "back");
-    //   Get.snackbar('Success', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+    //   SnackBarDialog.showSnackbar('Success',mainResponse.message!);
     // } else {
-    //   Get.snackbar('Error', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+    //   SnackBarDialog.showSnackbar('Error',mainResponse.message!);
     // }
 
     MainResponse? mainResponse  = await shippingAddressController!.editAddress(shippingAddress!.addressId!);
@@ -175,12 +185,13 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
         shippingAddressController!.pincodeTextController!.clear();
         shippingAddressController!.countryTextController!.clear();
         shippingAddressController!.addressTypeTextController!.clear();
+        shippingAddressController!.checkBoxValue=0;
         Get.back(result: "back");
-        Get.snackbar('Success', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+        SnackBarDialog.showSnackbar('Success',mainResponse.message!);
         // Get.offAllNamed(Routes.landingHome);
 
       } else {
-        Get.snackbar('Error', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+        SnackBarDialog.showSnackbar('Error',mainResponse.message!);
       }
     }else{
       print("elseeeeee");

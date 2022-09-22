@@ -6,9 +6,11 @@ import 'package:eshoperapp/routes/navigation.dart';
 import 'package:eshoperapp/utils/alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../constants/app_costants.dart';
+import '../../../utils/snackbar_dialog.dart';
 
 class AddressListTile extends StatefulWidget {
   final List<ShippingAddress>? shippingAddressList;
@@ -33,7 +35,33 @@ class _AddressListTileState extends State<AddressListTile> {
      shippingAddressController = Get.find<ShippingAddressController>();
      // shippingAddressController!.getAddressId();
      print("shippingAddressController!.index.toInt() ${shippingAddressController!.index.toInt()}");
-     groupValue = shippingAddressController!.index.toInt();
+
+     widget.shippingAddressList!.forEach((element) {
+
+
+     });
+
+     int index = 0;
+     widget.shippingAddressList!.map((e){
+
+
+       print("eeeeeeeee $index ============= ${e.setDefault}");
+       {
+         index = index + 1;
+         if(e.setDefault == "1"){
+           // int idx = e;
+           // groupValue = shippingAddressController!.index.toInt();
+           print("index index ${index-1}");
+           groupValue = index-1;
+         }else{
+
+         }
+       }
+     }
+
+
+     ).toList();
+
     super.initState();
   }
 
@@ -92,12 +120,13 @@ class _AddressListTileState extends State<AddressListTile> {
                                 groupValue: groupValue,
                                 onChanged: (value) async {
                                   setState(() {
-                                    groupValue = int.parse(value!.toString());
+                                    changeDeliveryAddress(widget.shippingAddressList![index].addressId!,int.parse(value!.toString()));
                                   });
-                                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                                  sharedPreferences.setInt(AppConstants.prefAddressId!, int.parse(value.toString()));
                                   print("value value value $value");
-                                  Get.back(result: value);
+                                  // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                                  // sharedPreferences.setInt(AppConstants.prefAddressId!, int.parse(value.toString()));
+                                  // print("value value value $value");
+                                  // Get.back(result: value);
 
 
                                 },
@@ -185,18 +214,21 @@ class _AddressListTileState extends State<AddressListTile> {
 
                               AlertDialogs.showAlertDialog("Delete?", "Are you "
                                   " you want to delete from this Address?", () async {
+                                // Get.back();
                                 print("shippingAddressList![index].addressType! ${widget.shippingAddressList![index].addressId!}");
                                 MainResponse? mainResponse  = await shippingAddressController!.deleteAddress(widget.shippingAddressList![index].addressId!);
+                                // Get.back();
+                                Navigator.pop(context);
                                 if(mainResponse != null){
                                   if (mainResponse.status!) {
 
                                     // Get.back(result: "back");
                                     shippingAddressController!.getAddress(shippingAddressController!.customerId.value);
-                                    Get.snackbar('Success', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+                                    SnackBarDialog.showSnackbar('Success',mainResponse.message!);
                                     // Get.offAllNamed(Routes.landingHome);
 
                                   } else {
-                                    Get.snackbar('Error', mainResponse.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+                                    SnackBarDialog.showSnackbar('Error',mainResponse.message!);
                                   }
                                 }else{
                                   print("elseeeeee");
@@ -223,5 +255,31 @@ class _AddressListTileState extends State<AddressListTile> {
         ],
       ),
     );
+  }
+  void changeDeliveryAddress(String addressId, int value) async {
+    // MainResponse? mainResponse = await controller.addAddress("4");
+    // if (mainResponse.status! == true) {
+    //   // Get.offAllNamed(Routes.login);
+    //   Get.back(result: "back");
+    //   SnackBarDialog.showSnackbar('Success',mainResponse.message!);
+    // } else {
+    //   SnackBarDialog.showSnackbar('Error',mainResponse.message!);
+    // }
+
+    MainResponse? mainResponse  = await shippingAddressController!.changeDeliveryAddress(addressId);
+    if(mainResponse != null){
+      if (mainResponse.status!) {
+        groupValue = value;
+        Get.back(result: value);
+        SnackBarDialog.showSnackbar('Success',mainResponse.message!);
+        // Get.offAllNamed(Routes.landingHome);
+
+      } else {
+        SnackBarDialog.showSnackbar('Error',mainResponse.message!);
+      }
+    }else{
+      print("elseeeeee");
+    }
+
   }
 }

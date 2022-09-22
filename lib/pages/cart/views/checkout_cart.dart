@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../models/carts.dart';
 import '../../../routes/navigation.dart';
 import '../../../utils/alert_dialog.dart';
+import '../../profile/profile_controller.dart';
 
 class CheckoutCart extends StatelessWidget {
 
@@ -16,6 +17,7 @@ class CheckoutCart extends StatelessWidget {
   CheckoutCart({this.totalAmount, required this.productIds, required this
   .cartList, this.imagePath});
   final homeController = Get.find<HomeController>();
+  final profileController = Get.find<ProfileController>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -55,8 +57,16 @@ class CheckoutCart extends StatelessWidget {
             onTap: (){
               String stringList = productIds.join(",");
               print("product list ${stringList}");
-              if(productIds.isEmpty){
-                AlertDialogs.showAlertDialog("Cart?", "Please select minimum 1 item", () async {
+
+              if(profileController.customerId.value == ""){
+                AlertDialogs.showLoginRequiredDialog();
+              }else if(cartList.isEmpty){
+                AlertDialogs.showAlertDialog("Cart?", "Please minimum 1 item add to cart", ()  {
+                  Get.back();
+                });
+              } else if(productIds.isEmpty){
+                AlertDialogs.showAlertDialog("Cart?", "Please select minimum 1 item", ()  {
+                  Get.back();
                 });
               }else{
                 List<Carts> finaCartList = [];
@@ -79,6 +89,7 @@ class CheckoutCart extends StatelessWidget {
                 // homeController.checkOut(stringList);
                 Get.toNamed(Routes.checkOut,arguments: [{"cartList": finaCartList}, {"imagePath": imagePath}]);
               }
+
 
             },
             child: Container(

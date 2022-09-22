@@ -11,6 +11,9 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../models/carts.dart';
 import '../../models/shipping_address.dart';
 import '../../routes/navigation.dart';
+import '../../utils/alert_dialog.dart';
+import '../../utils/snackbar_dialog.dart';
+import '../landing_home/home_controller.dart';
 import '../shipping_address/shippig_address_controller.dart';
 import 'check_out_controller.dart';
 
@@ -24,17 +27,19 @@ class CheckOutScreen extends StatefulWidget {
 class _CheckOutScreenState extends State<CheckOutScreen> {
   ShippingAddressController? shippingAddressController;
   CheckOutController? checkOutController;
+  final homeController = Get.find<HomeController>();
 
   // OrderHistory? orderHistory;
   List<Carts>? cartList;
   RxString? imagePath;
-  int? index;
+  // int? index;
   bool? isFlag = true;
   double totalPrice = 0.0;
   double totalDiscount = 0.0;
   double totalAmount = 0.0;
   Razorpay? _razorpay;
-  static const platform = const MethodChannel("razorpay_flutter");
+  static const platform = MethodChannel("razorpay_flutter");
+  String? paymentType;
 
   @override
   void initState() {
@@ -56,8 +61,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
 
     // print("cartList total ------------- ${cartList[0].totalAmt!}");
     cartList!.forEach((element) {
-        totalPrice += double.parse(element.mrp!);
-        print("mrp ------------- ${element.mrp!}");
+        totalPrice += double.parse(element.mrpPrice!);
+        print("mrp ------------- ${element.mrpPrice!}");
         print("mrp ------------- $totalPrice");
     });
 
@@ -68,8 +73,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     });
 
     cartList!.forEach((element) {
-      totalAmount+= double.parse(element.totalAmt!);
-      print("totalAmt ------------- ${element.totalAmt!}");
+      double totalQty = double.parse(element.netPrice!) * double.parse(element.quantity!);
+      totalAmount+= totalQty;
+      print("totalAmt ------------- ${totalQty}");
       print("totalAmt ------------- $totalAmount");
     });
     _razorpay = Razorpay();
@@ -140,7 +146,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         height: 10.0,
                       ),
                       const Text("Shipping Address",
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.w500)),
@@ -153,13 +159,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                 .isLoadingGetAddress.value ==
                             true) {
 
-                          if(isFlag!){
-                            index = shippingAddressController!.index.toInt();
-                            print("indexxxx $index");
-                            isFlag = false;
-                          }else{
-                            isFlag = false;
-                          }
+                          // if(isFlag!){
+                          //   index = shippingAddressController!.index.toInt();
+                          //   print("indexxxx $index");
+                          //   isFlag = false;
+                          // }else{
+                          //   isFlag = false;
+                          // }
 
                           MainResponse? mainResponse =
                               shippingAddressController!.getAddressObj.value;
@@ -172,204 +178,465 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           }
                           // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
 
-                          String address =
-                              shippingAddressData[index!].address != ""
-                                  ? shippingAddressData[index!].address! + ", "
-                                  : "";
-                          String city = shippingAddressData[index!].city! != ""
-                              ? shippingAddressData[index!].city! + ", "
-                              : "";
-                          // String state = shippingAddressList![index].state! != "" ? shippingAddressList![index].state! + ", " : "";
-                          // String pincode = shippingAddressList![index].pincode! != "" ? shippingAddressList![index].pincode! + ", " : "";
-                          String fullAddress = address +
-                              city +
-                              shippingAddressData[index!].state! +
-                              " - " +
-                              shippingAddressData[index!].pincode!;
+
                           String? imageUrl = mainResponse.imageUrl ?? "";
                           String? message = mainResponse.message ??
                               AppConstants.noInternetConn;
 
                           // print("checkOutController!.index.toInt()  check out ${index!}");
 
+
+
                           if (shippingAddressData.isEmpty) {
                             return Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height,
+                              width: 100,
+                              height: 100,
                               child: ListView(
                                 // physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 children: [
                                   Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.height -
-                                        100,
+                                    width: 100,
+                                    height: 100,
                                     //height: MediaQuery.of(context).size.height,
                                     alignment: Alignment.center,
-                                    child: Center(
+                                    child: ElevatedButton(onPressed: () async {
+                                      final result =  await
+                                      Get.toNamed(Routes.addShippingAddress,arguments: [
+                                        {"editMode": false},
+                                        {"addressObj": ShippingAddress()}
+                                      ]);
+                                      print("Shipping Address Screen  $result");
+                                      if(result != null){
+                                        shippingAddressController!.getUser();
+                                      }
+                                    }, child: Padding(
+                                      padding: const EdgeInsets.all(15.0),
                                       child: Text(
-                                        message!,
-                                        style: const TextStyle(color: Colors.black45),
-                                      ),
+                                          "Add Addess".toUpperCase(),
+                                  style: TextStyle(fontSize: 14)
+                              ),
+                                    ), style: ButtonStyle(
+                                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                        backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(10),
+                                                side: BorderSide(color: Colors.red)
+                                            )
+                                        )
                                     ),
+                                    )
+
+
+                                    // Center(
+                                    //   child: Text(
+                                    //     message!,
+                                    //     style: const TextStyle(color: Colors.black45),
+                                    //   ),
+                                    // ),
                                   ),
                                 ],
                               ),
                             );
                           } else {
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                                border: Border.all(
-                                    width: 0.5,
-                                    color: Colors.grey),
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(
-                                        5.0) //                 <--- border radius here
+
+
+                            return Column(children: shippingAddressData.map((addressObj) {
+                              String address =
+                              addressObj.address != ""
+                                  ? addressObj.address! + ", "
+                                  : "";
+                              String city = addressObj.city! != ""
+                                  ? addressObj.city! + ", "
+                                  : "";
+                              // String state = shippingAddressList![index].state! != "" ? shippingAddressList![index].state! + ", " : "";
+                              // String pincode = shippingAddressList![index].pincode! != "" ? shippingAddressList![index].pincode! + ", " : "";
+                              String fullAddress = address +
+                                  city +
+                                  addressObj.state! +
+                                  " - " +
+                                  addressObj.pincode!;
+
+                            if(addressObj.setDefault == "1"){
+                              // return  Text("ddd ${e.email}");
+                              isFlag = false;
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[100],
+                                  border: Border.all(
+                                      width: 0.5,
+                                      color: Colors.grey),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(
+                                          5.0) //                 <--- border radius here
+                                  ),
                                 ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Row(
-                                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text(
-                                                  shippingAddressData[index!]
-                                                          .firstName! +
-                                                      " " +
-                                                      shippingAddressData[index!]
-                                                          .lastName!,
-                                                  style: const TextStyle(
-                                                    fontSize: 18,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              Row(
+                                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    addressObj
+                                                            .firstName! +
+                                                        " " +
+                                                        addressObj
+                                                            .lastName!,
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                    ),
                                                   ),
-                                                ),
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey[300],
-                                                    border: Border.all(
-                                                        width: 0.5,
-                                                        color: Colors.grey),
-                                                    borderRadius: const BorderRadius.all(
-                                                        Radius.circular(
-                                                            5.0) //                 <--- border radius here
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.grey[300],
+                                                      border: Border.all(
+                                                          width: 0.5,
+                                                          color: Colors.grey),
+                                                      borderRadius: const BorderRadius.all(
+                                                          Radius.circular(
+                                                              5.0) //                 <--- border radius here
+                                                          ),
+                                                    ),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(4.0),
+                                                      child: Text(
+                                                        addressObj
+                                                            .addressType!,
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
                                                         ),
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(4.0),
-                                                    child: Text(
-                                                      shippingAddressData[index!]
-                                                          .addressType!,
-                                                      style: const TextStyle(
-                                                        fontSize: 16,
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                                // Image.asset(
-                                                //   'assets/images/default.png',
-                                                //   height: 90,
-                                                // ),
-                                              ],
-                                            ),
+                                                  // Image.asset(
+                                                  //   'assets/images/default.png',
+                                                  //   height: 90,
+                                                  // ),
+                                                ],
+                                              ),
 
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 8,
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context).size.width- 130,
-                                          child: Text(
-                                            fullAddress,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+                                          Container(
+                                            width: MediaQuery.of(context).size.width- 130,
+                                            child: Text(
+                                              fullAddress,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                color: Colors.black54,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+                                          Text(
+                                            addressObj.mobile!,
                                             style: const TextStyle(
                                               color: Colors.black54,
                                               fontSize: 16,
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          shippingAddressData[index!].mobile!,
-                                          style: const TextStyle(
-                                            color: Colors.black54,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(width: 10,),
-                                    InkWell(
-                                        onTap: () async {
-                                          final result =  await
-                                          Get.toNamed(Routes.shippingAddress, arguments: true);
+                                        ],
+                                      ),
+                                      const SizedBox(width: 10,),
+                                      InkWell(
+                                          onTap: () async {
+                                            final result =  await
+                                            Get.toNamed(Routes.shippingAddress, arguments: true);
 
-                                          print("Check Out Screen  $result");
-                                          print("Check Out Screen  ${shippingAddressController!.customerId.value}");
-                                          if(result != null){
-                                            await shippingAddressController!.getAddress(shippingAddressController!.customerId.value).then((value) {
-                                              setState(() {
-                                                index = result;
-                                                print("Check Out Screen  index  $index");
-
-                                                // shippingAddressController.getAddressId();
+                                            print("Check Out Screen  $result");
+                                            print("Check Out Screen  ${shippingAddressController!.customerId.value}");
+                                            if(result != null){
+                                              await shippingAddressController!.getAddress(shippingAddressController!.customerId.value).then((value) {
+                                                // setState(() {
+                                                //   index = result;
+                                                //   print("Check Out Screen  index  $index");
+                                                //
+                                                //   // shippingAddressController.getAddressId();
+                                                // });
                                               });
-                                            });
 
-                                           // await shippingAddressController.getAddressId().then((value) {
-                                           //   shippingAddressController.getUser();
-                                           //   print("result checkOutController!.index.toInt() ${index!}");
-                                           // });
-                                            // shippingAddressController.index(result);
+                                             // await shippingAddressController.getAddressId().then((value) {
+                                             //   shippingAddressController.getUser();
+                                             //   print("result checkOutController!.index.toInt() ${index!}");
+                                             // });
+                                              // shippingAddressController.index(result);
 
 
-                                          }
-                                          // Get.toNamed(Routes.shippingAddress, arguments: true);
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[100],
-                                            border: Border.all(
-                                                width: 0.5,
-                                                color: Colors.grey),
-                                            borderRadius: const BorderRadius.all(
-                                                Radius.circular(
-                                                    5.0) //                 <--- border radius here
+                                            }
+                                            // Get.toNamed(Routes.shippingAddress, arguments: true);
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[100],
+                                              border: Border.all(
+                                                  width: 0.5,
+                                                  color: Colors.grey),
+                                              borderRadius: const BorderRadius.all(
+                                                  Radius.circular(
+                                                      5.0) //                 <--- border radius here
+                                              ),
                                             ),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: const Text("Change",
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.redAccent,
-                                                    fontWeight: FontWeight.w400)),
-                                          ),
-                                        )),
-                                    SizedBox(width: 10,),
-                                  ],
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(4.0),
+                                              child: Text("Change",
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.redAccent,
+                                                      fontWeight: FontWeight.w400)),
+                                            ),
+                                          )),
+                                      const SizedBox(width: 10,),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
+
+                            }else{
+
+                              if(isFlag!){
+                                isFlag = false;
+                                return Container(
+                                  // width: 100,
+                                  height: 100,
+                                  child: ListView(
+                                    // physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    children: [
+                                      Container(
+                                          // width: 100,
+                                          height: 100,
+                                          //height: MediaQuery.of(context).size.height,
+                                          alignment: Alignment.center,
+                                          child: ElevatedButton(onPressed: () async {
+                                            final result =  await
+                                            Get.toNamed(Routes.addShippingAddress,arguments: [
+                                              {"editMode": false},
+                                              {"addressObj": ShippingAddress()}
+                                            ]);
+                                            print("Shipping Address Screen  $result");
+                                            if(result != null){
+                                              shippingAddressController!.getUser();
+                                            }
+                                          }, child: Padding(
+                                            padding: const EdgeInsets.all(15.0),
+                                            child: Text(
+                                                "Select Address".toUpperCase(),
+                                                style: TextStyle(fontSize: 14)
+                                            ),
+                                          ), style: ButtonStyle(
+                                              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                              backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(10),
+                                                      side: BorderSide(color: Colors.red)
+                                                  )
+                                              )
+                                          ),
+                                          )
+
+
+                                        // Center(
+                                        //   child: Text(
+                                        //     message!,
+                                        //     style: const TextStyle(color: Colors.black45),
+                                        //   ),
+                                        // ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+
+
+
+                              return Container();
+                            }
+                            }).toList());
+                             shippingAddressData.map((e) {
+                               Text("ddd");
+                            }).toList();
+
+                            // return Container(
+                            //   decoration: BoxDecoration(
+                            //     color: Colors.grey[100],
+                            //     border: Border.all(
+                            //         width: 0.5,
+                            //         color: Colors.grey),
+                            //     borderRadius: const BorderRadius.all(
+                            //         Radius.circular(
+                            //             5.0) //                 <--- border radius here
+                            //     ),
+                            //   ),
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.all(5.0),
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //       children: [
+                            //         Column(
+                            //           mainAxisAlignment: MainAxisAlignment.center,
+                            //           crossAxisAlignment: CrossAxisAlignment.start,
+                            //           children: [
+                            //             Row(
+                            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //               crossAxisAlignment: CrossAxisAlignment.end,
+                            //               children: [
+                            //                 Row(
+                            //                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //                   children: [
+                            //                     Text(
+                            //                       shippingAddressData[index!]
+                            //                               .firstName! +
+                            //                           " " +
+                            //                           shippingAddressData[index!]
+                            //                               .lastName!,
+                            //                       style: const TextStyle(
+                            //                         fontSize: 18,
+                            //                       ),
+                            //                     ),
+                            //                     const SizedBox(
+                            //                       width: 10,
+                            //                     ),
+                            //                     Container(
+                            //                       decoration: BoxDecoration(
+                            //                         color: Colors.grey[300],
+                            //                         border: Border.all(
+                            //                             width: 0.5,
+                            //                             color: Colors.grey),
+                            //                         borderRadius: const BorderRadius.all(
+                            //                             Radius.circular(
+                            //                                 5.0) //                 <--- border radius here
+                            //                             ),
+                            //                       ),
+                            //                       child: Padding(
+                            //                         padding:
+                            //                             const EdgeInsets.all(4.0),
+                            //                         child: Text(
+                            //                           shippingAddressData[index!]
+                            //                               .addressType!,
+                            //                           style: const TextStyle(
+                            //                             fontSize: 16,
+                            //                           ),
+                            //                         ),
+                            //                       ),
+                            //                     ),
+                            //                     // Image.asset(
+                            //                     //   'assets/images/default.png',
+                            //                     //   height: 90,
+                            //                     // ),
+                            //                   ],
+                            //                 ),
+                            //
+                            //               ],
+                            //             ),
+                            //             const SizedBox(
+                            //               height: 8,
+                            //             ),
+                            //             Container(
+                            //               width: MediaQuery.of(context).size.width- 130,
+                            //               child: Text(
+                            //                 fullAddress,
+                            //                 maxLines: 2,
+                            //                 overflow: TextOverflow.ellipsis,
+                            //                 style: const TextStyle(
+                            //                   color: Colors.black54,
+                            //                   fontSize: 16,
+                            //                 ),
+                            //               ),
+                            //             ),
+                            //             const SizedBox(
+                            //               height: 8,
+                            //             ),
+                            //             Text(
+                            //               shippingAddressData[index!].mobile!,
+                            //               style: const TextStyle(
+                            //                 color: Colors.black54,
+                            //                 fontSize: 16,
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //         const SizedBox(width: 10,),
+                            //         InkWell(
+                            //             onTap: () async {
+                            //               final result =  await
+                            //               Get.toNamed(Routes.shippingAddress, arguments: true);
+                            //
+                            //               print("Check Out Screen  $result");
+                            //               print("Check Out Screen  ${shippingAddressController!.customerId.value}");
+                            //               if(result != null){
+                            //                 await shippingAddressController!.getAddress(shippingAddressController!.customerId.value).then((value) {
+                            //                   setState(() {
+                            //                     index = result;
+                            //                     print("Check Out Screen  index  $index");
+                            //
+                            //                     // shippingAddressController.getAddressId();
+                            //                   });
+                            //                 });
+                            //
+                            //                // await shippingAddressController.getAddressId().then((value) {
+                            //                //   shippingAddressController.getUser();
+                            //                //   print("result checkOutController!.index.toInt() ${index!}");
+                            //                // });
+                            //                 // shippingAddressController.index(result);
+                            //
+                            //
+                            //               }
+                            //               // Get.toNamed(Routes.shippingAddress, arguments: true);
+                            //             },
+                            //             child: Container(
+                            //               decoration: BoxDecoration(
+                            //                 color: Colors.grey[100],
+                            //                 border: Border.all(
+                            //                     width: 0.5,
+                            //                     color: Colors.grey),
+                            //                 borderRadius: const BorderRadius.all(
+                            //                     Radius.circular(
+                            //                         5.0) //                 <--- border radius here
+                            //                 ),
+                            //               ),
+                            //               child: const Padding(
+                            //                 padding: EdgeInsets.all(4.0),
+                            //                 child: Text("Change",
+                            //                     style: TextStyle(
+                            //                         fontSize: 16,
+                            //                         color: Colors.redAccent,
+                            //                         fontWeight: FontWeight.w400)),
+                            //               ),
+                            //             )),
+                            //         const SizedBox(width: 10,),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // );
                           }
+
+
+
+
                         } else {
                           return Container(
                               // height: 200,
@@ -382,8 +649,45 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       const SizedBox(
                         height: 10.0,
                       ),
+
+                      const Text("Payment Type",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500)),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      DropdownButtonFormField<String>(
+
+                        decoration: const InputDecoration(
+                            // labelText: 'Payment Type',
+                            hintText: 'Payment Type',
+                            border: OutlineInputBorder()),
+                         value: paymentType,
+                        // hint: Text(
+                        //   'Salutation',
+                        // ),
+                        onChanged: (salutation){
+                          paymentType = salutation!;
+                          print("salutation $salutation");
+                        },
+                        // onChanged: (salutation) =>
+                        //     setState(() => selectedSalutation = salutation),
+                        validator: (value) => value == null ? 'This field is required' : null,
+                        items:
+                        ['Cash On Delivery', 'Online Payment'].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
                       const Text("Order Summary",
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.w500)),
@@ -392,10 +696,12 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       ),
                       // myOrderController.isLoading.value != false
                       //     ?
+
                       Column(
                         children: cartList!.map((element) {
-                          double mrp = double.parse(element.mrp!) *
+                          double mrp = double.parse(element.mrpPrice!) *
                               double.parse(element.quantity!);
+                          double totalQty = double.parse(element.netPrice!) * double.parse(element.quantity!);
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: Column(
@@ -413,7 +719,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                             imagePath! +
                                                 element.productId! +
                                                 "/" +
-                                                element.image!,
+                                                element.coverImg!,
                                             height: 120,
                                             width: 120,
                                             fit: BoxFit.contain,
@@ -497,7 +803,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                                       ),
                                                       Text(
                                                         '\u{20B9} ' +
-                                                            "${double.parse(element.totalAmt!).toStringAsFixed(0)}",
+                                                            "${totalQty.toStringAsFixed(0)}",
                                                         style: const TextStyle(
                                                             fontSize: 16,
                                                             fontWeight:
@@ -552,7 +858,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         height: 10.0,
                       ),
                       const Text("Price Details",
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.w500)),
@@ -583,7 +889,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       final dashCount = (boxWidth / (2 * dashWidth)).floor();
                       return Flex(
                         children: List.generate(dashCount, (_) {
-                          return SizedBox(
+                          return const SizedBox(
                             width: dashWidth,
                             height: 1,
                             child: DecoratedBox(
@@ -656,7 +962,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       // searchOnTab: () {},
       bottomNavigationBar:   Container(
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: Colors.white,
             boxShadow: [
               BoxShadow(
@@ -693,7 +999,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     ),
                     Text(
                       totalAmount.toStringAsFixed(0),
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                       // style: CustomTextStyle.price,
                     )
                   ],
@@ -702,7 +1008,19 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             ),
             InkWell(
               onTap: (){
-                openCheckout();
+                // openCheckout();
+                FocusManager.instance.primaryFocus?.unfocus();
+                print("paymentType $paymentType");
+                if(paymentType == null){
+                  // AlertDialogs.showSimpleDialog("Payment Type","Please select payment type");
+                  // Get.snackbar('Payment Type',"Please select payment type" ,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+                  SnackBarDialog.showSnackbar('Payment Type','Please select payment type');
+                }else if(paymentType == "Cash On Delivery"){
+                  homeController.placeOrder(paymentType!);
+                }else{
+
+                }
+
                 // String stringList = productIds.join(",");
                 // print("product list ${stringList}");
                 // if(productIds.isEmpty){
@@ -733,14 +1051,14 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               },
               child: Container(
                 height: 60,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Colors.redAccent,
                     borderRadius: BorderRadius.only(topRight: Radius.circular(10))),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Center(
                     child: Text(
-                      'Pay Now',
+                      'Place Order',
                       // textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),

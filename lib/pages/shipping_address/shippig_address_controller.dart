@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants/app_costants.dart';
+import '../../models/country_and_state.dart';
 
 class ShippingAddressController extends GetxController {
   final LocalRepositoryInterface localRepositoryInterface;
@@ -30,6 +31,12 @@ class ShippingAddressController extends GetxController {
   RxString customerId = "".obs;
   var checkLoginData = CheckLoginData().obs;
 
+  RxBool isLoadingCountry = false.obs;
+  var countryList = <CountryAndState>[].obs;
+
+  RxBool isLoadingState = true.obs;
+  var stateList = <CountryAndState>[].obs;
+
   RxInt index = 0.obs;
 
   TextEditingController? firstNameTextController;
@@ -44,12 +51,23 @@ class ShippingAddressController extends GetxController {
   TextEditingController? pincodeTextController;
   TextEditingController? countryTextController;
   TextEditingController? addressTypeTextController;
+  int? checkBoxValue;
+  // RxInt checkBoxValue = 0.obs;
+  // bool? checkedValue  = false;
+
+
+
+
+
 
   @override
   void onInit() {
+    stateList([]);
+    print("stateList init");
     CheckInternet.checkInternet();
     getAddressId();
     getUser();
+    getCountry();
     if(editMode){
       print("shippingAddress.firstName ${shippingAddress.firstName}");
       firstNameTextController = TextEditingController(text: shippingAddress.firstName);
@@ -64,7 +82,10 @@ class ShippingAddressController extends GetxController {
       pincodeTextController = TextEditingController(text: shippingAddress.pincode);
       countryTextController = TextEditingController(text: shippingAddress.country);
       addressTypeTextController = TextEditingController(text: shippingAddress.addressType);
+      checkBoxValue=int.parse(shippingAddress.setDefault!);
+      print("controller.checkBoxValue init  ${checkBoxValue}");
     }else{
+
       firstNameTextController = TextEditingController();
       lastNameTextController = TextEditingController();
       emailTextController = TextEditingController();
@@ -77,6 +98,8 @@ class ShippingAddressController extends GetxController {
       pincodeTextController = TextEditingController();
       countryTextController = TextEditingController();
       addressTypeTextController = TextEditingController();
+      checkBoxValue=0;
+
     }
 
     // getAddress("4");
@@ -136,6 +159,32 @@ class ShippingAddressController extends GetxController {
     }
   }
 
+  getCountry() async {
+    try {
+      isLoadingCountry(false);
+      await apiRepositoryInterface.countries().then((value) {
+        print("value ${value[0].name}");
+        countryList(value);
+        isLoadingCountry(true);
+      });
+    } finally {
+      // isLoadingCountry(true);
+    }
+  }
+
+
+  getState(String countryCode) async {
+    try {
+      isLoadingState(false);
+      await apiRepositoryInterface.states(countryCode).then((value) {
+        stateList(value);
+      });
+    } finally {
+      isLoadingState(true);
+    }
+  }
+
+
   Future<MainResponse> addAddress() async {
     print("customerId ${customerId}");
     final firstName = firstNameTextController!.text;
@@ -150,6 +199,8 @@ class ShippingAddressController extends GetxController {
     final pincode = pincodeTextController!.text;
     final country = countryTextController!.text;
     final addressType = addressTypeTextController!.text;
+    String setDefault = checkBoxValue.toString();
+    print("setDefault ${setDefault}");
     try {
       isLoadingAddAddress(true);
       final addAddressResponse = await apiRepositoryInterface.addAddress(AddressRequest(firstName,
@@ -163,6 +214,7 @@ class ShippingAddressController extends GetxController {
           state,
           pincode,
           country,
+          setDefault,
           addressType),customerId.value);
 
       //     .then((value) {
@@ -199,6 +251,7 @@ class ShippingAddressController extends GetxController {
     final pincode = pincodeTextController!.text;
     final country = countryTextController!.text;
     final addressType = addressTypeTextController!.text;
+    String setDefault = checkBoxValue.toString();
     try {
       isLoadingAddAddress(true);
       final editAddressResponse = await apiRepositoryInterface.editAddress(AddressRequest(firstName,
@@ -212,7 +265,8 @@ class ShippingAddressController extends GetxController {
           state,
           pincode,
           country,
-          addressType),addressId);
+          setDefault,
+          addressType),addressId,customerId.value);
 
       //     .then((value) {
       // return  addAddressObj(value);
@@ -253,6 +307,30 @@ class ShippingAddressController extends GetxController {
       }else{
         isLoadingAddAddress(false);
         return deleteAddressResponse;
+      }
+    } finally {
+      isLoadingAddAddress(false);
+    }
+  }
+
+  Future<MainResponse> changeDeliveryAddress(String addressId) async {
+
+    try {
+      isLoadingAddAddress(true);
+      final changeDeliveryAddress = await apiRepositoryInterface.changeDeliveryAddress(customerId.value,addressId);
+
+
+
+      print("changeDeliveryAddress ${changeDeliveryAddress!.message}");
+      print("changeDeliveryAddress ${changeDeliveryAddress.status}");
+      if (changeDeliveryAddress.data != null){
+        // print("loginResponse ${addAddressResponse.data![0]}");
+
+        //  await localRepositoryInterface.saveUser(addAddressResponse.data![0]);
+        return changeDeliveryAddress;
+      }else{
+        isLoadingAddAddress(false);
+        return changeDeliveryAddress;
       }
     } finally {
       isLoadingAddAddress(false);

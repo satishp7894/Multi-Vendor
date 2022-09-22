@@ -11,6 +11,7 @@ class AddressRequest {
     this.state,
     this.pincode,
     this.country,
+      this.setDefault,
     this.addressType,
   );
 
@@ -25,5 +26,6 @@ class AddressRequest {
   final String? state;
   final String? pincode;
   final String? country;
+  final String? setDefault;
   final String? addressType;
 }

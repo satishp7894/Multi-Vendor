@@ -4,7 +4,7 @@ class OrderHistory {
   String? customerId;
   String? totalQuantity;
   String? totalAmount;
-  int? gstAmount;
+  String? gstAmount;
   int? shipAmount;
   int? grandTotal;
   String? billId;

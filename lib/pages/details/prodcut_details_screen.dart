@@ -21,6 +21,9 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:share/share.dart';
 
 import '../../config/theme.dart';
+import '../../models/customer.dart';
+import '../../utils/alert_dialog.dart';
+import '../profile/profile_controller.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final Products? products;
@@ -37,6 +40,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final homecontroller = Get.put(HomeController(
       localRepositoryInterface: Get.find(),
       apiRepositoryInterface: Get.find()));
+  final profileController = Get.put(ProfileController(
+      apiRepositoryInterface: Get.find(),
+      customer: Customer(),
+      localRepositoryInterface: Get.find()));
 
   @override
   void initState() {
@@ -129,6 +136,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
                   MainResponse? mainResponse = productDetailsController!.productDetailObj.value;
                   List<ProductDetail>? productDetailData = [];
+                  List<ProductElement>? productElementDate = [];
 
                   // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
 
@@ -139,6 +147,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     print("productDetailData[0].description ${productDetailData[0].description}");
                   }
 
+                  if(mainResponse.productElement != null){
+                    mainResponse.productElement!.forEach((v) {
+                      productElementDate.add( ProductElement.fromJson(v));
+                    });
+                    print("productDetailData[0].value ${productElementDate[0].value}");
+                  }
 
                   String? imageUrl = mainResponse.imageUrl ?? "";
                   String? message = mainResponse.message ?? AppConstants.noInternetConn;
@@ -869,10 +883,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
       bottomNavigationBar: AddToCard(
        // product: args.product,
+       //  customerId: profileController,
         onChanged: () {
           print("addToCard ${products!.productId!}");
+          if(profileController.customerId.value == ""){
+            AlertDialogs.showLoginRequiredDialog();
+          }else{
+            homecontroller.addToCard(products!.productId!,"1");
+          }
 
-          homecontroller.addToCard(products!.productId!,"1");
+
         },
       ),
     );

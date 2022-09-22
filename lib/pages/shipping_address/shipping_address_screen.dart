@@ -37,111 +37,121 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
 
-      // backgroundColor: Colors.green.withOpacity(0.1),
-      // appBar: AppBar(
-      //   actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
-      //   elevation: 0,
-      // ),
+        Get.back(result: "back");
 
-      appBar: AppBar(
-        elevation: 5,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Style.Colors.appColor,
-            size: 30,
+        return true;
+      },
+      child: Scaffold(
+
+        // backgroundColor: Colors.green.withOpacity(0.1),
+        // appBar: AppBar(
+        //   actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
+        //   elevation: 0,
+        // ),
+
+        appBar: AppBar(
+          elevation: 5,
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Style.Colors.appColor,
+              size: 30,
+            ),
+            onPressed: () =>  Get.back(result: "back"),
           ),
-          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+          title: Text("${AppConstants.shippingAddress}", style: TextStyle(fontSize: 20,color: Style.Colors.appColor)),
         ),
-        title: Text("${AppConstants.shippingAddress}", style: TextStyle(fontSize: 20,color: Style.Colors.appColor)),
-      ),
-      body:RefreshIndicator(
-        onRefresh: () {
-          CheckInternet.checkInternet();
-          // profileController.customerProfile();
-          return shippingAddressController.getUser();
-        },
-        child:
-        Obx(() {
-          if (shippingAddressController.isLoadingGetAddress.value == true) {
-            MainResponse? mainResponse = shippingAddressController.getAddressObj.value;
-            List<ShippingAddress>? shippingAddressData = [];
-            if(mainResponse.data != null){
-              mainResponse.data!.forEach((v) {
-                shippingAddressData.add( ShippingAddress.fromJson(v));
-              });
-            }
-            // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
+        body:RefreshIndicator(
+          onRefresh: () {
+            CheckInternet.checkInternet();
+            // profileController.customerProfile();
+            return shippingAddressController.getUser();
+          },
+          child:
+          Obx(() {
+
+            print("shippingAddressController.isLoadingGetAddress.value ${shippingAddressController.isLoadingGetAddress.value}");
+            if (shippingAddressController.isLoadingGetAddress.value == true) {
+              MainResponse? mainResponse = shippingAddressController.getAddressObj.value;
+              List<ShippingAddress>? shippingAddressData = [];
+              if(mainResponse.data != null){
+                mainResponse.data!.forEach((v) {
+                  shippingAddressData.add( ShippingAddress.fromJson(v));
+                });
+              }
+              // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
 
 
-            String? imageUrl = mainResponse.imageUrl ?? "";
-            String? message = mainResponse.message ?? AppConstants.noInternetConn;
-            if (shippingAddressData.isEmpty) {
-              return Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: ListView(
-                  // physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height-100,
-                      //height: MediaQuery.of(context).size.height,
-                      alignment: Alignment.center,
-                      child: Center(
-                        child: Text(
-                          message!,
-                          style: TextStyle(color: Colors.black45),
+              String? imageUrl = mainResponse.imageUrl ?? "";
+              String? message = mainResponse.message ?? AppConstants.noInternetConn;
+              if (shippingAddressData.isEmpty) {
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: ListView(
+                    // physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height-100,
+                        //height: MediaQuery.of(context).size.height,
+                        alignment: Alignment.center,
+                        child: Center(
+                          child: Text(
+                            message!,
+                            style: TextStyle(color: Colors.black45),
+                          ),
                         ),
                       ),
-                    ),
 
-                  ],
-                ),
-              );
-            }else{
-             return ListView(
-               // shrinkWrap: true,
-               children: [
-                 SingleChildScrollView(child: AddressListTile(shippingAddressList: shippingAddressData,isBool: isBool!,)),
-               ],
-             );
-            }
-
-          } else {
-            return  Container(
-              // height: 200,
-                child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor)));
-
-          }
-        }),
-      ),
-
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(right: 8.0,bottom: 8.0),
-          child: new FloatingActionButton(
-              elevation: 0.0,
-              child: new Icon(Icons.add),
-              backgroundColor:Style.Colors.appColor,
-              onPressed: () async {
-                final result =  await
-                Get.toNamed(Routes.addShippingAddress,arguments: [
-                  {"editMode": false},
-                  {"addressObj": ShippingAddress()}
-                ]);
-                print("Shipping Address Screen  $result");
-                if(result != null){
-                  shippingAddressController.getAddress(shippingAddressController.customerId.value);
-                }
+                    ],
+                  ),
+                );
+              }else{
+               return ListView(
+                 // shrinkWrap: true,
+                 children: [
+                   SingleChildScrollView(child: AddressListTile(shippingAddressList: shippingAddressData,isBool: isBool!,)),
+                 ],
+               );
               }
-          ),
-        )
+
+            } else {
+              return  Container(
+                // height: 200,
+                  child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor)));
+
+            }
+          }),
+        ),
+
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(right: 8.0,bottom: 8.0),
+            child: new FloatingActionButton(
+                elevation: 0.0,
+                child: new Icon(Icons.add),
+                backgroundColor:Style.Colors.appColor,
+                onPressed: () async {
+                  final result =  await
+                  Get.toNamed(Routes.addShippingAddress,arguments: [
+                    {"editMode": false},
+                    {"addressObj": ShippingAddress()}
+                  ]);
+                  print("Shipping Address Screen  $result");
+                  if(result != null){
+                    shippingAddressController.getAddress(shippingAddressController.customerId.value);
+                  }
+                }
+            ),
+          )
 
 
+      ),
     );
   }
 }

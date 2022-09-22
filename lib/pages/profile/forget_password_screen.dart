@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:eshoperapp/style/theme.dart' as Style;
 
+import '../../utils/snackbar_dialog.dart';
+
 class ForgetPasswordScreen extends GetWidget<ProfileController> {
   const ForgetPasswordScreen({Key? key}) : super(key: key);
 
@@ -21,12 +23,14 @@ class ForgetPasswordScreen extends GetWidget<ProfileController> {
       controller.emailTextController!.clear();
       controller.isUserDataRefresh(true);
       controller.logout();
-      Get.snackbar('Success', forgetPassword.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      // Get.snackbar('Success', forgetPassword.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Success',forgetPassword.message!);
       Get.offNamed(Routes.login);
     } else {
       // controller.emailTextController!.clear();
       // Get.offNamed(Routes.login);
-      Get.snackbar('Error', forgetPassword.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      // Get.snackbar('Error', forgetPassword.message!,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
+      SnackBarDialog.showSnackbar('Error',forgetPassword.message!);
     }
   }
 
