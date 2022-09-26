@@ -1,3 +1,4 @@
+import 'package:eshoperapp/config/theme.dart';
 import 'package:eshoperapp/constants/app_costants.dart';
 import 'package:eshoperapp/models/main_response.dart';
 import 'package:eshoperapp/models/shipping_address.dart';
@@ -8,6 +9,7 @@ import 'package:eshoperapp/utils/check_internet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:eshoperapp/style/theme.dart' as Style;
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -56,14 +58,16 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
           elevation: 5,
           backgroundColor: Colors.white,
           leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Style.Colors.appColor,
-              size: 30,
-            ),
+            icon: Image.asset("assets/img/arrow_left.png",fit: BoxFit.fill,),
+
+            // Icon(
+            //   Icons.arrow_back,
+            //   color: Style.Colors.appColor,
+            //   size: 30,
+            // ),
             onPressed: () =>  Get.back(result: "back"),
           ),
-          title: Text("${AppConstants.shippingAddress}", style: TextStyle(fontSize: 20,color: Style.Colors.appColor)),
+          title: Text("${AppConstants.shippingAddress}", style: GoogleFonts.inriaSans(textStyle: TextStyle(color:AppColors.appText,fontSize: 20,fontWeight: FontWeight.w700 ))),
         ),
         body:RefreshIndicator(
           onRefresh: () {
@@ -116,7 +120,34 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                return ListView(
                  // shrinkWrap: true,
                  children: [
-                   SingleChildScrollView(child: AddressListTile(shippingAddressList: shippingAddressData,isBool: isBool!,)),
+                   SingleChildScrollView(child: Column(
+                     mainAxisAlignment: MainAxisAlignment.start,
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                     children: [
+                       SizedBox(height: 20,),
+                        InkWell(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text("+ ADD NEW ADDRESS",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.appRed,fontWeight: FontWeight.w700,fontSize: 16)),),
+                          ),
+                          onTap: () async {
+                            final result =  await
+                            Get.toNamed(Routes.addShippingAddress,arguments: [
+                              {"editMode": false},
+                              {"addressObj": ShippingAddress()}
+                            ]);
+                            print("Shipping Address Screen  $result");
+                            if(result != null){
+                              shippingAddressController.getAddress(shippingAddressController.customerId.value);
+                            }
+                          },
+                        ),
+                       Padding(
+                         padding: const EdgeInsets.only(left: 12.0,right: 12),
+                         child: AddressListTile(shippingAddressList: shippingAddressData,isBool: isBool!,),
+                       ),
+                     ],
+                   )),
                  ],
                );
               }
@@ -130,25 +161,25 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
           }),
         ),
 
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(right: 8.0,bottom: 8.0),
-            child: new FloatingActionButton(
-                elevation: 0.0,
-                child: new Icon(Icons.add),
-                backgroundColor:Style.Colors.appColor,
-                onPressed: () async {
-                  final result =  await
-                  Get.toNamed(Routes.addShippingAddress,arguments: [
-                    {"editMode": false},
-                    {"addressObj": ShippingAddress()}
-                  ]);
-                  print("Shipping Address Screen  $result");
-                  if(result != null){
-                    shippingAddressController.getAddress(shippingAddressController.customerId.value);
-                  }
-                }
-            ),
-          )
+          // floatingActionButton: Padding(
+          //   padding: const EdgeInsets.only(right: 8.0,bottom: 8.0),
+          //   child: new FloatingActionButton(
+          //       elevation: 0.0,
+          //       child: new Icon(Icons.add),
+          //       backgroundColor:Style.Colors.appColor,
+          //       onPressed: () async {
+          //         final result =  await
+          //         Get.toNamed(Routes.addShippingAddress,arguments: [
+          //           {"editMode": false},
+          //           {"addressObj": ShippingAddress()}
+          //         ]);
+          //         print("Shipping Address Screen  $result");
+          //         if(result != null){
+          //           shippingAddressController.getAddress(shippingAddressController.customerId.value);
+          //         }
+          //       }
+          //   ),
+          // )
 
 
       ),

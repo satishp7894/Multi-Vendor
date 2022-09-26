@@ -26,12 +26,15 @@ import 'package:eshoperapp/pages/profile/change_password_screen.dart';
 import 'package:eshoperapp/pages/profile/edit_profile_screen.dart';
 import 'package:eshoperapp/pages/profile/forget_password_screen.dart';
 import 'package:eshoperapp/pages/profile/profile_binding.dart';
+import 'package:eshoperapp/pages/setting/setting_screen.dart';
 import 'package:eshoperapp/pages/shipping_address/add_shipping_address_screen.dart';
 import 'package:eshoperapp/pages/shipping_address/shipping_address_screen.dart';
 import 'package:eshoperapp/pages/shipping_address/shipping_address_binding.dart';
 import 'package:eshoperapp/pages/splash/splash_binding.dart';
 import 'package:eshoperapp/pages/splash/splash_screen.dart';
 import 'package:get/get.dart';
+
+import '../pages/setting/setting_binding.dart';
 
 class Routes {
   static const String splash = '/splash';
@@ -53,6 +56,7 @@ class Routes {
   static const String checkAccount = '/checkAccount';
   static const String sendCodeScreen = '/sendCodeScreen';
   static const String createNewPassword = '/createNewPassword';
+  static const String setting = '/setting';
 }
 
 class Pages {
@@ -65,6 +69,11 @@ class Pages {
       name: Routes.login,
       page: () => LoginScreen(),
       bindings: [LoginBinding(), MainBinding()],
+    ),
+    GetPage(
+      name: Routes.setting,
+      page: () => SettingsScreen(),
+      bindings: [SettingBinding()],
     ),
     GetPage(
         name: Routes.landingHome,

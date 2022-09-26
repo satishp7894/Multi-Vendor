@@ -30,6 +30,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     // print("customer ${customer.customerName}");
     return Scaffold(
+      appBar: AppBar(
+        elevation: 1,
+        leading: IconButton(
+          icon: Image.asset("assets/img/arrow_left.png",fit: BoxFit.fill,),
+
+          // Icon(
+          //   Icons.arrow_back,
+          //   color: Style.Colors.appColor,
+          //   size: 30,
+          // ),
+          onPressed: () =>  Get.back(),
+        ),
+      ),
       body: SafeArea(
         child: Container(
           alignment: Alignment.center,

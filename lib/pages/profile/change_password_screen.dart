@@ -9,7 +9,9 @@ import 'package:eshoperapp/routes/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:eshoperapp/style/theme.dart' as Style;
+import 'package:google_fonts/google_fonts.dart';
 
+import '../../config/theme.dart';
 import '../../utils/snackbar_dialog.dart';
 
 
@@ -55,29 +57,43 @@ class ChangePasswordScreen extends GetWidget<ProfileController> {
         return true;
       },
       child: Scaffold(
-
         appBar: AppBar(
-          elevation: 5,
+          elevation: 1,
           backgroundColor: Colors.white,
           leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Style.Colors.appColor,
-              size: 30,
-            ),
-            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+            icon: Image.asset("assets/img/arrow_left.png",fit: BoxFit.fill,),
+
+            // Icon(
+            //   Icons.arrow_back,
+            //   color: Style.Colors.appColor,
+            //   size: 30,
+            // ),
+            onPressed: () =>  Get.back(),
           ),
-          title: const Text("${AppConstants.changePassword}", style: TextStyle(fontSize: 20,color: Style.Colors.appColor)),
+          title: Text("${AppConstants.changePassword}", style: GoogleFonts.inriaSans(textStyle: TextStyle(color:AppColors.appText,fontSize: 20,fontWeight: FontWeight.w700 ))),
         ),
+        // appBar: AppBar(
+        //   elevation: 5,
+        //   backgroundColor: Colors.white,
+        //   leading: IconButton(
+        //     icon: Icon(
+        //       Icons.arrow_back,
+        //       color: Style.Colors.appColor,
+        //       size: 30,
+        //     ),
+        //     onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+        //   ),
+        //   title: const Text("${AppConstants.changePassword}", style: TextStyle(fontSize: 20,color: Style.Colors.appColor)),
+        // ),
         body: SafeArea(
           child: Container(
-            alignment: Alignment.center,
+            // alignment: Alignment.center,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  // crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     ChangePassForm(
                       currentPassword: controller.currentPasswordTexcontroller,

@@ -3,6 +3,8 @@ import 'package:eshoperapp/widgets/default_btn.dart';
 import 'package:eshoperapp/widgets/default_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:eshoperapp/routes/navigation.dart';
 
 import '../profile_controller.dart';
 
@@ -28,7 +30,7 @@ class EditForm extends StatelessWidget {
   final controller = Get.find<ProfileController>();
 
 
-  Widget buildSignType() {
+  Widget buildSignType(BuildContext context) {
 
     return Form(
       key: _formKey,
@@ -38,7 +40,7 @@ class EditForm extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DefaultLogo(),
+            // DefaultLogo(),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +113,8 @@ class EditForm extends StatelessWidget {
                         decoration: InputDecoration(
                             labelText: 'Email',
                             hintText: 'Email ',
-                            border: OutlineInputBorder()),
+                            border: OutlineInputBorder()
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -183,6 +186,34 @@ class EditForm extends StatelessWidget {
                   ],
                 )
               ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            InkWell(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15.0,bottom: 15.0),
+                  child: Center(child: Text("CHANGE PASSWORD", style: GoogleFonts.inriaSans(
+                      textStyle: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.appText,
+                          fontWeight: FontWeight.w700)),)),
+                ),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.appText1, width: 1),
+                  // color: Colors.grey[100],
+                  borderRadius: const BorderRadius.all(Radius.circular(
+                      5.0) //                 <--- border radius here
+                  ),
+                ),
+              ),
+              onTap: (){
+                    Get.toNamed(
+                      Routes.changePassword,
+                    );
+              },
             ),
             SizedBox(
               height: 20,
@@ -278,6 +309,6 @@ class EditForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return buildSignType();
+    return buildSignType(context);
   }
 }

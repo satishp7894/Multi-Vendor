@@ -3,6 +3,7 @@ class AppConstants{
   static const String? categoryId = "categoryId";
   static const String? categoryName = "categoryName";
   static const String? shippingAddress = "Shipping Address";
+  static const String? setting = "SETTINGS";
   static const String? addAddress = "Add Address";
   static const String? editAddress = "Edit Address";
   static const String? changePassword = "Change Password";

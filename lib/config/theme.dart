@@ -21,6 +21,13 @@ class AppSizes {
 }
 
 class AppColors {
+  static const appRed = Color(0xFFEE4B4C);
+  static const appText = Color(0xFF1D2D3D);
+  static const appText1 = Color(0xFF898989);
+  static const toggleBg = Color(0xFFD9D9D9);
+  static const validationBg = Color.fromRGBO(238, 75, 76, 0.2);
+  static const validationBg1 = Color.fromRGBO(137, 137, 137, 0.2);
+  static const appLine = Color(0xFF898989);
   static const red = Color(0xFFDB3022);
   static const black = Color(0xFF222222);
   static const lightGray = Color(0xFF9B9B9B);

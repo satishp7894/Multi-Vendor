@@ -13,4 +13,23 @@ class Validation{
       return null;
     }
   }
+
+  static  bool validateStructure(String value){
+    String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = new RegExp(pattern);
+    return regExp.hasMatch(value);
+  }
+
+ static  bool validateNumeric(String value){
+   String  pattern = r'^([0-9])';
+   RegExp regExp = new RegExp(pattern);
+   return regExp.hasMatch(value);
+ }
+
+ static  bool validateUpperCase(String value){
+   String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~])';
+   RegExp regExp = new RegExp(pattern);
+   return regExp.hasMatch(value);
+ }
 }
+
