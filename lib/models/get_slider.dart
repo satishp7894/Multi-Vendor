@@ -34,7 +34,7 @@ class GetSliderData {
   String? sliderId;
   String? sliderImage;
   String? sliderTitle;
-  Null? shortDescription;
+  String? shortDescription;
   String? position;
 
   GetSliderData(

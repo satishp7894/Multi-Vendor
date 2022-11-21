@@ -137,6 +137,7 @@ class ShippingAddressController extends GetxController {
         }else{
           customerId("");
           checkLoginData();
+          getAddress("3");
         }
       });
     } on Exception {

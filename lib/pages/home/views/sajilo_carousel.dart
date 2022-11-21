@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:eshoperapp/config/theme.dart';
 import 'package:eshoperapp/models/get_slider.dart';
 import 'package:eshoperapp/package/carousel.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +14,12 @@ class SajiloCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: AppColors.red,
         child: CarouselSlider(
             options: CarouselOptions(
               autoPlay: true,
               // enlargeCenterPage: false,
+              enlargeCenterPage: true,
               height: 200.0,
               viewportFraction: 1.0,
             ),
@@ -37,14 +40,14 @@ class SajiloCarousel extends StatelessWidget {
         },
         child: Container(
           padding: EdgeInsets.only(
-              left: 5.0, right: 5.0, top: 10.0, bottom: 5.0),
+              left: 0.0, right: 0.0, top: 2.0, bottom: 2.0),
           child: Stack(
             children: <Widget>[
               sliderObj.sliderImage! == null
                   ? Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    shape: BoxShape.rectangle,
+                    // borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    // shape: BoxShape.rectangle,
                     image: DecorationImage(
                         fit: BoxFit.fill,
                         image: AssetImage("assets/img/placeholder.jpg")
@@ -56,8 +59,8 @@ class SajiloCarousel extends StatelessWidget {
                   ))
                   : Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    shape: BoxShape.rectangle,
+                    // borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    // shape: BoxShape.rectangle,
                     image: DecorationImage(
                         fit: BoxFit.fill,
                         image:  NetworkImage(
@@ -70,37 +73,37 @@ class SajiloCarousel extends StatelessWidget {
                       // : NetworkImage(article.img)
                     ),
                   )),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      stops: [
-                        0.1,
-                        0.9
-                      ],
-                      colors: [
-                        Colors.black.withOpacity(0.9),
-                        Colors.white.withOpacity(0.0)
-                      ]),
-                ),
-              ),
-              Positioned(
-                  bottom: 8.0,
-                  child: Container(
-                    padding: EdgeInsets.only(left: 8.0, right: 8.0),
-                    // width: 250.0,
-                    width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      sliderObj.sliderTitle!,
-                      style: TextStyle(
-                          // height: 1.5,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12.0),
-                    ),
-                  )),
+              // Container(
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              //     gradient: LinearGradient(
+              //         begin: Alignment.bottomCenter,
+              //         end: Alignment.topCenter,
+              //         stops: [
+              //           0.1,
+              //           0.9
+              //         ],
+              //         colors: [
+              //           Colors.black.withOpacity(0.9),
+              //           Colors.white.withOpacity(0.0)
+              //         ]),
+              //   ),
+              // ),
+              // Positioned(
+              //     bottom: 8.0,
+              //     child: Container(
+              //       padding: EdgeInsets.only(left: 8.0, right: 8.0),
+              //       // width: 250.0,
+              //       width: MediaQuery.of(context).size.width,
+              //       child: Text(
+              //         sliderObj.sliderTitle!,
+              //         style: TextStyle(
+              //             // height: 1.5,
+              //             color: Colors.white,
+              //             fontWeight: FontWeight.bold,
+              //             fontSize: 12.0),
+              //       ),
+              //     )),
               // Positioned(
               //     bottom: 10.0,
               //     left: 10.0,

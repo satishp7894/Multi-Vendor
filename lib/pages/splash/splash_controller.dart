@@ -19,7 +19,9 @@ class SplashController extends GetxController {
       const Duration(seconds: 3),
     );
 
-    Get.offNamed(Routes.landingHome);
+    Get.offNamed(Routes.onBoarding1,
+        // transition: Transition.rightToLeft,duration: const Duration(milliseconds: 3000)
+    );
     // final token = await localRepositoryInterface.getUser();
     // if (token != null) {
     //   Get.offNamed(Routes.landingHome);

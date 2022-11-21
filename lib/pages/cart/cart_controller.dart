@@ -26,6 +26,27 @@ class CartController extends GetxController {
   ScrollController scrollController = ScrollController();
   RxBool isVisible = true.obs;
 
+  List<Carts> cartList = [
+    Carts(productId: "1",productName: "Gap",coverImg: "assets/img/gap.png",description: "Red Women’s T-Shirt With Logo",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+    Carts(productId: "2",productName: "Roadster",coverImg: "assets/img/roadster.png",description: "Black Casual Cotton Shirt",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+
+    // Carts(productId: "3",productName: "Gap",coverImg: "assets/img/gap.png",description: "Red Women’s T-Shirt With Logo",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+    // Carts(productId: "4",productName: "Roadster",coverImg: "assets/img/roadster.png",description: "Black Casual Cotton Shirt",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+    // Carts(productId: "5",productName: "Gap",coverImg: "assets/img/gap.png",description: "Red Women’s T-Shirt With Logo",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+    // Carts(productId: "6",productName: "Roadster",coverImg: "assets/img/roadster.png",description: "Black Casual Cotton Shirt",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+    // Carts(productId: "7",productName: "Gap",coverImg: "assets/img/gap.png",description: "Red Women’s T-Shirt With Logo",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+    // Carts(productId: "8",productName: "Roadster",coverImg: "assets/img/roadster.png",description: "Black Casual Cotton Shirt",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+    // Carts(productId: "9",productName: "Gap",coverImg: "assets/img/gap.png",description: "Red Women’s T-Shirt With Logo",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+    // Carts(productId: "10",productName: "Roadster",coverImg: "assets/img/roadster.png",description: "Black Casual Cotton Shirt",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+    // Carts(productId: "11",productName: "Gap",coverImg: "assets/img/gap.png",description: "Red Women’s T-Shirt With Logo",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+    // Carts(productId: "12",productName: "Roadster",coverImg: "assets/img/roadster.png",description: "Black Casual Cotton Shirt",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+    // Carts(productId: "13",productName: "Gap",coverImg: "assets/img/gap.png",description: "Red Women’s T-Shirt With Logo",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+    // Carts(productId: "14",productName: "Roadster",coverImg: "assets/img/roadster.png",description: "Black Casual Cotton Shirt",netPrice: "549",mrpPrice: "999",discount: "45% OFF",quantity: "1"),
+    //
+
+
+  ];
+
   @override
   void onInit() {
     super.onInit();

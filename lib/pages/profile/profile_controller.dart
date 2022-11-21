@@ -40,6 +40,12 @@ class ProfileController extends GetxController {
   TextEditingController? genderTexcontroller;
   TextEditingController? mobileTextController;
 
+
+  TextEditingController? birthdateTexcontroller;
+  TextEditingController? locationTextController;
+  TextEditingController? numberTexcontroller;
+  TextEditingController? hintTextController;
+
   TextEditingController? currentPasswordTexcontroller;
   TextEditingController? newPasswordTexcontroller;
   TextEditingController? confirmPasswordTexcontroller;
@@ -55,6 +61,10 @@ class ProfileController extends GetxController {
       genderTexcontroller = TextEditingController(text: customer!.gender);
       nameTexcontroller = TextEditingController(text: customer!.customerName);
       mobileTextController = TextEditingController(text: customer!.mobile);
+      birthdateTexcontroller = TextEditingController();
+      locationTextController = TextEditingController();
+      numberTexcontroller = TextEditingController();
+      hintTextController = TextEditingController();
       // passwordTextController = TextEditingController(text: customer!.customerName);
       // passwordTextController = TextEditingController(text: customer!.customerName);
       // passwordTextController = TextEditingController(text: customer!.customerName);
@@ -63,6 +73,10 @@ class ProfileController extends GetxController {
       genderTexcontroller = TextEditingController();
       nameTexcontroller = TextEditingController();
       mobileTextController = TextEditingController();
+      birthdateTexcontroller = TextEditingController();
+      locationTextController = TextEditingController();
+      numberTexcontroller = TextEditingController();
+      hintTextController = TextEditingController();
     }
 
     // customerProfile();

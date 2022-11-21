@@ -11,7 +11,7 @@ class DefaultLogo extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Image.asset(
-              'assets/logos/logo.png',
+              'assets/logos/app_logo.png',
               height: 100,
             ),
           )),

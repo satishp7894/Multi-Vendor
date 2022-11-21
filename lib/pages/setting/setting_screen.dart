@@ -13,6 +13,8 @@ import 'package:eshoperapp/style/theme.dart' as Style;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../widgets/app_bar_title.dart';
+
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -36,69 +38,87 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.ratingText,
 
 
-
-      appBar: AppBar(
-        elevation: 5,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Image.asset("assets/img/arrow_left.png",fit: BoxFit.fill,),
-
-          // Icon(
-          //   Icons.arrow_back,
-          //   color: Style.Colors.appColor,
-          //   size: 30,
-          // ),
-          onPressed: () =>  Get.back(result: "back"),
-        ),
-        title: Text("${AppConstants.setting}", style: GoogleFonts.inriaSans(textStyle: TextStyle(color:AppColors.appText,fontSize: 20,fontWeight: FontWeight.w700 ))),
-      ),
-      body:Padding(
-        padding: const EdgeInsets.only(left: 15.0,right: 15.0,top: 20.0),
+      // appBar: AppBar(
+      //   elevation: 5,
+      //   backgroundColor: Colors.white,
+      //   leading: IconButton(
+      //     icon: Image.asset("assets/img/arrow_left.png",fit: BoxFit.fill,height: 20,width: 22,),
+      //
+      //     // Icon(
+      //     //   Icons.arrow_back,
+      //     //   color: Style.Colors.appColor,
+      //     //   size: 30,
+      //     // ),
+      //     onPressed: () =>  Get.back(),
+      //   ),
+      //   title: Text("${AppConstants.setting}", style: GoogleFonts.inriaSans(textStyle: TextStyle(color:AppColors.appText,fontSize: 20,fontWeight: FontWeight.w700 ))),
+      // ),
+      body:SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Notifications",style: GoogleFonts.inriaSans(textStyle: TextStyle(fontSize: 20,color: AppColors.appText))),
-              // Switch(
-              //   onChanged: toggleSwitch,
-              //   value: isSwitched,
-              //   activeColor: Colors.white,
-              //   activeTrackColor: AppColors.appRed,
-              //   inactiveThumbColor: Colors.white,
-              //   inactiveTrackColor: Colors.grey,
-              // )
+            AppbarTitleWidget(title: AppConstants.setting,flag: false,),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 16,),
+                Container(
+                  color: AppColors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Notifications",style: GoogleFonts.inriaSans(textStyle: TextStyle(fontSize: 14,color: AppColors.black))),
+                        // Switch(
+                        //   onChanged: toggleSwitch,
+                        //   value: isSwitched,
+                        //   activeColor: Colors.white,
+                        //   activeTrackColor: AppColors.appRed,
+                        //   inactiveThumbColor: Colors.white,
+                        //   inactiveTrackColor: Colors.grey,
+                        // )
 
-              FlutterSwitch(
-                value: isSwitched,
-                height: 25.0,
-                width: 50.0,
-                activeColor: AppColors.appRed,
-                inactiveColor: AppColors.toggleBg,
-                toggleSize: 22.0,
-                padding: 1.0,
-                borderRadius: 20.0,
-                onToggle: (val) {
-                  setState(() {
-                    isSwitched = val;
-                  });
-                },
-              ),
-              // Container(
-              //   alignment: Alignment.centerRight,
-              //   child: Text(
-              //     "Value: $isSwitched",
-              //   ),
-              // ),
-            ],
-          ),
-          SizedBox(height: 20,),
-          Text("Delete Account",style: GoogleFonts.inriaSans(textStyle: TextStyle(fontSize: 20,color: AppColors.appText)))
-        ],),
+                        FlutterSwitch(
+                          value: isSwitched,
+                          height: 24.0,
+                          width: 48.0,
+                          activeColor: AppColors.appRed,
+                          inactiveColor: AppColors.toggleBg,
+                          toggleSize: 17.0,
+                          padding: 3.0,
+                          borderRadius: 20.0,
+                          onToggle: (val) {
+                            setState(() {
+                              isSwitched = val;
+                            });
+                          },
+                        ),
+                        // Container(
+                        //   alignment: Alignment.centerRight,
+                        //   child: Text(
+                        //     "Value: $isSwitched",
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 1,),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                      color: AppColors.white,child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text("Delete Account",style: GoogleFonts.inriaSans(textStyle: TextStyle(fontSize: 14,color: AppColors.black))),
+                      ))
+              ],),
+            ),
+          ],
+        ),
       ),
 
 

@@ -1,3 +1,4 @@
+import 'package:eshoperapp/config/theme.dart';
 import 'package:eshoperapp/constants/app_costants.dart';
 import 'package:eshoperapp/models/carts.dart';
 import 'package:eshoperapp/models/main_response.dart';
@@ -14,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:eshoperapp/style/theme.dart' as Style;
+import 'package:google_fonts/google_fonts.dart';
+import '../../routes/navigation.dart';
 import '../details/prodcut_details_screen.dart';
 import 'cart_controller.dart';
 
@@ -47,387 +50,665 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SajiloDokanScaffold(
-        title: "Shopping Cart",
-        searchOnTab: (){
+    return  Scaffold(
 
-        },
-        leading: widget.leading,
-        body: RefreshIndicator(
-          onRefresh: () async {
-            CheckInternet.checkInternet();
-            cardController.homecontroller.getSlider();
-            cardController.homecontroller.getBrand();
-            cardController.homecontroller.bestSellerProduct();
-            cardController.homecontroller.allProducts();
-            await cardController.homecontroller.loadUser(false);
-            return cardController.homecontroller.newProducts(true);
-          },
-          child:
-          Scaffold(
-              // appBar: AppBar(
-              //   centerTitle: true,
-              //   elevation: 0,
-              //   title: Text(
-              //     'Shopping Cart',
-              //     style: TextStyle(color: Colors.black),
-              //   ),
-              // ),
-              backgroundColor: Colors.grey.withOpacity(0.1),
-              body:
+      // appBar: AppBar(
+      //   elevation: 1,
+      //   backgroundColor: Colors.white,
+      //   leading: IconButton(
+      //     icon: Image.asset("assets/img/close.png",fit: BoxFit.fill,height: 17,width: 17,),
+      //
+      //     // Icon(
+      //     //   Icons.arrow_back,
+      //     //   color: Style.Colors.appColor,
+      //     //   size: 30,
+      //     // ),
+      //     onPressed: () =>  Get.back(),
+      //   ),
+      //   // title: Text("${categories!.categoryName!}", style: TextStyle(fontSize: 20,color: Style.Colors.appColor)),
+      //   title: Text("SHOPPING BAG",
+      //       style: GoogleFonts.inriaSans(textStyle: const TextStyle(fontSize: 20,fontWeight: FontWeight.w700,color: AppColors.appText))),
+      //   actions: [
+      //     IconButton(
+      //         padding: EdgeInsets.zero,
+      //         onPressed: ()  {
+      //           Get.toNamed(Routes.wishList);
+      //         },
+      //         icon: Image.asset('assets/img/heart.png',fit: BoxFit.fill,height: 22,width: 22,)),
+      //   ],
+      // ),
+      backgroundColor:AppColors.ratingText,
+      body:
 
-              Obx(() {
-                if (cardController.homecontroller.isLoadingNewProducts.value !=
-                    true) {
-                  return  ListView(
+      SafeArea(
+        child: Column(
+          children: [
+            Column(children: [
+              Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: AppSizes.sidePadding,right: AppSizes.sidePadding,top: 26,bottom: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Row(
+                        children: [
+                          InkWell(child: Image.asset('assets/img/close.png',fit: BoxFit.fill,height: 12,width: 12,),onTap: (){
+                            Get.back();
+                          },),
+                          SizedBox(width: 16,),
+                          Text('SHOPPING BAG',
+                              style: GoogleFonts.inriaSans(textStyle: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: AppColors.appText))),
+                        ],
+                      ),
+
+                      InkWell(child: Image.asset('assets/img/heart.png',fit: BoxFit.fill,height: 18,width: 18,),
+                        onTap: (){
+                          Get.toNamed(Routes.cart);
+                        },),
+                    ],
+                  ),
+                ),
+              ),
+              Container(height: 0.5,width: MediaQuery.of(context).size.width,color: AppColors.tileLine,),
+            ],),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  CheckInternet.checkInternet();
+                  // cardController.homecontroller.getSlider();
+                  // cardController.homecontroller.getBrand();
+                  // cardController.homecontroller.bestSellerProduct();
+                  // cardController.homecontroller.allProducts();
+                  await cardController.homecontroller.loadUser(false);
+                  return cardController.homecontroller.newProducts(true);
+                },
+                child: Obx(() {
+                  if (cardController.homecontroller.isLoadingNewProducts.value !=
+                      true) {
+                    return  ListView(
+                      children: [
 
 
-                      Obx(() {
-                        if (cardController.homecontroller.isLoadingGetCartItems.value != true) {
-                          MainResponse? mainResponse = cardController.homecontroller.getCartItemsObj.value;
-                          List<Carts>? getCartData = [];
+                        Obx(() {
+                          if (cardController.homecontroller.isLoadingGetCartItems.value != true) {
+                            MainResponse? mainResponse = cardController.homecontroller.getCartItemsObj.value;
+                            // List<Carts>? getCartData = [];
 
-                          if(mainResponse.data != null){
-                            mainResponse.data!.forEach((v) {
-                              getCartData.add(Carts.fromJson(v));
+                            if(mainResponse.data != null){
+                              mainResponse.data!.forEach((v) {
+                                // getCartData.add(Carts.fromJson(v));
+                              });
+
+                            }
+
+
+                            // print("getCartData total ------------- ${getCartData[0].totalAmt!}");
+                            // cardController.homecontroller.cartList(getCartData);
+                            Future.delayed(Duration.zero, () { // <-- add this
+                              cardController.homecontroller.refreshTotal();
                             });
 
-                          }
+                            // cardController.homecontroller.refreshTotal();
+                            // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
 
 
-                          // print("getCartData total ------------- ${getCartData[0].totalAmt!}");
-                          // cardController.homecontroller.cartList(getCartData);
-                          Future.delayed(Duration.zero, () { // <-- add this
-                            cardController.homecontroller.refreshTotal();
-                          });
-
-                          // cardController.homecontroller.refreshTotal();
-                          // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
+                            String? imageUrl = mainResponse.imageUrl ?? "";
+                            String? message = mainResponse.message ?? AppConstants.noInternetConn;
 
 
-                          String? imageUrl = mainResponse.imageUrl ?? "";
-                          String? message = mainResponse.message ?? AppConstants.noInternetConn;
+                            Future.delayed(Duration(seconds: 1), () {
+                              // Do something
+                              // cardController.homecontroller.selectAllCart(getCartData);
+                            });
+                            if (cardController.cartList.isEmpty) {
+                              // return Container(
+                              //   height: 90.0,
+                              //   width: MediaQuery.of(context).size.width,
+                              //   child: Column(
+                              //     mainAxisAlignment: MainAxisAlignment.center,
+                              //     crossAxisAlignment: CrossAxisAlignment.center,
+                              //     children: <Widget>[
+                              //       Column(
+                              //         children: <Widget>[
+                              //           Text(
+                              //             message!,
+                              //             style: TextStyle(color: Colors.black45),
+                              //           )
+                              //         ],
+                              //       )
+                              //     ],
+                              //   ),
+                              // );
 
-
-                          Future.delayed(Duration(seconds: 1), () {
-                            // Do something
-                            // cardController.homecontroller.selectAllCart(getCartData);
-                          });
-                          if (getCartData.isEmpty) {
-                            // return Container(
-                            //   height: 90.0,
-                            //   width: MediaQuery.of(context).size.width,
-                            //   child: Column(
-                            //     mainAxisAlignment: MainAxisAlignment.center,
-                            //     crossAxisAlignment: CrossAxisAlignment.center,
-                            //     children: <Widget>[
-                            //       Column(
-                            //         children: <Widget>[
-                            //           Text(
-                            //             message!,
-                            //             style: TextStyle(color: Colors.black45),
-                            //           )
-                            //         ],
-                            //       )
-                            //     ],
-                            //   ),
-                            // );
-
-                            return Container();
-                          }else{
-                            // cardController.selectAllCartInit(getCartData);
-                            return Column(
-                              //controller: _scrollController,
-                              children: [
-                                Container(
-                                  color: Colors.white,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 15),
-                                            child: ItemNuber(
-                                              itemNumber: getCartData.length,
-                                            ),
-                                          ),
-                                          TextButton(
-                                              onPressed: () {
-                                                cardController.homecontroller.productIds.clear();
-                                                AlertDialogs.showAlertDialog("Delete?", "Are you sure you want to delete from all Items?", () async {
-                                                  // Get.back();
-                                                  Navigator.pop(context);
-                                                  cardController.homecontroller.emptyCart(cardController.homecontroller.customerId.value);
-                                                });
-                                              },
-                                              child: Text(
-                                                'Clear all',
-                                                style: TextStyle(
-                                                    color: Colors.redAccent,
-                                                    fontSize: 16),
-                                              ))
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          IconButton(
-                                              onPressed: () {
-                                                cardController.selectAllCart(getCartData);
-
-                                               print("controller.isAllCartSelected(getCartData) ${cardController.homecontroller.isAllCartSelected(getCartData)}");
-                                               if(cardController.homecontroller.isAllCartSelected(getCartData)){
-                                                 cardController.homecontroller.productIds.clear();
-                                                 getCartData.forEach((element) {
-                                                   cardController.homecontroller.productIds.add(element.productId);
-                                                 });
-                                                 print("productIds ${cardController.homecontroller.productIds}");
-                                               }else{
-                                                 cardController.homecontroller.productIds.clear();
-                                                 print("productIds ${cardController.homecontroller.productIds}");
-                                               }
-
-                                              },
-                                              icon: cardController.homecontroller.isAllCartSelected(getCartData)
-                                                  ? Icon(Icons.check_box)
-                                                  : Icon(
-                                                  Icons.check_box_outline_blank)),
-                                          Text(
-                                            'Select All',
-                                            style: TextStyle(
-                                                color: Colors.redAccent, fontSize: 16),
-                                          ),
-                                          Spacer()
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
+                              return Center(
+                                child:
                                 Column(
+
                                   children: [
-                                    ...List.generate(
-                                        getCartData.length,
-                                            (index) {
-                                              double mrp = double.parse(getCartData[index].mrpPrice!) * double.parse(getCartData[index].quantity!);
-                                              double totalQty = double.parse(getCartData[index].netPrice!) * double.parse(getCartData[index].quantity!);
-                                            return Row(
+                                    // SizedBox(height: 30,),
+                                    Image.asset(
+                                      'assets/img/empty_bag.png',
+                                      fit: BoxFit.fill,
+                                      width: 204,
+                                      height: 267,
+                                    ),
+                                    // SizedBox(height: 20,),
+                                    Text(
+                                      "Hey, it feels so light!",
+                                      style: GoogleFonts.inriaSans(
+                                          textStyle: const TextStyle(
+                                              fontSize: 20,
+                                              color: AppColors.appText,
+                                              fontWeight: FontWeight.w700)),
+                                    ),
+                                    SizedBox(height: 8,),
+                                    Text("There is nothing in your bag. Lets’s add some items",
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.inriaSans(
+
+                                          textStyle: const TextStyle(
+
+                                              fontSize: 14,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400)),
+                                    ),
+
+                                  ],),
+                              );
+                            }else{
+                              // cardController.selectAllCartInit(getCartData);
+                              return Column(
+                                //controller: _scrollController,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    // color: Colors.white,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Row(
+                                        //   mainAxisAlignment:
+                                        //   MainAxisAlignment.spaceBetween,
+                                        //   children: [
+                                        //     Padding(
+                                        //       padding: const EdgeInsets.symmetric(
+                                        //           horizontal: 15),
+                                        //       child: ItemNuber(
+                                        //         itemNumber: cardController.cartList.length,
+                                        //       ),
+                                        //     ),
+                                        //     TextButton(
+                                        //         onPressed: () {
+                                        //           cardController.homecontroller.productIds.clear();
+                                        //           AlertDialogs.showAlertDialog("Delete?", "Are you sure you want to delete from all Items?", () async {
+                                        //             // Get.back();
+                                        //             Navigator.pop(context);
+                                        //             cardController.homecontroller.emptyCart(cardController.homecontroller.customerId.value);
+                                        //           });
+                                        //         },
+                                        //         child: Text(
+                                        //           'Clear all',
+                                        //           style: TextStyle(
+                                        //               color: Colors.redAccent,
+                                        //               fontSize: 16),
+                                        //         ))
+                                        //   ],
+                                        // ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Obx(() {
-                                                return SizedBox(
-                                                    height: 20,
-                                                    child: IconButton(
-                                                        onPressed: () {
-                                                          // productIds.clear();
-                                                          cardController.selectCart(getCartData[index]);
-                                                          print("productIds first ${cardController.homecontroller.productIds}");
-                                                          // print("contains ${productIds.contains(getCartData[index].cartId.toString())}");
-                                                          // // print("contains ${productIds.where((item) => item.contains(getCartData[index].cartId.toString()))}" );
-                                                          // if(productIds.contains(getCartData[index].cartId.toString())){
-                                                          //   productIds.removeAt(index);
-                                                          // }else{
-                                                          //   productIds.add(getCartData[index].productId!);
-                                                          // }
+                                              InkWell(
+                                                onTap: (){
+                                                  cardController.selectAllCart(cardController.cartList);
+
+                                                  print("controller.isAllCartSelected(getCartData) ${cardController.homecontroller.isAllCartSelected(cardController.cartList)}");
+                                                  if(cardController.homecontroller.isAllCartSelected(cardController.cartList)){
+                                                    cardController.homecontroller.productIds.clear();
+                                                    cardController.cartList.forEach((element) {
+                                                      cardController.homecontroller.productIds.add(element.productId);
+                                                    });
+                                                    print("productIds ${cardController.homecontroller.productIds}");
+                                                  }else{
+                                                    cardController.homecontroller.productIds.clear();
+                                                    print("productIds ${cardController.homecontroller.productIds}");
+                                                  }
+                                                },
+                                                child: cardController.homecontroller.isAllCartSelected(cardController.cartList)
+                                                    ? Image.asset("assets/img/checked.png",fit: BoxFit.fill,height: 20,width: 20,)
+                                                    : Image.asset("assets/img/unchecked.png",fit: BoxFit.fill,height: 20,width: 20,),
+
+                                                  // ? Icon(Icons.check_box,size: 28,color: AppColors.appRed,)
+                                                  //     : Icon(
+                                                  // Icons.check_box_outline_blank,size: 28),
+                                              ),
+                                              SizedBox(width: 8,),
+                                              Text(
+                                                '2/2 ITEMS SELECTED',
+                                                style: GoogleFonts.inriaSans(
+                                                    textStyle:
+                                                    const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                        FontWeight
+                                                            .w700,
+                                                        color: AppColors
+                                                            .black)),
+                                              ),
+
+                                              Text(
+                                                '(₹2,039)',
+                                                style: GoogleFonts.inriaSans(
+                                                    textStyle:
+                                                    const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                        FontWeight
+                                                            .w700,
+                                                        color: AppColors
+                                                            .appRed)),
+                                              ),
+                                              Spacer(),
+                                              Image.asset(
+                                                "assets/img/wishlist_heart.png",
+                                                fit: BoxFit.fill,
+                                                height: 20,
+                                                width: 20,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 5,),
+
+                                  Column(
+                                    children: [
+                                      ...List.generate(
+                                          cardController.cartList.length,
+                                              (index) {
+                                            double mrp = double.parse(cardController.cartList[index].mrpPrice!) * double.parse(cardController.cartList[index].quantity!);
+                                            double totalQty = double.parse(cardController.cartList[index].netPrice!) * double.parse(cardController.cartList[index].quantity!);
+                                            return InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>  ProductDetailsScreen(
+                                                          products: Products(productId: cardController.cartList[index].productId!,productName: cardController.cartList[index].productName!),
+                                                          // article: articles[index],
+                                                        )));
+
+
+
+
+
+
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(bottom: 8.0),
+                                                child: Container(
+                                                  decoration: const BoxDecoration(
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(bottom: 8,right: 16.0,left: 16.0,top: 3),
+                                                    child: Row(
+
+                                                      children: [
+                                                        InkWell(
+                                                          // onTap: () {
+                                                          //   Navigator.push(
+                                                          //       context,
+                                                          //       MaterialPageRoute(
+                                                          //           builder: (context) =>  ProductDetailsScreen(
+                                                          //             products: Products(productId: cart!.productId!,productName: cart!.productName!),
+                                                          //             // article: articles[index],
+                                                          //           )));
                                                           //
-                                                          // print("productIds ${productIds}");
-
-                                                          // List<String> myList = ['US', 'SG', 'US'];
-                                                          print(cardController.homecontroller.productIds.where((item) => item.contains(getCartData[index].productId!)));
-                                                          var contain = cardController.homecontroller.productIds.where((item) => item.contains(getCartData[index].productId!));
-                                                          if (contain.isEmpty){
-                                                            cardController.homecontroller.productIds.add(getCartData[index].productId!);
-                                                            print("productIds if ${cardController.homecontroller.productIds}");
-                                                          }else{
-                                                            cardController.homecontroller.productIds.removeWhere((item) => item == getCartData[index].productId);
-                                                            // productIds.removeAt(index);
-                                                            print("productIds ${cardController.homecontroller.productIds}");
-                                                          }
+                                                          //
+                                                          //
+                                                          //
+                                                          //
+                                                          //   // Navigator.pushNamed(
+                                                          //   //     context, Routes.productDetails,
+                                                          //   //    // arguments: ProductDetailsArguments(product: cart!.product)
+                                                          //   // );
+                                                          // },
 
 
-                                                        },
-                                                        // icon: homeController.selectedCarts.contains(cart!.id)
-                                                        icon: cardController.homecontroller.selectedCarts.contains(getCartData[index].cartId)
-                                                            ? const Icon(Icons.check_box)
-                                                            : const Icon(Icons.check_box_outline_blank)));
-                                              }),
-                                              Expanded(
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>  ProductDetailsScreen(
-                                                              products: Products(productId: getCartData[index].productId!,productName: getCartData[index].productName!),
-                                                              // article: articles[index],
-                                                            )));
+                                                          child: Stack(
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets.only(top: 15.0),
+                                                                child: SizedBox(
+                                                                  height: 100,
+                                                                  width: 104,
+                                                                  child: Image.asset(
+                                                                    // 'https://onlinehatiya.herokuapp.com' +
+                                                                    //     cart!.product!.image!,
+
+                                                                    // imageUrl + getCartData[index].productId! + "/" + getCartData[index].coverImg!,
+                                                                    cardController.cartList[index].coverImg!,
+                                                                    fit: BoxFit.fill,),
+                                                                ),
+                                                              ),
+                                                              Obx(() {
+
+                                                                return InkWell(
+                                                                  onTap: (){
+                                                                    // productIds.clear();
+                                                                    cardController.selectCart(cardController.cartList[index]);
+                                                                    print("productIds first ${cardController.homecontroller.productIds}");
+                                                                    // print("contains ${productIds.contains(getCartData[index].cartId.toString())}");
+                                                                    // // print("contains ${productIds.where((item) => item.contains(getCartData[index].cartId.toString()))}" );
+                                                                    // if(productIds.contains(getCartData[index].cartId.toString())){
+                                                                    //   productIds.removeAt(index);
+                                                                    // }else{
+                                                                    //   productIds.add(getCartData[index].productId!);
+                                                                    // }
+                                                                    //
+                                                                    // print("productIds ${productIds}");
+
+                                                                    // List<String> myList = ['US', 'SG', 'US'];
+                                                                    print(cardController.homecontroller.productIds.where((item) => item.contains(cardController.cartList[index].productId!)));
+                                                                    var contain = cardController.homecontroller.productIds.where((item) => item.contains(cardController.cartList[index].productId!));
+                                                                    if (contain.isEmpty){
+                                                                      cardController.homecontroller.productIds.add(cardController.cartList[index].productId!);
+                                                                      print("productIds if ${cardController.homecontroller.productIds}");
+                                                                    }else{
+                                                                      cardController.homecontroller.productIds.removeWhere((item) => item == cardController.cartList[index].productId);
+                                                                      // productIds.removeAt(index);
+                                                                      print("productIds ${cardController.homecontroller.productIds}");
+                                                                    }
+                                                                  },
+                                                                  child: cardController.homecontroller.selectedCarts.contains(cardController.cartList[index].cartId)
+                                                                      ? Padding(
+                                                                    padding: const EdgeInsets.only(left: 2.0),
+                                                                    child: Container(
+                                                                        alignment: Alignment.topLeft,
 
 
+                                                                        child:
+
+                                                                        //const Icon(Icons.check_box,color: AppColors.appRed,size: 28,)
+                                                                        Image.asset("assets/img/checked.png",fit: BoxFit.fill,height: 20,width: 20,)
+
+                                                                    ),
+                                                                  )
+                                                                      : Padding(
+                                                                    padding: const EdgeInsets.only(left: 2.0),
+                                                                    child: Container(
+                                                                        alignment: Alignment.topLeft,child:
+                                                                    Image.asset("assets/img/unchecked.png",fit: BoxFit.fill,height: 20,width: 20,)
+                                                                    // const Icon(Icons.check_box_outline_blank,size: 28)
 
 
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                                return IconButton(
+                                                                    padding: EdgeInsets.all(0),
+                                                                    onPressed: () {
+                                                                      // productIds.clear();
+                                                                      cardController.selectCart(cardController.cartList[index]);
+                                                                      print("productIds first ${cardController.homecontroller.productIds}");
+                                                                      // print("contains ${productIds.contains(getCartData[index].cartId.toString())}");
+                                                                      // // print("contains ${productIds.where((item) => item.contains(getCartData[index].cartId.toString()))}" );
+                                                                      // if(productIds.contains(getCartData[index].cartId.toString())){
+                                                                      //   productIds.removeAt(index);
+                                                                      // }else{
+                                                                      //   productIds.add(getCartData[index].productId!);
+                                                                      // }
+                                                                      //
+                                                                      // print("productIds ${productIds}");
 
-                                                    // Navigator.pushNamed(
-                                                    //     context, Routes.productDetails,
-                                                    //    // arguments: ProductDetailsArguments(product: cart!.product)
-                                                    // );
-                                                  },
-                                                  child: Container(
-                                                    decoration: const BoxDecoration(
-                                                        color: Colors.white,
-                                                        border: Border(bottom: BorderSide(color: Colors.grey))),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.all(15),
-                                                      child: Row(
-                                                        children: [
-                                                          InkWell(
-                                                            // onTap: () {
-                                                            //   Navigator.push(
-                                                            //       context,
-                                                            //       MaterialPageRoute(
-                                                            //           builder: (context) =>  ProductDetailsScreen(
-                                                            //             products: Products(productId: cart!.productId!,productName: cart!.productName!),
-                                                            //             // article: articles[index],
-                                                            //           )));
-                                                            //
-                                                            //
-                                                            //
-                                                            //
-                                                            //
-                                                            //   // Navigator.pushNamed(
-                                                            //   //     context, Routes.productDetails,
-                                                            //   //    // arguments: ProductDetailsArguments(product: cart!.product)
-                                                            //   // );
-                                                            // },
+                                                                      // List<String> myList = ['US', 'SG', 'US'];
+                                                                      print(cardController.homecontroller.productIds.where((item) => item.contains(cardController.cartList[index].productId!)));
+                                                                      var contain = cardController.homecontroller.productIds.where((item) => item.contains(cardController.cartList[index].productId!));
+                                                                      if (contain.isEmpty){
+                                                                        cardController.homecontroller.productIds.add(cardController.cartList[index].productId!);
+                                                                        print("productIds if ${cardController.homecontroller.productIds}");
+                                                                      }else{
+                                                                        cardController.homecontroller.productIds.removeWhere((item) => item == cardController.cartList[index].productId);
+                                                                        // productIds.removeAt(index);
+                                                                        print("productIds ${cardController.homecontroller.productIds}");
+                                                                      }
 
 
-                                                            child: SizedBox(
-                                                              height: 50,
-                                                              width: 50,
-                                                              child: Image.network(
-                                                                // 'https://onlinehatiya.herokuapp.com' +
-                                                                //     cart!.product!.image!,
-
-                                                                imageUrl + getCartData[index].productId! + "/" + getCartData[index].coverImg!,
-                                                                fit: BoxFit.fill,),
-                                                            ),
+                                                                    },
+                                                                    // icon: homeController.selectedCarts.contains(cart!.id)
+                                                                    icon: cardController.homecontroller.selectedCarts.contains(cardController.cartList[index].cartId)
+                                                                        ? const Icon(Icons.check_box)
+                                                                        : const Icon(Icons.check_box_outline_blank));
+                                                              }),
+                                                            ],
                                                           ),
-                                                          Expanded(
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.only(left: 10, right: 10),
+                                                        ),
+                                                        Expanded(
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(left: 12, right: 10,top: 11),
+                                                            child: SizedBox(
+                                                              height: 110,
                                                               child: Column(
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                                                mainAxisAlignment: MainAxisAlignment.start,
                                                                 children: [
-                                                                  Text(getCartData[index].productName!,
+                                                                  Text(cardController.cartList[index].productName!,
+                                                                      style: GoogleFonts.inriaSans(
+                                                                          textStyle: const TextStyle(
+                                                                              fontSize: 14,
+                                                                              fontWeight: FontWeight.w700,
+                                                                              color: AppColors.black))
+                                                                  ),
+                                                                  // const SizedBox(
+                                                                  //   height: 3,
+                                                                  // ),
+                                                                  Text(cardController.cartList[index].description!,
                                                                       // style: GoogleFonts.ptSans(),
                                                                       overflow: TextOverflow.ellipsis,
-                                                                  maxLines: 2,
+                                                                      maxLines: 1,
+                                                                      style: GoogleFonts.inriaSans(
+                                                                          textStyle: const TextStyle(
+                                                                              fontSize: 14,
+                                                                              fontWeight: FontWeight.w400,
+                                                                              color: AppColors.black))
                                                                   ),
                                                                   const SizedBox(
-                                                                    height: 5,
+                                                                    height: 4,
                                                                   ),
-                                                                  // Text(
-                                                                  //   "cart!.product!.description!",
-                                                                  //   maxLines: 2,
-                                                                  //   style: const TextStyle(fontSize: 14),
-                                                                  // ),
-                                                                  // const SizedBox(
-                                                                  //   height: 5,
-                                                                  // ),
+
                                                                   Row(
                                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                     children: [
                                                                       Column(
                                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                                         children: [
-                                                                          Text(
-                                                                            '\u{20B9} ' + "${mrp.toStringAsFixed(0)}",
-                                                                            style:  TextStyle(
-                                                                                decoration: TextDecoration.combine(
-                                                                                    [ TextDecoration.lineThrough]),
-                                                                                fontSize: 16,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.grey),
+                                                                          Row(
+                                                                            children: [
+                                                                              Container(
+
+                                                                                child: InkWell(
+                                                                                    onTap: () {
+                                                                                      cardController.quantity(int.parse(cardController.cartList[index].quantity!));
+                                                                                      cardController.showButtomSheed(
+                                                                                          context, () {
+
+                                                                                      }, int.parse(cardController.cartList[index].productId!),cardController.homecontroller.customerId.value);
+                                                                                    },
+                                                                                    child: Padding(
+                                                                                      padding: const EdgeInsets.all(2.0),
+                                                                                      child: Text('Size:38 ▾',
+                                                                                          style: GoogleFonts.inriaSans(
+                                                                                              textStyle: TextStyle(
+                                                                                                  fontSize: 12,
+                                                                                                  fontWeight:
+                                                                                                  FontWeight.w400,
+                                                                                                  color: AppColors
+                                                                                                      .black))
+                                                                                      ),
+                                                                                    )),
+                                                                                decoration: BoxDecoration(
+                                                                                    borderRadius: BorderRadius.circular(3),
+                                                                                    color:Colors.grey[100]
+                                                                                ),
+                                                                              ),
+                                                                              SizedBox(width: 12,),
+                                                                              Container(
+                                                                                decoration: BoxDecoration(
+                                                                                    borderRadius: BorderRadius.circular(3),
+                                                                                    color: Colors.grey[100]
+                                                                                ),
+                                                                                child: InkWell(
+                                                                                    onTap: () {
+                                                                                      cardController.quantity(int.parse(cardController.cartList[index].quantity!));
+                                                                                      cardController.showButtomSheed(
+                                                                                          context, () {
+
+                                                                                      }, int.parse(cardController.cartList[index].productId!),cardController.homecontroller.customerId.value);
+                                                                                    },
+                                                                                    child: Padding(
+                                                                                      padding: const EdgeInsets.all(2.0),
+                                                                                      child: Text('Qty:${cardController.cartList[index].quantity} ▾',
+                                                                                          style: GoogleFonts.inriaSans(
+                                                                                              textStyle: TextStyle(
+                                                                                                  fontSize: 12,
+                                                                                                  fontWeight:
+                                                                                                  FontWeight.w400,
+                                                                                                  color: AppColors
+                                                                                                      .black))
+                                                                                      ),
+                                                                                    )),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          const SizedBox(
+                                                                            height: 4,
                                                                           ),
                                                                           Row(
                                                                             children: [
                                                                               Text(
-                                                                                '\u{20B9} ' + "${totalQty.toStringAsFixed(0)}",
-                                                                                style: const TextStyle(
-                                                                                    fontSize: 16,
-                                                                                    fontWeight: FontWeight.bold,
-                                                                                    color: Colors.black),
+                                                                                  '\u{20B9} ' + "${totalQty.toStringAsFixed(0)}",
+                                                                                  style: GoogleFonts.inriaSans(
+                                                                                      textStyle: TextStyle(
+                                                                                          fontSize: 12,
+                                                                                          fontWeight:
+                                                                                          FontWeight.w700,
+                                                                                          color: AppColors
+                                                                                              .black))
                                                                               ),
                                                                               SizedBox(width: 5,),
                                                                               Text(
-                                                                                '\u{20B9} ' + getCartData[index].discount.toString() +" % off",
-                                                                                style: const TextStyle(
-                                                                                    fontSize: 14,
-                                                                                    fontWeight: FontWeight.bold,
-                                                                                    color: Colors.redAccent),
+                                                                                '\u{20B9} ' + "${mrp.toStringAsFixed(0)}",
+                                                                                style: GoogleFonts.inriaSans(
+                                                                                    textStyle: TextStyle(
+                                                                                        fontSize: 12,
+                                                                                        decoration:
+                                                                                        TextDecoration
+                                                                                            .combine([
+                                                                                          TextDecoration
+                                                                                              .lineThrough
+                                                                                        ]),
+                                                                                        fontWeight:
+                                                                                        FontWeight.w700,
+                                                                                        color: AppColors
+                                                                                            .appText1)),
+                                                                              ),
+                                                                              SizedBox(width: 5,),
+                                                                              Text(
+                                                                                  '\u{20B9} ' + cardController.cartList[index].discount.toString() ,
+                                                                                  style: GoogleFonts.inriaSans(
+                                                                                      textStyle: TextStyle(
+                                                                                          fontSize: 12,
+                                                                                          fontWeight:
+                                                                                          FontWeight.w700,
+                                                                                          color: AppColors
+                                                                                              .appRed))
                                                                               ),
                                                                             ],
                                                                           ),
+                                                                          SizedBox(height: 4,),
+                                                                          Row(
+                                                                            children: [
+                                                                              Image.asset("assets/img/Shape.png",fit: BoxFit.fill,height: 12,width: 12,),
+                                                                              SizedBox(width: 5,),
+                                                                              Text("Delivery by ",
+                                                                                  style: GoogleFonts.inriaSans(
+                                                                                      textStyle: TextStyle(
+                                                                                          fontSize: 10,
+                                                                                          fontWeight:
+                                                                                          FontWeight.w700,
+                                                                                          color: AppColors
+                                                                                              .appText1))
+                                                                              ),
+
+                                                                              Text(" 24 Sep 2022",
+                                                                                  style: GoogleFonts.inriaSans(
+                                                                                      textStyle: TextStyle(
+                                                                                          fontSize: 10,
+                                                                                          fontWeight:
+                                                                                          FontWeight.w700,
+                                                                                          color: AppColors
+                                                                                              .black))
+                                                                              ),
+                                                                            ],
+                                                                          ),
+
                                                                         ],
                                                                       ),
-                                                                      SizedBox(width: 10,),
+                                                                      // SizedBox(width: 8,),
+                                                                      //
 
-                                                                      InkWell(
-                                                                          onTap: () {
-                                                                            cardController.quantity(int.parse(getCartData[index].quantity!));
-                                                                            cardController.showButtomSheed(
-                                                                                context, () {
-
-                                                                            }, int.parse(getCartData[index].productId!),cardController.homecontroller.customerId.value);
-                                                                          },
-                                                                          child: Text('Qty:${getCartData[index].quantity} ▾'))
                                                                     ],
-                                                                  )
+                                                                  ),
+
                                                                 ],
                                                               ),
                                                             ),
                                                           ),
-                                                          IconButton(
-                                                              onPressed: () {
-                                                                // homeController.removeProductFromCart(int.parse(cart!.cartId!));
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(top: 8.0,right: 2),
+                                                          child: InkWell(
 
-                                                                AlertDialogs.showAlertDialog("Delete?", "Are you sure you want to delete from this Item?", () async {
-                                                                  Navigator.pop(context);
-                                                                  print("productIds ${cardController.homecontroller.productIds}");
-                                                                  var contain = cardController.homecontroller.productIds.where((item) => item.contains(getCartData[index].productId!));
-                                                                  if (contain.isEmpty){
+                                                            child: Image.asset("assets/img/close.png",fit: BoxFit.fill,height: 17,width: 17,),onTap: (){
+                                                            AlertDialogs.showAlertDialog("Delete?", "Are you sure you want to delete from this Item?", () async {
+                                                              Navigator.pop(context);
+                                                              print("productIds ${cardController.homecontroller.productIds}");
+                                                              var contain = cardController.homecontroller.productIds.where((item) => item.contains(cardController.cartList[index].productId!));
+                                                              if (contain.isEmpty){
 
-                                                                    print("productIds if cancel ${cardController.homecontroller.productIds}");
-                                                                  }else{
-                                                                    cardController.homecontroller.productIds.removeWhere((item) => item == getCartData[index].productId);
-                                                                    // productIds.removeAt(index);
-                                                                    print("productIds cancel ${cardController.homecontroller.productIds}");
-                                                                  }
-                                                                   cardController.homecontroller.removeFromCart(getCartData[index].productId!,cardController.homecontroller.customerId.value,index);
-                                                                  // if(isBool){
-                                                                  //
-                                                                  //
-                                                                  // }
+                                                                print("productIds if cancel ${cardController.homecontroller.productIds}");
+                                                              }else{
+                                                                cardController.homecontroller.productIds.removeWhere((item) => item == cardController.cartList[index].productId);
+                                                                // productIds.removeAt(index);
+                                                                print("productIds cancel ${cardController.homecontroller.productIds}");
+                                                              }
+                                                              cardController.homecontroller.removeFromCart(cardController.cartList[index].productId!,cardController.homecontroller.customerId.value,index);
+                                                              // if(isBool){
+                                                              //
+                                                              //
+                                                              // }
 
-                                                                });
-                                                              },
-                                                              icon: const Icon(Icons.cancel))
-                                                        ],
-                                                      ),
+                                                            });
+
+                                                          },),
+                                                        )
+                                                      ],
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ],
-                                          );
-                                            }
+                                            );
+                                          }
 
 
 
@@ -443,167 +724,400 @@ class _CartScreenState extends State<CartScreen> {
 
 
 
-                                    )
-                                  ],
-                                ),
-
-                              ],
-                            );
-                          }
-
-                        } else {
-                          return Container();
-                          return  Container(
-                              height: 90,
-                              child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor)));
-
-                        }
-                      }),
-
-                      Obx(() {
-                        if (cardController.homecontroller.isLoadingNewProducts.value != true) {
-                          MainResponse? mainResponse = cardController.homecontroller.newProductsObj.value;
-                          List<Products>? newProductsData = [];
-                          if(mainResponse.data !=null){
-                            mainResponse.data!.forEach((v) {
-                              newProductsData.add( Products.fromJson(v));
-                            });
-                          }
-                          // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
-
-
-                          String? imageUrl = mainResponse.imageUrl ?? "";
-                          String? message = mainResponse.message ?? AppConstants.noInternetConn;
-                          if (newProductsData.isEmpty) {
-                            return Container(
-                              height: 200.0,
-                              width: MediaQuery.of(context).size.width,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Column(
-                                    children: <Widget>[
-                                      Text(
-                                        message!,
-                                        style: TextStyle(color: Colors.black45),
                                       )
                                     ],
-                                  )
-                                ],
-                              ),
-                            );
-                          }else{
-                            return Column(
-                              children: [
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  color: Colors.white.withOpacity(0.4),
-                                  child: Center(
+                                  ),
+                                  Container(
+
                                     child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Continue Shopping',
-                                        style: TextStyle(
-                                            fontSize: 16, fontWeight: FontWeight.bold),
+                                      padding: const EdgeInsets.only(top: 8.0,
+                                          left: 16.0,bottom: 8),
+                                      child: Text("COUPONS",
+                                          style: GoogleFonts.inriaSans(
+                                              textStyle: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: AppColors.appText))),
+                                    ),
+                                    // color: Colors.green,
+                                  ),
+                                  Container(
+
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 16.0,right: 16.0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Image.asset(
+                                                "assets/img/coupons.png",
+                                                fit: BoxFit.fill,
+                                                height: 20,
+                                                width: 20,
+                                              ),
+                                              SizedBox(width: 12,),
+                                              Text("Apply Coupon",
+                                                  style: GoogleFonts.inriaSans(
+                                                      textStyle: const TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: AppColors.black))),
+                                            ],
+                                          ),
+                                          Image.asset(
+                                            "assets/img/arrow_right.png",
+                                            fit: BoxFit.fill,
+                                            height: 15,
+                                            width: 8,
+                                          )
+                                        ],),
+                                    ),color: AppColors.white,
+                                  height: 40,
+                                  ),
+                                  SizedBox(height: 16.0,),
+                                  Container(
+                                    color: AppColors.white,
+
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Container(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+
+                                          children: [
+                                            Text("PRICE DETAILS(2 ITEMS)",
+                                                style: GoogleFonts.inriaSans(
+                                                    textStyle: const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: AppColors.black))),
+                                            SizedBox(height: 8,),
+                                            Container(
+                                              height: 1,
+                                              width: MediaQuery.of(context).size.width,
+                                              color: Colors.grey[200],
+                                            ),
+                                            SizedBox(height: 8,),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Total MRP",
+                                                    style: GoogleFonts.inriaSans(
+                                                        textStyle: const TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w400,
+                                                            color: AppColors.black))),
+                                                Text("₹3,289",
+                                                    style: GoogleFonts.inriaSans(
+                                                        textStyle: const TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w400,
+                                                            color: AppColors.black))),
+                                              ],
+                                            ),
+                                            SizedBox(height: 8,),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Discount on MRP",
+                                                    style: GoogleFonts.inriaSans(
+                                                        textStyle: const TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w400,
+                                                            color: AppColors.black))),
+                                                Text("-₹1,252",
+                                                    style: GoogleFonts.inriaSans(
+                                                        textStyle: const TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w400,
+                                                            color: AppColors.appGreen))),
+                                              ],
+                                            ),
+                                            SizedBox(height: 8,),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Coupon Discount",
+                                                    style: GoogleFonts.inriaSans(
+                                                        textStyle: const TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w400,
+                                                            color: AppColors.black))),
+                                                Text("Apply Coupon",
+                                                    style: GoogleFonts.inriaSans(
+                                                        textStyle: const TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w400,
+                                                            color: AppColors.appRed))),
+                                              ],
+                                            ),
+                                            SizedBox(height: 8,),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text("Convenience Fee",
+                                                        style: GoogleFonts.inriaSans(
+                                                            textStyle: const TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight: FontWeight.w400,
+                                                                color: AppColors.black))),
+                                                    Text(" Know More",
+                                                        style: GoogleFonts.inriaSans(
+                                                            textStyle: const TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight: FontWeight.w400,
+                                                                color: AppColors.appRed))),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text("₹99",
+                                                        style: GoogleFonts.inriaSans(
+                                                            textStyle: TextStyle(
+                                                                fontSize: 12,
+                                                                decoration:
+                                                                TextDecoration
+                                                                    .combine([
+                                                                  TextDecoration
+                                                                      .lineThrough
+                                                                ]),
+                                                                fontWeight:
+                                                                FontWeight.w400,
+                                                                color: AppColors
+                                                                    .black))),
+                                                    SizedBox(width: 5.0,),
+                                                    Text("FREE",
+                                                        style: GoogleFonts.inriaSans(
+                                                            textStyle: const TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight: FontWeight.w400,
+                                                                color: AppColors.appRed))),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 8,),
+                                            Container(
+                                              height: 1,
+                                              width: MediaQuery.of(context).size.width,
+                                              color: Colors.grey[200],
+                                            ),
+                                            SizedBox(height: 8,),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Total Amount",
+                                                    style: GoogleFonts.inriaSans(
+                                                        textStyle: const TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: AppColors.black))),
+                                                Text("₹2,039",
+                                                    style: GoogleFonts.inriaSans(
+                                                        textStyle: const TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: AppColors.black))),
+                                              ],
+                                            ),
+                                          ],),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
-                                  child: ProductGridviewTile(
-                                    products: newProductsData,
-                                    imageUrl: imageUrl,
-                                  ),
-                                ),
-                              ],
-                            );
+                                  )
+
+
+
+
+                                ],
+                              );
+                            }
+
+                          } else {
+                            return Container();
+                            return  Container(
+                                height: 90,
+                                child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor)));
+
                           }
-
-                        } else {
-                          return  Container(
-                            height: 200,
-                            // child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor))
-                          );
-
-                        }
-                      }),
+                        }),
 
 
-                      // Obx(() {
-                      //   return controller.isCartLoad.value
-                      //       ? Container(
-                      //     color: Colors.grey.withOpacity(0.4),
-                      //     height: double.infinity,
-                      //     width: double.infinity,
-                      //     child: SizedBox(
-                      //       height: 30,
-                      //       width: 30,
-                      //       child: Center(
-                      //         child: CircularProgressIndicator(
-                      //           color: Colors.redAccent,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   )
-                      //       : SizedBox.shrink();
-                      // })
-                    ],
-                  );
-                } else {
-                  if (cardController.homecontroller.isRefresh.value !=
-                      true) {
-                    return Container(
-                        // height: MediaQuery.of(context).size.height-120,
-                        child: Center(
-                            child: CircularProgressIndicator(
-                                color: Colors.green))
+                      ],
                     );
                   } else {
-                    return Container(
-                      // height: 200,
-                    );
+                    if (cardController.homecontroller.isRefresh.value !=
+                        true) {
+                      return Container(
+                        // height: MediaQuery.of(context).size.height-120,
+                          child: Center(
+                              child: CircularProgressIndicator(
+                                  color: Colors.green))
+                      );
+                    } else {
+                      return Container(
+                        // height: 200,
+                      );
+                    }
                   }
-                }
-              }),
+                }),
+              ),
+            ),
+          ],
+        ),
+      ),
+
+
+      bottomNavigationBar:cardController.cartList.isEmpty?Container(height: 0.0,):
+      Wrap(
+        children: [
+          Container(
+
+            width: MediaQuery.of(context).size.width,
+            child: Column(children: [
+              Container(
+
+                width: MediaQuery.of(context).size.width,
+                height: 20,
+                color: AppColors.selectedItem,
+                child: Center(
+                  child: Text("2 Items selected for order", style: GoogleFonts.inriaSans(
+                      textStyle: TextStyle(
+                          fontSize: 12,
+                          fontWeight:
+                          FontWeight.w400,
+                          color: AppColors
+                              .black))),
+                ),
+              ),
+              InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0,bottom: 8.0,left: 16.0,right: 16.0),
+                  child: Container(
+                    height: 36,
+                    width: MediaQuery.of(context).size.width,
+                    color: AppColors.appRed,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: 8.0,
+                          top: 8.0,
+                        ),
+                        child: Text(
+                          "PLACE ORDER",
+                          style: GoogleFonts.inriaSans(
+                            textStyle: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          // style: const TextStyle(
+                          //     fontSize: 23,
+                          //     fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  // String stringList = cardController.homecontroller.productIds.join(",");
+                  // print("product list ${stringList}");
+                  //
+                  // if(profileController.customerId.value == ""){
+                  //   AlertDialogs.showLoginRequiredDialog();
+                  // }else if(cartList.isEmpty){
+                  //   AlertDialogs.showAlertDialog("Cart?", "Please minimum 1 item add to cart", ()  {
+                  //     Get.back();
+                  //   });
+                  // } else if(productIds.isEmpty){
+                  //   AlertDialogs.showAlertDialog("Cart?", "Please select minimum 1 item", ()  {
+                  //     Get.back();
+                  //   });
+                  // }else{
+                  //   List<Carts> finaCartList = [];
+                  //   cartList.forEach((element1) {
+                  //     productIds.forEach((element2) {
+                  //       print("element1.productId 11111 outside ${element1.productId}");
+                  //       print("element2.productId 22222 outside ${element2}");
+                  //       if(element1.productId == element2){
+                  //         print("element1.productId 11111 ${element1.productId}");
+                  //
+                  //         print("element2.productId element1 ${element1.productName}");
+                  //         finaCartList.add(element1);
+                  //       }else{
+                  //         print("element1.productId 11111 else ${element1.productId}");
+                  //         print("element2.productId 22222 else ${element2}");
+                  //       }
+                  //     });
+                  //
+                  //   });
+                  //   // homeController.checkOut(stringList);
+                  //   Get.toNamed(Routes.checkOut,arguments: [{"cartList": finaCartList}, {"imagePath": imagePath}]);
+                  // }
+
+
+                  List<Carts> finaCartList = [];
+                  cardController.cartList.forEach((element1) {
+                    cardController.homecontroller.productIds.forEach((element2) {
+                      print("element1.productId 11111 outside ${element1.productId}");
+                      print("element2.productId 22222 outside ${element2}");
+                      if(element1.productId == element2){
+                        print("element1.productId 11111 ${element1.productId}");
+
+                        print("element2.productId element1 ${element1.productName}");
+                        finaCartList.add(element1);
+                      }else{
+                        print("element1.productId 11111 else ${element1.productId}");
+                        print("element2.productId 22222 else ${element2}");
+                      }
+                    });
+
+                  });
+                  // homeController.checkOut(stringList);
+                  Get.toNamed(Routes.checkOut,arguments: [{"cartList": finaCartList}, {"imagePath": "imagePath"}]);
+                },
+              )
+            ],),
+          ),
+        ],
+      )
 
 
 
-              // NotificationListener<ScrollNotification>(
-              //   onNotification: (scrollNotification) {
-              //     if (_scrollController.position.userScrollDirection ==
-              //         ScrollDirection.reverse) {
-              //       cardController.isVisible(false);
-              //
-              //       //the setState function
-              //     } else if (_scrollController.position.userScrollDirection ==
-              //         ScrollDirection.forward) {
-              //       cardController.isVisible(true);
-              //
-              //       //setState function
-              //     }
-              //     return true;
-              //   },
-              //   child:
-              //
-              // ),
-              bottomNavigationBar:
-              Obx((){
-                return  CheckoutCart(
-                  totalAmount: cardController.homecontroller.totalAmount.value,
-                  productIds: cardController.homecontroller.productIds,
-                    cartList : cardController.homecontroller.cartList,
-                  imagePath: cardController.homecontroller.imagePath,
-                );
-              })
 
-             ),
-        ));
+
+      // NotificationListener<ScrollNotification>(
+      //   onNotification: (scrollNotification) {
+      //     if (_scrollController.position.userScrollDirection ==
+      //         ScrollDirection.reverse) {
+      //       cardController.isVisible(false);
+      //
+      //       //the setState function
+      //     } else if (_scrollController.position.userScrollDirection ==
+      //         ScrollDirection.forward) {
+      //       cardController.isVisible(true);
+      //
+      //       //setState function
+      //     }
+      //     return true;
+      //   },
+      //   child:
+      //
+      // ),
+      // bottomNavigationBar:
+      // Obx((){
+      //   return  CheckoutCart(
+      //     totalAmount: cardController.homecontroller.totalAmount.value,
+      //     productIds: cardController.homecontroller.productIds,
+      //       cartList : cardController.homecontroller.cartList,
+      //     imagePath: cardController.homecontroller.imagePath,
+      //   );
+      // })
+
+    );
   }
 }

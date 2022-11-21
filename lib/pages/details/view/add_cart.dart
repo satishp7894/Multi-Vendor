@@ -1,6 +1,8 @@
+import 'package:eshoperapp/config/theme.dart';
 import 'package:eshoperapp/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../models/customer.dart';
 import '../../profile/profile_controller.dart';
@@ -16,44 +18,96 @@ class AddToCard extends StatelessWidget {
       localRepositoryInterface: Get.find()));
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black.withOpacity(0.2))),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return
+      Container(
+      height: 70,
+      // decoration: BoxDecoration(
+      //     color: Colors.white,
+      //     border: Border.all(color: Colors.black.withOpacity(0.2))),
+      child: Column(
         children: [
-          Expanded(
-            child: InkWell(
-              onTap: () {
-                onChanged!();
-              },
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
+          Container(
+            height: 1,width: MediaQuery.of(context).size.width,
+            color: Colors.black.withOpacity(0.2),
+          ),
+          Container(
+            height: 69,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      onChanged!();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0,right: 5.0,bottom: 10,top: 10),
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.all(Radius.circular(2)),
+                              border: Border.all(color: Colors.black.withOpacity(0.2))),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  "assets/img/heart.png",
+                                ),
+                                SizedBox(width: 8,),
+                                Text('WISHLIST',
+                                    style: GoogleFonts.inriaSans(
+                                        textStyle: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight:
+                                            FontWeight
+                                                .w700,
+                                            color: AppColors
+                                                .black))),
+                              ],
+                            ),
+                          )),
+                    ),
                   ),
-                  child: Center(
-                    child: Text('Buy',
-                        style: TextStyle(fontSize: 18, color: Colors.black)),
-                  )),
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      onChanged!();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5.0,right: 10.0,bottom: 10,top: 10),
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.redAccent,
+                            borderRadius: const BorderRadius.all(Radius.circular(2)),
+                          ),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  "assets/img/bag.png",color: AppColors.white,
+                                ),
+                                SizedBox(width: 8,),
+                                Text('ADD TO BAG',
+                                    style: GoogleFonts.inriaSans(
+                                        textStyle: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight:
+                                            FontWeight
+                                                .w700,
+                                            color: AppColors
+                                                .white))),
+                              ],
+                            ),
+                          )),
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
-          Expanded(
-            child: InkWell(
-              onTap: () {
-                onChanged!();
-              },
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.redAccent,
-                  ),
-                  child: Center(
-                    child: Text('Add to Cart',
-                        style: TextStyle(fontSize: 18, color: Colors.white)),
-                  )),
-            ),
-          )
         ],
       ),
     );

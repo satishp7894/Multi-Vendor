@@ -185,7 +185,8 @@ class _ChangePassFormState extends State<ChangePassForm> {
                   height: 20,
                 ),
                 Container(
-                  child: TextFormField(
+                  child:
+                  TextFormField(
                     textInputAction: TextInputAction.done,
                     // validator: (value) {
                     //   if (value!.isEmpty) {

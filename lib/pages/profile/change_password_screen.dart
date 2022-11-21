@@ -61,7 +61,7 @@ class ChangePasswordScreen extends GetWidget<ProfileController> {
           elevation: 1,
           backgroundColor: Colors.white,
           leading: IconButton(
-            icon: Image.asset("assets/img/arrow_left.png",fit: BoxFit.fill,),
+            icon: Image.asset("assets/img/arrow_left.png",fit: BoxFit.fill,height: 20,width: 22,),
 
             // Icon(
             //   Icons.arrow_back,

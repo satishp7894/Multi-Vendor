@@ -5,6 +5,8 @@ import 'package:eshoperapp/repository/local_repository.dart';
 import 'package:eshoperapp/routes/navigation.dart';
 import 'package:get/get.dart';
 
+import '../../models/categories.dart';
+
 class MyOrderController extends GetxController {
   final LocalRepositoryInterface localRepositoryInterface;
   final ApiRepositoryInterface apiRepositoryInterface;
@@ -12,11 +14,34 @@ class MyOrderController extends GetxController {
   var productList = <Product>[].obs;
   RxBool isLoading = true.obs;
 
+  RxInt groupValueStatus = 0.obs;
+  RxInt groupValueTime = 0.obs;
+
   RxBool isLoadingGetOrderHistory = false.obs;
   var getOrderHistoryObj = MainResponse().obs;
 
   RxBool isLoadingOrderDetail = false.obs;
   var orderDetailObj = MainResponse().obs;
+
+  List<Categories> list = [
+    Categories(categoryName: "Komal Pandey",categoryImage: "assets/mode/mode1.png"),
+    Categories(categoryName: "Thatbohogirl",categoryImage: "assets/mode/mode2.png"),
+    Categories(categoryName: "Aashna Shroff",categoryImage: "assets/mode/mode2.png"),
+    Categories(categoryName: "shauryasanadhya",categoryImage: "assets/mode/mode4.png"),
+
+  ];
+
+  List<Categories> list1 = [
+    Categories(categoryName: "Komal Pandey",categoryImage: "assets/mode/mode1.png"),
+    Categories(categoryName: "Thatbohogirl",categoryImage: "assets/mode/mode2.png"),
+    Categories(categoryName: "Aashna Shroff",categoryImage: "assets/mode/mode2.png"),
+
+  ];
+
+
+  List<String> statusList = ["All","On the Way","Delivered","Cancelled","Returned"];
+
+  List<String> timeList = ["Anytime","Last 30 days","Last 6 months","Last year"];
 
   MyOrderController({required this.localRepositoryInterface, required this.apiRepositoryInterface});
 

@@ -34,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: SajiloDokanScaffold(
       leading: false,
       title: "My Account",
-      background: Colors.white,
+      background: Colors.grey[200],
       searchOnTab: () {},
       body: RefreshIndicator(
         onRefresh: () {
@@ -44,6 +44,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
         child: ListView(
           children: [
+            SizedBox(height: 16.0,),
             Obx(() {
               if (profileController.isUserDataRefresh.value == true) {
                 print(
@@ -54,177 +55,318 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 print(
                     "profileController.isUserDataRefresh.value  else ${profileController.isUserDataRefresh.value}");
               }
-              if (profileController.customerId.value == "") {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              border:
-                                  Border.all(color: Colors.redAccent, width: 1),
-                              color: Colors.grey[100],
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(
-                                      100.0) //                 <--- border radius here
-                                  ),
-                              // boxShadow: const [
-                              //   BoxShadow(
-                              //     color: Colors.black26,
-                              //     blurRadius: 10,
-                              //     offset:
-                              //     Offset(4, 8), // Shadow position
-                              //   ),
-                              // ],
-                            ),
-                            height: 110,
-                            width: 110,
-                            child: Center(
-                              child: Image.asset(
-                                "assets/img/user.png",
-                                fit: BoxFit.fill,
-                                height: 60,
-                                width: 65,
-                              ),
-                              // child: Text(
-                              //   customerProfileData[0].customerName !=
-                              //       null
-                              //       ? customerProfileData[0].customerName![0]
-                              //       : '',
-                              //   style: GoogleFonts.salsa(textStyle: const TextStyle( fontSize: 40),),
-                              // ),
-                            ),
-
-                            // ClipOval(
-                            //   child: Image.network(
-                            //     'https://images.contentstack.io/v3/assets/blt36c2e63521272fdc/blt2e5f7f145e6f737c/5e9d17c4cb84e463e2ebd703/370x370_Chris-Dale.jpg',
-                            //     width: 75,
-                            //     height: 75,
-                            //     fit: BoxFit.cover,
-                            //   ),
-                            // ),
-                          ),
-                          const SizedBox(
-                            width: 15.0,
-                          ),
-                          InkWell(
-                            child: Container(
+              if (profileController.customerId.value != "") {
+                return Container(
+                  color: AppColors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15,bottom: 15),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            Container(
                               decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: AppColors.appRed, width: 1),
-                                color: AppColors.appRed,
+                                border:
+                                    Border.all(color: Colors.redAccent, width: 1),
+                                color: Colors.grey[100],
                                 borderRadius: const BorderRadius.all(
                                     Radius.circular(
-                                        10.0) //                 <--- border radius here
+                                        100.0) //                 <--- border radius here
                                     ),
+                                // boxShadow: const [
+                                //   BoxShadow(
+                                //     color: Colors.black26,
+                                //     blurRadius: 10,
+                                //     offset:
+                                //     Offset(4, 8), // Shadow position
+                                //   ),
+                                // ],
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 8.0,
-                                  top: 8.0,
-                                  right: 20.0,
-                                  left: 20.0,
+                              height: 110,
+                              width: 110,
+                              child: Center(
+                                child: Image.asset(
+                                  "assets/img/user.png",
+                                  fit: BoxFit.fill,
+                                  height: 60,
+                                  width: 65,
                                 ),
-                                child: Text(
-                                  "LOGIN/SIGNUP",
-                                  style: GoogleFonts.salsa(
-                                    textStyle: const TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                  // style: const TextStyle(
-                                  //     fontSize: 23,
-                                  //     fontWeight: FontWeight.w500),
-                                ),
+                                // child: Text(
+                                //   customerProfileData[0].customerName !=
+                                //       null
+                                //       ? customerProfileData[0].customerName![0]
+                                //       : '',
+                                //   style: GoogleFonts.salsa(textStyle: const TextStyle( fontSize: 40),),
+                                // ),
                               ),
+
+                              // ClipOval(
+                              //   child: Image.network(
+                              //     'https://images.contentstack.io/v3/assets/blt36c2e63521272fdc/blt2e5f7f145e6f737c/5e9d17c4cb84e463e2ebd703/370x370_Chris-Dale.jpg',
+                              //     width: 75,
+                              //     height: 75,
+                              //     fit: BoxFit.cover,
+                              //   ),
+                              // ),
                             ),
-                            onTap: () {
-                              Get.toNamed(
-                                Routes.login,
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                            const SizedBox(
+                              width: 15.0,
+                            ),
+                            InkWell(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: AppColors.appRed, width: 1),
+                                  color: AppColors.appRed,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(
+                                          10.0) //                 <--- border radius here
+                                      ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    bottom: 8.0,
+                                    top: 8.0,
+                                    right: 20.0,
+                                    left: 20.0,
+                                  ),
+                                  child: Text(
+                                    "LOGIN/SIGNUP",
+                                    style: GoogleFonts.salsa(
+                                      textStyle: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    // style: const TextStyle(
+                                    //     fontSize: 23,
+                                    //     fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                Get.offNamed(Routes.login);
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 );
               } else {
-                print(
-                    "profileController.isLoadingCustomerProfile.value   ${profileController.isLoadingCustomerProfile.value}");
-                if (profileController.isLoadingCustomerProfile.value != true) {
-                  MainResponse? mainResponse =
-                      profileController.customerProfileObj.value;
-                  List<Customer>? customerProfileData = [];
-                  // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
-                  if (mainResponse.data != null) {
-                    mainResponse.data!.forEach((v) {
-                      customerProfileData.add(Customer.fromJson(v));
-                    });
-                  }
+                // print(
+                //     "profileController.isLoadingCustomerProfile.value   ${profileController.isLoadingCustomerProfile.value}");
+                // if (profileController.isLoadingCustomerProfile.value != true) {
+                //   MainResponse? mainResponse =
+                //       profileController.customerProfileObj.value;
+                //   List<Customer>? customerProfileData = [];
+                //   // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
+                //   if (mainResponse.data != null) {
+                //     mainResponse.data!.forEach((v) {
+                //       customerProfileData.add(Customer.fromJson(v));
+                //     });
+                //   }
+                //
+                //   // for (var v in mainResponse.data!) {
+                //   //   customerProfileData!.add(UpdateCustomerPasswordData.fromJson(v));
+                //   // }
+                //   // List<UpdateCustomerPasswordData>? sliderList =
+                //   // mainResponse.data != null ? mainResponse.data : [];
+                //   String? message = mainResponse.message ?? "";
+                //   if (customerProfileData.isEmpty) {
+                //     profileController.logout();
+                //     return SizedBox(
+                //       height: 150.0,
+                //       width: MediaQuery.of(context).size.width,
+                //       child: Column(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         crossAxisAlignment: CrossAxisAlignment.center,
+                //         children: <Widget>[
+                //           Column(
+                //             children: <Widget>[
+                //               Text(
+                //                 message,
+                //                 style: const TextStyle(color: Colors.black45),
+                //               )
+                //             ],
+                //           )
+                //         ],
+                //       ),
+                //     );
+                //   } else {
+                //     return InkWell(
+                //       onTap: () async {
+                //         print("My Profile");
+                //         final result = await Get.toNamed(Routes.editProfile,
+                //             arguments: customerProfileData[0]);
+                //         print("My Profile  $result");
+                //
+                //         if (result != null) {
+                //           profileController.getUser();
+                //         }
+                //       },
+                //       child: Container(
+                //         color: AppColors.white,
+                //         child: Padding(
+                //           padding: const EdgeInsets.only(left: 15, right: 15,bottom: 15),
+                //           child: Column(
+                //             children: [
+                //               Container(
+                //                 height: 20,
+                //               ),
+                //               Row(
+                //                 children: [
+                //                   Container(
+                //                     decoration: BoxDecoration(
+                //                       border: Border.all(
+                //                           color: Colors.redAccent, width: 1),
+                //
+                //                       borderRadius: const BorderRadius.all(
+                //                           Radius.circular(
+                //                               100.0) //                 <--- border radius here
+                //                           ),
+                //                       // boxShadow: const [
+                //                       //   BoxShadow(
+                //                       //     color: Colors.black26,
+                //                       //     blurRadius: 10,
+                //                       //     offset:
+                //                       //     Offset(4, 8), // Shadow position
+                //                       //   ),
+                //                       // ],
+                //                     ),
+                //                     height: 110,
+                //                     width: 110,
+                //                     child: Padding(
+                //                       padding: const EdgeInsets.all(4.0),
+                //                       child: Container(
+                //                         decoration: BoxDecoration(
+                //                           // border: Border.all(
+                //                           //     color: Colors.redAccent, width: 1),
+                //                           color: AppColors.appBg,
+                //                           borderRadius: const BorderRadius.all(
+                //                               Radius.circular(
+                //                                   100.0) //                 <--- border radius here
+                //                           ),
+                //                           // boxShadow: const [
+                //                           //   BoxShadow(
+                //                           //     color: Colors.black26,
+                //                           //     blurRadius: 10,
+                //                           //     offset:
+                //                           //     Offset(4, 8), // Shadow position
+                //                           //   ),
+                //                           // ],
+                //                         ),
+                //
+                //                         child: Center(
+                //                           child: Text(
+                //                             customerProfileData[0].customerName !=
+                //                                     null
+                //                                 ? customerProfileData[0]
+                //                                     .customerName![0]
+                //                                 : '',
+                //                             style: GoogleFonts.salsa(
+                //                               textStyle:
+                //                                   const TextStyle(fontSize: 40),
+                //                             ),
+                //                           ),
+                //                         ),
+                //                       ),
+                //                     ),
+                //
+                //                     // ClipOval(
+                //                     //   child: Image.network(
+                //                     //     'https://images.contentstack.io/v3/assets/blt36c2e63521272fdc/blt2e5f7f145e6f737c/5e9d17c4cb84e463e2ebd703/370x370_Chris-Dale.jpg',
+                //                     //     width: 75,
+                //                     //     height: 75,
+                //                     //     fit: BoxFit.cover,
+                //                     //   ),
+                //                     // ),
+                //                   ),
+                //                   const SizedBox(
+                //                     width: 15.0,
+                //                   ),
+                //                   Text(
+                //                     customerProfileData[0].customerName != null
+                //                         ? customerProfileData[0].customerName!
+                //                         : '',
+                //                     style: GoogleFonts.salsa(
+                //                       textStyle: const TextStyle(fontSize: 20),
+                //                     ),
+                //                     // style: const TextStyle(
+                //                     //     fontSize: 23,
+                //                     //     fontWeight: FontWeight.w500),
+                //                   ),
+                //                 ],
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //       ),
+                //     );
+                //   }
+                // } else {
+                //   // profileController.logout();
+                //   return const SizedBox(
+                //       height: 150,
+                //       child: Center(
+                //           child: CircularProgressIndicator(
+                //               color: Style.Colors.appColor)));
+                // }
 
-                  // for (var v in mainResponse.data!) {
-                  //   customerProfileData!.add(UpdateCustomerPasswordData.fromJson(v));
-                  // }
-                  // List<UpdateCustomerPasswordData>? sliderList =
-                  // mainResponse.data != null ? mainResponse.data : [];
-                  String? message = mainResponse.message ?? "";
-                  if (customerProfileData.isEmpty) {
-                    profileController.logout();
-                    return SizedBox(
-                      height: 150.0,
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              Text(
-                                message,
-                                style: const TextStyle(color: Colors.black45),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    );
-                  } else {
-                    return InkWell(
-                      onTap: () async {
-                        print("My Profile");
-                        final result = await Get.toNamed(Routes.editProfile,
-                            arguments: customerProfileData[0]);
-                        print("My Profile  $result");
 
-                        if (result != null) {
-                          profileController.getUser();
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 15, right: 15),
-                        child: Column(
+
+
+
+
+
+
+                return Container(
+                  color: AppColors.white,
+                  height: 146,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 20,
+                        ),
+                        Row(
                           children: [
                             Container(
-                              height: 20,
-                            ),
-                            Row(
-                              children: [
-                                Container(
+                              height: 105,
+                              width: 105,
+                              decoration: BoxDecoration(
+                                border:
+                                Border.all(color: Colors.redAccent, width: 1),
+                                color: AppColors.white,
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(
+                                        100.0) //                 <--- border radius here
+                                ),
+                                // boxShadow: const [
+                                //   BoxShadow(
+                                //     color: Colors.black26,
+                                //     blurRadius: 10,
+                                //     offset:
+                                //     Offset(4, 8), // Shadow position
+                                //   ),
+                                // ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Container(
                                   decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.redAccent, width: 1),
-                                    color: Colors.grey[100],
+                                    // border:
+                                    // Border.all(color: Colors.redAccent, width: 1),
+                                    color: AppColors.profileCircleBg,
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(
                                             100.0) //                 <--- border radius here
-                                        ),
+                                    ),
                                     // boxShadow: const [
                                     //   BoxShadow(
                                     //     color: Colors.black26,
@@ -234,20 +376,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     //   ),
                                     // ],
                                   ),
-                                  height: 110,
-                                  width: 110,
+
                                   child: Center(
-                                    child: Text(
-                                      customerProfileData[0].customerName !=
-                                              null
-                                          ? customerProfileData[0]
-                                              .customerName![0]
-                                          : '',
+                                    child:
+                                    Text(
+                                      "P",
                                       style: GoogleFonts.salsa(
-                                        textStyle:
-                                            const TextStyle(fontSize: 40),
+                                        textStyle: const TextStyle(
+                                            fontSize: 40,
+                                            color: AppColors.appText,
+                                            fontWeight: FontWeight.w400),
                                       ),
+                                      // style: const TextStyle(
+                                      //     fontSize: 23,
+                                      //     fontWeight: FontWeight.w500),
                                     ),
+                                    // child: Text(
+                                    //   customerProfileData[0].customerName !=
+                                    //       null
+                                    //       ? customerProfileData[0].customerName![0]
+                                    //       : '',
+                                    //   style: GoogleFonts.salsa(textStyle: const TextStyle( fontSize: 40),),
+                                    // ),
                                   ),
 
                                   // ClipOval(
@@ -259,35 +409,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   //   ),
                                   // ),
                                 ),
-                                const SizedBox(
-                                  width: 15.0,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 15.0,
+                            ),
+                            Container(
+
+                              child: Text(
+                                "Prachi",
+                                style: GoogleFonts.salsa(
+                                  textStyle: const TextStyle(
+                                      fontSize: 20,
+                                      color: AppColors.appText,
+                                      fontWeight: FontWeight.w400),
                                 ),
-                                Text(
-                                  customerProfileData[0].customerName != null
-                                      ? customerProfileData[0].customerName!
-                                      : '',
-                                  style: GoogleFonts.salsa(
-                                    textStyle: const TextStyle(fontSize: 20),
-                                  ),
-                                  // style: const TextStyle(
-                                  //     fontSize: 23,
-                                  //     fontWeight: FontWeight.w500),
-                                ),
-                              ],
+                                // style: const TextStyle(
+                                //     fontSize: 23,
+                                //     fontWeight: FontWeight.w500),
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    );
-                  }
-                } else {
-                  // profileController.logout();
-                  return const SizedBox(
-                      height: 150,
-                      child: Center(
-                          child: CircularProgressIndicator(
-                              color: Style.Colors.appColor)));
-                }
+                      ],
+                    ),
+                  ),
+                );
               }
             }),
 
@@ -308,16 +455,122 @@ class _ProfileScreenState extends State<ProfileScreen> {
             //     }
             //   },
             // ),
+            SizedBox(height: 16,),
             Obx(() {
               if (profileController.customerId.value == "") {
                 return Column(
                   children: [
                     ListItemCart(
                       iconPath: "assets/img/order.png",
-                      title: 'My Orders',
+                      title: 'Orders',
                       subTitle: "Save your card for faster checkout",
                       onPressed: () {
-                        AlertDialogs.showLoginRequiredDialog();
+                        // AlertDialogs.showLoginRequiredDialog();
+                        Get.toNamed(Routes.myOrder);
+                      },
+                    ),
+                    ListItemCart(
+                      iconPath: "assets/img/bank _cards.png",
+                      title: 'Saved Cards',
+                      subTitle: "Save your card for faster checkout",
+                      onPressed: () {
+                        Get.toNamed(Routes.savedCard);
+                      },
+                    ),
+                    ListItemCart(
+                      iconPath: "assets/img/coupons.png",
+                      title: 'Coupons',
+                      subTitle: "Manage coupons for additional discounts",
+                      onPressed: () {
+                        Get.toNamed(Routes.coupons);
+                      },
+                    ),
+                    // Container(
+                    //   height: 60,
+                    //   width: MediaQuery.of(context).size.width,
+                    //   color: AppColors.white,
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.only(left: 18.0,right: 16.0),
+                    //     child: Center(
+                    //       child: InkWell(
+                    //         onTap: (){
+                    //           Get.toNamed(Routes.coupons);
+                    //         },
+                    //         child: Row(
+                    //
+                    //           crossAxisAlignment: CrossAxisAlignment.center,
+                    //
+                    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //           children: [
+                    //             Row(
+                    //
+                    //               children: [
+                    //                 Image.asset("assets/img/coupons.png",fit: BoxFit.fill,height: 20,width: 30,),
+                    //                 // Icon(
+                    //                 //   icon,
+                    //                 //   size: 25,
+                    //                 //   color: const Color(0xFFFF7643),
+                    //                 // ),
+                    //                 const SizedBox(
+                    //                   width: 16,
+                    //                 ),
+                    //                 Padding(
+                    //                   padding: const EdgeInsets.only(top: 13.0),
+                    //                   child: Container(
+                    //                     // color: Colors.amberAccent,
+                    //                     child: Column(
+                    //                       crossAxisAlignment: CrossAxisAlignment.start,
+                    //
+                    //                       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //                       children: [
+                    //                         Text(
+                    //                             "Coupons",
+                    //                             style: GoogleFonts.inriaSans(textStyle: TextStyle(fontSize: 14,color: AppColors.appText))
+                    //                           // const TextStyle(color: Color(0xFFFF7643), fontSize: 18),
+                    //                         ),
+                    //                         Text(
+                    //                             "Manage coupons for additional discounts",
+                    //                             style: GoogleFonts.inriaSans(textStyle: TextStyle(fontSize: 10,color: AppColors.appText1))
+                    //                           // style:
+                    //                           // const TextStyle(color: Color(0xFFFF7643), fontSize: 18),
+                    //                         ),
+                    //                       ],
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //                 // Spacer(),
+                    //
+                    //                 // const Icon(
+                    //                 //   Icons.arrow_forward_ios,
+                    //                 //   color: Color(0xFF898989),
+                    //                 //   size: 20,
+                    //                 // )
+                    //               ],
+                    //             ),
+                    //             Image.asset("assets/img/arrow_right.png",fit: BoxFit.fill,height: 12,width: 8,),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(height: 15,),
+                    // Container(height: 1,width: MediaQuery.of(context).size.width,color: AppColors.tileLine,),
+                    ListItemCart(
+                      iconPath: "assets/img/help_center.png",
+                      title: 'Help Center',
+                      subTitle: "Raise a concern",
+                      onPressed: () {
+                        Get.toNamed(Routes.helpCenter);
+                      },
+                    ),
+
+                    ListItemCart(
+                      iconPath: "assets/img/save_as.png",
+                      title: 'Manage Your Account',
+                      subTitle: "Manage profile information",
+                      onPressed: () {
+                        Get.toNamed(Routes.editProfile,arguments: Customer(customerId: "2",customerName: "satish",gender: "Male",email: "satishdh",mobile: "12345678"));
                       },
                     ),
                     ListItemCart(
@@ -325,7 +578,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       title: 'Address',
                       subTitle: "Update/ change your shipping address",
                       onPressed: () {
-                        AlertDialogs.showLoginRequiredDialog();
+                        Get.toNamed(Routes.shippingAddress, arguments: false);
                       },
                     ),
                     // ListItemCart(
@@ -355,7 +608,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       iconPath: "assets/img/setting.png",
                       title: 'Settings',
                       subTitle: "Manage notificaton & delete account",
-                      onPressed: () {},
+                      last:false,
+                      onPressed: () {
+
+                        Get.toNamed(Routes.setting);
+                      },
                     ),
                     // ListItemCart(
                     //   iconPath:"assets/img/search.png",
@@ -399,9 +656,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       iconPath: "assets/img/help_center.png",
                       title: 'Help Center',
                       subTitle: "Raise a concern",
-                      onPressed: () {
-                        Get.toNamed(Routes.shippingAddress, arguments: false);
-                      },
+                      onPressed: () {},
                     ),
                     // ListItemCart(
                     //   iconPath: "assets/img/search.png",
@@ -446,6 +701,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       iconPath: "assets/img/setting.png",
                       title: 'Settings',
                       subTitle: "Manage notificaton & delete account",
+
                       onPressed: () {
                         Get.toNamed(Routes.setting);
                       },
@@ -461,7 +717,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }),
 
             Obx(() {
-              if (profileController.customerId.value == "") {
+              if (profileController.customerId.value != "") {
                 return Container();
                 // return InkWell(
                 //   onTap: () {
@@ -550,8 +806,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                   child: Padding(
                     padding:
-                        const EdgeInsets.only(left: 28.0, right: 25.0, top: 20),
+                        const EdgeInsets.only(left: 16.0, right: 16.0, top: 16,bottom: 16),
                     child: Container(
+                      height: 45,
                       decoration: BoxDecoration(
                         border: Border.all(color: AppColors.appRed, width: 1),
                         // color: Colors.grey[100],
@@ -559,18 +816,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 10.0) //                 <--- border radius here
                             ),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Center(
-                            child: Text(
-                          "LOG OUT",
-                          style: GoogleFonts.inriaSans(
-                              textStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.appRed,
-                                  fontWeight: FontWeight.w400)),
-                        )),
-                      ),
+                      child: Center(
+                          child: Text(
+                        "LOG OUT",
+                        style: GoogleFonts.inriaSans(
+                            textStyle: TextStyle(
+                                fontSize: 16,
+                                color: AppColors.appRed,
+                                fontWeight: FontWeight.w700)),
+                      )),
                     ),
                   ),
                 );
@@ -625,9 +879,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
             }),
 
-            const SizedBox(
-              height: 10,
-            ),
+            // SizedBox(height: 15.0,),
+            Container(
+              color: AppColors.aboutUsBg,
+              // height: 200,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16.0,bottom: 16,left: 60),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "FAQ",
+                          style: GoogleFonts.inriaSans(
+                              textStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.white,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                        Text(
+                          "S",
+                          style: GoogleFonts.inriaSans(
+                              textStyle: TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.white,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8,),
+                    Text(
+                      "ABOUT US",
+                      style: GoogleFonts.inriaSans(
+                          textStyle: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.white,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    SizedBox(height: 8,),
+                    Text(
+                      "TERMS OF USE",
+                      style: GoogleFonts.inriaSans(
+                          textStyle: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.white,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    SizedBox(height: 8,),
+                    Text(
+                      "PRIVACY POLICY",
+                      style: GoogleFonts.inriaSans(
+                          textStyle: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.white,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ),
+            )
             // Container(
             //   color: Colors.white.withOpacity(0.4),
             //   child: const Center(

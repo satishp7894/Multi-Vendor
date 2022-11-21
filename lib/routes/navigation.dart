@@ -3,12 +3,11 @@ import 'package:eshoperapp/pages/brand_product/brand_product_screen.dart';
 import 'package:eshoperapp/pages/cart/cart_binding.dart';
 import 'package:eshoperapp/pages/cart/cart_screen.dart';
 import 'package:eshoperapp/pages/category/categories_binding.dart';
-import 'package:eshoperapp/pages/category/category_products.dart';
-import 'package:eshoperapp/pages/category_product/category_product_screen.dart';
+import 'package:eshoperapp/pages/category_product/filter_screen.dart';
 import 'package:eshoperapp/pages/check_out/check_out_binding.dart';
 import 'package:eshoperapp/pages/check_out/check_out_screen.dart';
-import 'package:eshoperapp/pages/details/prodcut_details_screen.dart';
-import 'package:eshoperapp/pages/details/product_details_binding.dart';
+import 'package:eshoperapp/pages/choose_your_store/choose_your_store_screen.dart';
+import 'package:eshoperapp/pages/coupons/coupons_screen.dart';
 
 // import 'package:eshoperapp/pages/details/product_details_binding.dart';
 // import 'package:eshoperapp/pages/details/product_details_screen.dart';
@@ -22,18 +21,27 @@ import 'package:eshoperapp/pages/login/login_screen.dart';
 import 'package:eshoperapp/pages/myorder/my_order_screen.dart';
 import 'package:eshoperapp/pages/myorder/myorder_binding.dart';
 import 'package:eshoperapp/pages/myorder/order_details_screen.dart';
+import 'package:eshoperapp/pages/on_boarding/on_boarding1.dart';
+import 'package:eshoperapp/pages/otp/otp_screen.dart';
+import 'package:eshoperapp/pages/payment/payment_screen.dart';
 import 'package:eshoperapp/pages/profile/change_password_screen.dart';
 import 'package:eshoperapp/pages/profile/edit_profile_screen.dart';
 import 'package:eshoperapp/pages/profile/forget_password_screen.dart';
-import 'package:eshoperapp/pages/profile/profile_binding.dart';
+import 'package:eshoperapp/pages/profile/help_center_screen.dart';
+import 'package:eshoperapp/pages/saved_card/add_cards_screen.dart';
+import 'package:eshoperapp/pages/search/search_screen.dart';
 import 'package:eshoperapp/pages/setting/setting_screen.dart';
 import 'package:eshoperapp/pages/shipping_address/add_shipping_address_screen.dart';
 import 'package:eshoperapp/pages/shipping_address/shipping_address_screen.dart';
-import 'package:eshoperapp/pages/shipping_address/shipping_address_binding.dart';
 import 'package:eshoperapp/pages/splash/splash_binding.dart';
 import 'package:eshoperapp/pages/splash/splash_screen.dart';
+import 'package:eshoperapp/pages/wishlist/wishlist_screen.dart';
 import 'package:get/get.dart';
 
+import '../pages/notofication/notification_screen.dart';
+import '../pages/on_boarding/on_boarding2.dart';
+import '../pages/on_boarding/on_boarding3.dart';
+import '../pages/saved_card/saved_card_screen.dart';
 import '../pages/setting/setting_binding.dart';
 
 class Routes {
@@ -57,6 +65,20 @@ class Routes {
   static const String sendCodeScreen = '/sendCodeScreen';
   static const String createNewPassword = '/createNewPassword';
   static const String setting = '/setting';
+  static const String onBoarding1 = '/onBoarding1';
+  static const String onBoarding2 = '/onBoarding2';
+  static const String onBoarding3 = '/onBoarding3';
+  static const String otpScreen = '/otpScreen';
+  static const String savedCard = '/savedCard';
+  static const String addCards = '/addCards';
+  static const String helpCenter = '/helpCenter';
+  static const String coupons = '/coupons';
+  static const String searchScreen = '/searchScreen';
+  static const String wishList = '/wishList';
+  static const String notification = '/notification';
+  static const String payment = '/payment';
+  static const String chooseYourStoreScreen = '/chooseYourStoreScreen';
+  static const String filterScreen = '/filterScreen';
 }
 
 class Pages {
@@ -66,9 +88,36 @@ class Pages {
         page: () => SplashScreen(),
         binding: SplashBinding()),
     GetPage(
+        name: Routes.otpScreen,
+        page: () => OTPScreen(),),
+    GetPage(
+        name: Routes.onBoarding1,
+        page: () => const OnBoarding1(),
+        transition: Transition.rightToLeft,
+        transitionDuration: const Duration(milliseconds: 2000)),
+    GetPage(
+      name: Routes.onBoarding2,
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 1000),
+      page: () => const OnBoarding2(),
+      // binding: OnBoarding2Binding()
+    ),
+    GetPage(
+      name: Routes.onBoarding3,
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 1000),
+      page: () => const OnBoarding3(),
+      // binding: OnBoarding2Binding()
+    ),
+    GetPage(
       name: Routes.login,
       page: () => LoginScreen(),
-      bindings: [LoginBinding(), MainBinding()],
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 2000),
+      bindings: [
+        LoginBinding(),
+        MainBinding(),
+      ],
     ),
     GetPage(
       name: Routes.setting,
@@ -78,29 +127,81 @@ class Pages {
     GetPage(
         name: Routes.landingHome,
         page: () => const LandingHome(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 2000),
         bindings: [
           HomeBinding(),
           MainBinding(),
           CategoriesBinding(),
         ]),
     GetPage(
-        name: Routes.shippingAddress,
-        page: () => const ShippingAddressScreen(),
-        // bindings: [ShippingAddressBinding(), MainBinding()]
+      name: Routes.shippingAddress,
+      page: () => const ShippingAddressScreen(),
+      // bindings: [ShippingAddressBinding(), MainBinding()]
     ),
     GetPage(
-        name: Routes.addShippingAddress,
-        page: () =>  const AddShippingAddressScreen(),
-        // bindings: [ShippingAddressBinding(), MainBinding()]
+      name: Routes.searchScreen,
+      page: () => const SearchScreen(),
+      // bindings: [ShippingAddressBinding(), MainBinding()]
     ),
     GetPage(
-        name: Routes.brandProduct,
-        page: () => const BrandProductScreen(),
-        // bindings: [BrandProductBinding(), MainBinding()]
+      name: Routes.chooseYourStoreScreen,
+      page: () => const ChooseYourStoreScreen(),
+      // bindings: [ShippingAddressBinding(), MainBinding()]
+    ),
+    GetPage(
+      name: Routes.filterScreen,
+      page: () => const FilterScreen(),
+      // bindings: [ShippingAddressBinding(), MainBinding()]
+    ),
+    GetPage(
+      name: Routes.payment,
+      page: () => const PaymentScreen(),
+      // bindings: [ShippingAddressBinding(), MainBinding()]
+    ),
+    GetPage(
+      name: Routes.wishList,
+      page: () => const WishListScreen(),
+      // bindings: [ShippingAddressBinding(), MainBinding()]
+    ),
+    GetPage(
+      name: Routes.addCards,
+      page: () => const AddCardsScreen(),
+      // bindings: [ShippingAddressBinding(), MainBinding()]
+    ),
+    GetPage(
+      name: Routes.savedCard,
+      page: () => const SavedCardScreen(),
+      // bindings: [ShippingAddressBinding(), MainBinding()]
+    ),
+    GetPage(
+      name: Routes.helpCenter,
+      page: () => const HelpCenterScreen(),
+      // bindings: [ShippingAddressBinding(), MainBinding()]
+    ),
+    GetPage(
+      name: Routes.coupons,
+      page: () => const CouponsScreen(),
+      // bindings: [ShippingAddressBinding(), MainBinding()]
+    ),
+    GetPage(
+      name: Routes.addShippingAddress,
+      page: () => const AddShippingAddressScreen(),
+      // bindings: [ShippingAddressBinding(), MainBinding()]
+    ),
+    GetPage(
+      name: Routes.notification,
+      page: () => const NotificationScreen(),
+      // bindings: [ShippingAddressBinding(), MainBinding()]
+    ),
+    GetPage(
+      name: Routes.brandProduct,
+      page: () => const BrandProductScreen(),
+      // bindings: [BrandProductBinding(), MainBinding()]
     ),
     GetPage(
         name: Routes.cart,
-        page: () => CartScreen(0,true),
+        page: () => CartScreen(0, true),
         bindings: [MainBinding(), CartBinding()]),
     // GetPage(
     //     name: Routes.categoryProduct,
@@ -126,11 +227,17 @@ class Pages {
     GetPage(
         name: Routes.forgetPassword,
         page: () => const ForgetPasswordScreen(),
-        bindings: [MainBinding(),HomeBinding(),]),
+        bindings: [
+          MainBinding(),
+          HomeBinding(),
+        ]),
     GetPage(
         name: Routes.editProfile,
-        page: () =>  const EditProfileScreen(),
-        bindings: [MainBinding(),HomeBinding(),]),
+        page: () => const EditProfileScreen(),
+        bindings: [
+          MainBinding(),
+          HomeBinding(),
+        ]),
     //  yasle garda suru maa Yo controller  initiaze hunxa
     // GetPage(name: SajiloDokanRoutes.home, page: () => Home()),
     // GetPage(

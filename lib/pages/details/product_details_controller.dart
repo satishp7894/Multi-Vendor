@@ -155,6 +155,8 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../models/products.dart';
+
 class ProductDetailsController extends GetxController {
   final ApiRepositoryInterface apiRepositoryInterface;
   final LocalRepositoryInterface localRepositoryInterface;
@@ -165,6 +167,10 @@ class ProductDetailsController extends GetxController {
 
   RxInt? selectedImage = 0.obs;
   int get index => selectedImage!.value;
+
+  PageController pageController = PageController(
+    initialPage: 0,
+  );
 
   RxBool initbool = true.obs;
   RxInt productid = 0.obs;
@@ -178,6 +184,60 @@ class ProductDetailsController extends GetxController {
   var productDetailObj = MainResponse().obs;
 
   RxBool isRefresh = false.obs;
+
+  List<Color> colorList = [
+    Colors.red,
+    Colors.yellow,
+    Colors.green,
+    Colors.blue,
+    Colors.pink,
+    Colors.orange,
+  ];
+
+  int? currentIndex = 0;
+  final List<String> img = [
+    'https://images.template.net/wp-content/uploads/2016/11/15115545/Free-Marketing-Product-Sale-Banner.jpg',
+    'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/facebook-cover-sale-banner-design-template-724adcb8d9a5e63bd0c602643186454d_screen.jpg?ts=1608557087',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU7RiD0MiS3zu_IjZA6cCNtPpNgm6rk2spsaKCw40OxTLdH72Renkgm21Cd09TxM0vevE&usqp=CAU',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4A_THdCJyuCOmGkN11OR4gGjyBJuBgEpGmQ&usqp=CAU',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHTzusfPqz1-dogbofS9mxWdCAegcO8i7D3w&usqp=CAU',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJOCHxQGCUwAE1Ybn6vTcIz4JZnjnNJU5s5Q&usqp=CAU'
+  ];
+
+  final List<String> sizeList = [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "XXL",
+    "3XL",
+  ];
+
+
+  List<Products> list = [
+    Products(productName: "Fabric",shortDescription:"Leather"),
+    Products(productName: "Number of Pockets",shortDescription:"4"),
+    Products(productName: "Lining Fabric",shortDescription:"Polyster"),
+    Products(productName: "Sustainable",shortDescription:"Regular"),
+    Products(productName: "Features",shortDescription:"Lightweight"),
+  ];
+
+  List<Products> similarList = [
+    Products(productName: "ROADSTER",coverImage: "assets/img/similar.png",shortDescription:"Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
+    Products(productName: "ROADSTER",coverImage: "assets/img/similar.png",shortDescription:"Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
+    Products(productName: "ROADSTER",coverImage: "assets/img/similar.png",shortDescription:"Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
+    Products(productName: "ROADSTER",coverImage: "assets/img/similar.png",shortDescription:"Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
+    Products(productName: "ROADSTER",coverImage: "assets/img/similar.png",shortDescription:"Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
+    Products(productName: "ROADSTER",coverImage: "assets/img/similar.png",shortDescription:"Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
+    Products(productName: "ROADSTER",coverImage: "assets/img/similar.png",shortDescription:"Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
+    Products(productName: "ROADSTER",coverImage: "assets/img/similar.png",shortDescription:"Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
+    Products(productName: "ROADSTER",coverImage: "assets/img/similar.png",shortDescription:"Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
+    Products(productName: "ROADSTER",coverImage: "assets/img/similar.png",shortDescription:"Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
+    Products(productName: "ROADSTER",coverImage: "assets/img/similar.png",shortDescription:"Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
+    Products(productName: "ROADSTER",coverImage: "assets/img/similar.png",shortDescription:"Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF")
+
+  ];
 
   //Animation Controller for Controll animation
   //Declare
