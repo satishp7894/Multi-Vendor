@@ -19,9 +19,9 @@ class DefaultBTN extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            btnText!,
+            btnText!.toUpperCase(),
             style: GoogleFonts.inriaSans(
-              textStyle: const TextStyle(fontSize: 14,color: AppColors.white,fontWeight: FontWeight.w700),
+              textStyle: const TextStyle(fontSize: 16,color: AppColors.white,fontWeight: FontWeight.w700),
             ),
           ),
         ));

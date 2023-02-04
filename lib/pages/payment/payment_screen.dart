@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:eshoperapp/pages/payment/payment_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../config/theme.dart';
 import '../../utils/snackbar_dialog.dart';
 import '../../widgets/app_bar_title.dart';
+import '../landing_home/home_controller.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({Key? key}) : super(key: key);
@@ -16,12 +19,29 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
 
-  final paymentController = Get.put(PaymentController(
-      apiRepositoryInterface: Get.find(),
-      localRepositoryInterface: Get.find()));
 
-  String? paymentType;
 
+
+  PaymentController? paymentController;
+
+    @override
+      void initState() {
+      paymentController  = Get.put(PaymentController(
+          apiRepositoryInterface: Get.find(),
+          localRepositoryInterface: Get.find()));
+      dynamic argumentData = Get.arguments;
+      List<int> finalPIDList = argumentData[0]['productIdList'];
+      print("finalPIDList ==============> ${finalPIDList}");
+      for(int i=0;i<finalPIDList.length;i++){
+        print("finalPIDList $i ==============> ${finalPIDList[i]}");
+        paymentController!.productIdS =paymentController!.productIdS!+finalPIDList[i].toString()+",";
+      }
+
+      print("paymentController!.productIdS ========== > ${paymentController!.productIdS}");
+
+      // paymentController!.productIdS = finalPIDList.toString();
+        super.initState();
+      }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +93,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           children: [
 
                           ...List.generate(
-                              paymentController.paymentList.length,
+                              paymentController!.paymentList.length,
                                   (index) {
 
 
@@ -83,9 +103,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     onTap: () async {
 
                                       setState(() {
-                                        paymentController.paymentList.forEach((element) => element.isSelected = false);
-                                        paymentController.paymentList[index].isSelected = true;
-                                        paymentType = paymentController.paymentList[index].text;
+                                        paymentController!.paymentList.forEach((element) => element.isSelected = false);
+                                        paymentController!.paymentList[index].isSelected = true;
+                                        paymentController!.paymentType = paymentController!.paymentList[index].text;
                                       });
                                     },
                                     child:
@@ -100,13 +120,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                                              Row(
                                                children: [
-                                                 Image.asset(paymentController.paymentList[index].iconPath,fit: BoxFit.fill,height: 16,width: 25,),
+                                                 Image.asset(paymentController!.paymentList[index].iconPath,fit: BoxFit.fill,height: 16,width: 25,),
                                                  SizedBox(width: 10,),
-                                                 Text(paymentController.paymentList[index].text,
+                                                 Text(paymentController!.paymentList[index].text,
                                                      style: GoogleFonts.inriaSans(textStyle: const TextStyle(fontSize: 14,fontWeight: FontWeight.w700,color: AppColors.paymentOptionText))),
                                                ],
                                              ),
-                                             paymentController.paymentList[index].isSelected ?Image.asset("assets/img/active.png",fit: BoxFit.fill,height: 18,width: 18,):Image.asset("assets/img/deactive.png",fit: BoxFit.fill,height: 18,width: 18,)
+                                             paymentController!.paymentList[index].isSelected ?Image.asset("assets/img/active.png",fit: BoxFit.fill,height: 18,width: 18,):Image.asset("assets/img/deactive.png",fit: BoxFit.fill,height: 18,width: 18,)
                                           ],
                                         ),
                                       ),
@@ -340,7 +360,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400,
                                               color: AppColors.black))),
-                                  Text("₹3,289",
+                                  Text("₹ ${paymentController!.homeController.totalMRP.toInt()}",
                                       style: GoogleFonts.inriaSans(
                                           textStyle: const TextStyle(
                                               fontSize: 12,
@@ -358,7 +378,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400,
                                               color: AppColors.black))),
-                                  Text("-₹1,252",
+                                  Text("-₹ ${paymentController!.homeController.totalDISCOUNT.toInt()}",
                                       style: GoogleFonts.inriaSans(
                                           textStyle: const TextStyle(
                                               fontSize: 12,
@@ -447,7 +467,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w700,
                                               color: AppColors.black))),
-                                  Text("₹2,039",
+                                  Text("₹ ${paymentController!.homeController.totalAmount.toInt()}",
                                       style: GoogleFonts.inriaSans(
                                           textStyle: const TextStyle(
                                               fontSize: 12,
@@ -510,15 +530,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
               onTap: () {
                 // Get.toNamed(Routes.payment);
                 // openCheckout();
-                          if(paymentType == null){
+                          if(paymentController!.paymentType == null){
                             // AlertDialogs.showSimpleDialog("Payment Type","Please select payment type");
                             // Get.snackbar('Payment Type',"Please select payment type" ,duration: const Duration(seconds: 8), snackPosition: SnackPosition.BOTTOM,);
                             SnackBarDialog.showSnackbar('Payment Type','Please select payment option');
-                          }else if(paymentType == "Cash On Delivery"){
+                          }else if(paymentController!.paymentType == "Cash On Delivery"){
                             // homeController.placeOrder(paymentType!);
                             SnackBarDialog.showSnackbar('Payment Type','Cash On Delivery');
                           }else{
-                            paymentController.openCheckout();
+                            paymentController!.openCheckout();
                           }
               },
             ),

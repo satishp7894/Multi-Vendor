@@ -4,6 +4,7 @@ class Carts {
   String? productId;
   String? quantity;
   String? productName;
+  String? variantCode;
   String? productCode;
   String? shortCode;
   String? shortDescription;
@@ -49,6 +50,7 @@ class Carts {
         this.quantity,
         this.productName,
         this.productCode,
+        this.variantCode,
         this.shortCode,
         this.shortDescription,
         this.description,
@@ -93,6 +95,7 @@ class Carts {
     quantity = json['quantity'];
     productName = json['product_name'];
     productCode = json['product_code'];
+    variantCode = json['variant_code'];
     shortCode = json['short_code'];
     shortDescription = json['short_description'];
     description = json['description'];
@@ -139,6 +142,7 @@ class Carts {
     data['quantity'] = this.quantity;
     data['product_name'] = this.productName;
     data['product_code'] = this.productCode;
+    data['variant_code'] = this.variantCode;
     data['short_code'] = this.shortCode;
     data['short_description'] = this.shortDescription;
     data['description'] = this.description;

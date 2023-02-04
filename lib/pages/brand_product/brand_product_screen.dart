@@ -35,7 +35,7 @@ class _BrandProductScreenState extends State<BrandProductScreen> {
     brand = argumentData[0]['brandObj'];
     print("brandObj brandId ${brand!.brandId}");
     brandProductController = Get.put(BrandProductController(
-        apiRepositoryInterface: Get.find(), brandId: brand!.brandId!, localRepositoryInterface: Get.find()));
+        apiRepositoryInterface: Get.find(), localRepositoryInterface: Get.find()));
     super.initState();
   }
 
@@ -66,8 +66,8 @@ class _BrandProductScreenState extends State<BrandProductScreen> {
         ),
         body: RefreshIndicator(
           onRefresh: () {
-            CheckInternet.checkInternet();
-            return brandProductController!.brandProduct(brand!.brandId!, true);
+          return  CheckInternet.checkInternet();
+            // return brandProductController!.brandProduct(brand!.brandId!, true);
           },
           child: Obx(() {
             if (brandProductController!.isLoadingBrandProduct.value != true) {

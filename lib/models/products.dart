@@ -4,6 +4,7 @@ class Products {
   String? productId;
   String? productName;
   String? productCode;
+  String? variantCode;
   String? shortDescription;
   String? name;
   String? vendorId;
@@ -24,6 +25,7 @@ class Products {
       {this.productId,
         this.productName,
         this.productCode,
+        this.variantCode,
         this.shortDescription,
         this.name,
         this.vendorId,
@@ -44,6 +46,7 @@ class Products {
     productId = json['product_id'];
     productName = json['product_name'];
     productCode = json['product_code'];
+    variantCode = json['variant_code'];
     shortDescription = json['short_description'];
     name = json['name'];
     vendorId = json['vendor_id'];
@@ -66,6 +69,7 @@ class Products {
     data['product_id'] = this.productId;
     data['product_name'] = this.productName;
     data['product_code'] = this.productCode;
+    data['variant_code'] = this.variantCode;
     data['short_description'] = this.shortDescription;
     data['name'] = this.name;
     data['vendor_id'] = this.vendorId;

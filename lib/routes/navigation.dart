@@ -28,6 +28,7 @@ import 'package:eshoperapp/pages/profile/change_password_screen.dart';
 import 'package:eshoperapp/pages/profile/edit_profile_screen.dart';
 import 'package:eshoperapp/pages/profile/forget_password_screen.dart';
 import 'package:eshoperapp/pages/profile/help_center_screen.dart';
+import 'package:eshoperapp/pages/register/register_binding.dart';
 import 'package:eshoperapp/pages/saved_card/add_cards_screen.dart';
 import 'package:eshoperapp/pages/search/search_screen.dart';
 import 'package:eshoperapp/pages/setting/setting_screen.dart';
@@ -36,11 +37,16 @@ import 'package:eshoperapp/pages/shipping_address/shipping_address_screen.dart';
 import 'package:eshoperapp/pages/splash/splash_binding.dart';
 import 'package:eshoperapp/pages/splash/splash_screen.dart';
 import 'package:eshoperapp/pages/wishlist/wishlist_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
+import '../models/categories.dart';
+import '../pages/category_product/categoty_product_list_screen.dart';
 import '../pages/notofication/notification_screen.dart';
 import '../pages/on_boarding/on_boarding2.dart';
 import '../pages/on_boarding/on_boarding3.dart';
+import '../pages/otp/otp_screen1.dart';
+import '../pages/register/register_screen.dart';
 import '../pages/saved_card/saved_card_screen.dart';
 import '../pages/setting/setting_binding.dart';
 
@@ -48,6 +54,7 @@ class Routes {
   static const String splash = '/splash';
   static const String home = '/home';
   static const String login = '/login';
+  static const String register = '/register';
   static const String landingHome = '/landingHome';
   static const String productDetails = '/productDetails';
   static const String cart = '/cart';
@@ -69,6 +76,9 @@ class Routes {
   static const String onBoarding2 = '/onBoarding2';
   static const String onBoarding3 = '/onBoarding3';
   static const String otpScreen = '/otpScreen';
+  static const String otpScreen1 = '/otpScreen1';
+
+
   static const String savedCard = '/savedCard';
   static const String addCards = '/addCards';
   static const String helpCenter = '/helpCenter';
@@ -79,6 +89,7 @@ class Routes {
   static const String payment = '/payment';
   static const String chooseYourStoreScreen = '/chooseYourStoreScreen';
   static const String filterScreen = '/filterScreen';
+  static const String categoryProductList = '/categoryProductList';
 }
 
 class Pages {
@@ -91,10 +102,20 @@ class Pages {
         name: Routes.otpScreen,
         page: () => OTPScreen(),),
     GetPage(
+      name: Routes.otpScreen1,
+      page: () => const OTPScreen1(),),
+    GetPage(
         name: Routes.onBoarding1,
         page: () => const OnBoarding1(),
         transition: Transition.rightToLeft,
+        // transitionDuration: const Duration(milliseconds: 2000)),
         transitionDuration: const Duration(milliseconds: 2000)),
+    GetPage(
+        name: Routes.categoryProductList,
+        page: () => const CategoryProductListScreen(),
+        transition: Transition.rightToLeft,
+        // transitionDuration: const Duration(milliseconds: 1000)),
+        transitionDuration: const Duration(milliseconds: 200)),
     GetPage(
       name: Routes.onBoarding2,
       transition: Transition.fadeIn,
@@ -115,12 +136,26 @@ class Pages {
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 2000),
       bindings: [
-        LoginBinding(),
+        HomeBinding(),MainBinding(),
+        LoginBinding()
+      ],
+    ),
+
+    GetPage(
+      name: Routes.register,
+      page: () => RegisterScreen(),
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 2000),
+      bindings: [
+        RegisterBinding(),
         MainBinding(),
       ],
     ),
     GetPage(
       name: Routes.setting,
+      transition: Transition.rightToLeft,
+      // transitionDuration: const Duration(milliseconds: 800),
+      transitionDuration: const Duration(milliseconds: 200),
       page: () => SettingsScreen(),
       bindings: [SettingBinding()],
     ),
@@ -128,7 +163,7 @@ class Pages {
         name: Routes.landingHome,
         page: () => const LandingHome(),
         transition: Transition.fadeIn,
-        transitionDuration: const Duration(milliseconds: 2000),
+        transitionDuration: const Duration(milliseconds: 200),
         bindings: [
           HomeBinding(),
           MainBinding(),
@@ -142,18 +177,22 @@ class Pages {
     GetPage(
       name: Routes.searchScreen,
       page: () => const SearchScreen(),
+        transition: Transition.downToUp,
+        // transitionDuration: const Duration(milliseconds: 800),
+        transitionDuration: const Duration(milliseconds: 200),
+        bindings: [MainBinding()]
       // bindings: [ShippingAddressBinding(), MainBinding()]
     ),
     GetPage(
       name: Routes.chooseYourStoreScreen,
       page: () => const ChooseYourStoreScreen(),
-      // bindings: [ShippingAddressBinding(), MainBinding()]
+      bindings: [ HomeBinding(),MainBinding()]
     ),
-    GetPage(
-      name: Routes.filterScreen,
-      page: () => const FilterScreen(),
-      // bindings: [ShippingAddressBinding(), MainBinding()]
-    ),
+    // GetPage(
+    //   name: Routes.filterScreen,
+    //   page: () => const FilterScreen(),
+    //   // bindings: [ShippingAddressBinding(), MainBinding()]
+    // ),
     GetPage(
       name: Routes.payment,
       page: () => const PaymentScreen(),
@@ -162,25 +201,40 @@ class Pages {
     GetPage(
       name: Routes.wishList,
       page: () => const WishListScreen(),
-      // bindings: [ShippingAddressBinding(), MainBinding()]
+        transition: Transition.rightToLeft,
+        // transitionDuration: const Duration(milliseconds: 800),
+        transitionDuration: const Duration(milliseconds: 200),
+      bindings: [MainBinding()]
     ),
     GetPage(
       name: Routes.addCards,
       page: () => const AddCardsScreen(),
+      transition: Transition.rightToLeft,
+      // transitionDuration: const Duration(milliseconds: 800),
+      transitionDuration: const Duration(milliseconds: 200),
       // bindings: [ShippingAddressBinding(), MainBinding()]
     ),
     GetPage(
       name: Routes.savedCard,
+      transition: Transition.rightToLeft,
+      // transitionDuration: const Duration(milliseconds: 800),
+      transitionDuration: const Duration(milliseconds: 200),
       page: () => const SavedCardScreen(),
       // bindings: [ShippingAddressBinding(), MainBinding()]
     ),
     GetPage(
       name: Routes.helpCenter,
+      transition: Transition.rightToLeft,
+      // transitionDuration: const Duration(milliseconds: 800),
+      transitionDuration: const Duration(milliseconds: 200),
       page: () => const HelpCenterScreen(),
       // bindings: [ShippingAddressBinding(), MainBinding()]
     ),
     GetPage(
       name: Routes.coupons,
+      transition: Transition.rightToLeft,
+      // transitionDuration: const Duration(milliseconds: 800),
+      transitionDuration: const Duration(milliseconds: 200),
       page: () => const CouponsScreen(),
       // bindings: [ShippingAddressBinding(), MainBinding()]
     ),
@@ -192,7 +246,10 @@ class Pages {
     GetPage(
       name: Routes.notification,
       page: () => const NotificationScreen(),
-      // bindings: [ShippingAddressBinding(), MainBinding()]
+      transition: Transition.rightToLeft,
+      // transitionDuration: const Duration(milliseconds: 800),
+        transitionDuration: const Duration(milliseconds: 200),
+      bindings: [MainBinding()]
     ),
     GetPage(
       name: Routes.brandProduct,
@@ -211,6 +268,9 @@ class Pages {
     GetPage(
         name: Routes.myOrder,
         page: () => const MyOrderScreen(),
+        transition: Transition.rightToLeft,
+        // transitionDuration: const Duration(milliseconds: 800),
+        transitionDuration: const Duration(milliseconds: 200),
         bindings: [MainBinding(), MyOrderBinding()]),
     GetPage(
         name: Routes.myOrderDetails,

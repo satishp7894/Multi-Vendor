@@ -19,6 +19,10 @@ class CategoryProductController extends GetxController {
   var categoryProductObj = CategoryProduct().obs;
 
 
+  RxBool isLoadingChildCategory= false.obs;
+  var childCategoryObj = MainResponse().obs;
+
+
   List<Products> productGrid = [
     Products(productName: "ROADSTER",coverImage: "assets/img/producr1.png",shortDescription:"Lightweight Leather Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
     Products(productName: "ROADSTER",coverImage: "assets/img/producr2.png",shortDescription:"Lightweight Leather Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
@@ -32,7 +36,6 @@ class CategoryProductController extends GetxController {
     Products(productName: "ROADSTER",coverImage: "assets/img/producr3.png",shortDescription:"Lightweight Leather Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
     Products(productName: "ROADSTER",coverImage: "assets/img/producr3.png",shortDescription:"Lightweight Leather Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF"),
     Products(productName: "ROADSTER",coverImage: "assets/img/producr3.png",shortDescription:"Lightweight Leather Jacket" ,netPrice: "549",mrpPrice: "999",discount: "45% OFF")
-
   ];
 
 
@@ -46,14 +49,25 @@ class CategoryProductController extends GetxController {
   }
 
 
-  categoryProduct(String categoryId) async {
+  // categoryProduct(String categoryId) async {
+  //   try {
+  //     isLoadingCategoryProduct(true);
+  //     await apiRepositoryInterface.categoryProduct(categoryId).then((value) {
+  //       categoryProductObj(value);
+  //     });
+  //   } finally {
+  //     isLoadingCategoryProduct(false);
+  //   }
+  // }
+
+  getChildCategory(String chooseType) async {
     try {
-      isLoadingCategoryProduct(true);
-      await apiRepositoryInterface.categoryProduct(categoryId).then((value) {
-        categoryProductObj(value);
+      isLoadingChildCategory(true);
+      await apiRepositoryInterface.getChildCategory(chooseType).then((value) {
+        childCategoryObj(value);
       });
     } finally {
-      isLoadingCategoryProduct(false);
+      isLoadingChildCategory(false);
     }
   }
 }

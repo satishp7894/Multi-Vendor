@@ -4,6 +4,7 @@ import 'package:eshoperapp/models/main_response.dart';
 import 'package:eshoperapp/models/shipping_address.dart';
 import 'package:eshoperapp/pages/shipping_address/shippig_address_controller.dart';
 import 'package:eshoperapp/pages/shipping_address/views/address_list_tile.dart';
+import 'package:eshoperapp/pages/shipping_address/views/other_address_list_tile.dart';
 import 'package:eshoperapp/routes/navigation.dart';
 import 'package:eshoperapp/utils/check_internet.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class ShippingAddressScreen extends StatefulWidget {
 
 class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
   bool? isBool;
+  bool? isFlag = false;
 
   final shippingAddressController = Get.put(ShippingAddressController(
       apiRepositoryInterface: Get.find(), editMode: false, shippingAddress: ShippingAddress(),localRepositoryInterface: Get.find()));
@@ -33,6 +35,7 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
   void initState() {
     isBool = Get.arguments;
     print("isBool $isBool");
+    shippingAddressController.getUser();
     // print("isBool ${shippingAddressController}");
     // shippingAddressController.getAddressId();
     super.initState();
@@ -44,9 +47,9 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
     return WillPopScope(
       onWillPop: () async {
 
-        Get.back(result: "back");
+        Get.back(result: "true");
 
-        return true;
+        return false;
       },
       child: Scaffold(
 
@@ -75,6 +78,30 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
           child: Column(
             children: [
               AppbarTitleWidget(title: AppConstants.shippingAddress,flag: false,),
+              Container(
+
+                child: InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text("+ ADD NEW ADDRESS",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.appRed,fontWeight: FontWeight.w700,fontSize: 14)),),
+                  ),
+                  onTap: () async {
+                    final result =  await
+                    Get.toNamed(Routes.addShippingAddress,arguments: [
+                      {"editMode": false},
+                      {"addressObj": ShippingAddress()}
+                    ]);
+                    print("Shipping Address Screen  $result");
+                    if(result != null){
+                      shippingAddressController.getAddress(shippingAddressController.customerId.value);
+                    }
+                  },
+                ),
+                color: AppColors.white,
+                width: MediaQuery.of(context).size.width,
+              ),
+              Container(height: 10,color: AppColors.ratingText,),
+
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () {
@@ -89,17 +116,26 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                     if (shippingAddressController.isLoadingGetAddress.value == true) {
                       MainResponse? mainResponse = shippingAddressController.getAddressObj.value;
                       List<ShippingAddress>? shippingAddressData = [];
+                      List<ShippingAddress>? shippingAddressDataOther = [];
                       if(mainResponse.data != null){
-                        mainResponse.data!.forEach((v) {
-                          shippingAddressData.add( ShippingAddress.fromJson(v));
-                        });
+                        for(int i=0;i<mainResponse.data!.length;i++){
+                          if(mainResponse.data![i]['set_default']=="1"){
+                            shippingAddressData.add( ShippingAddress.fromJson(mainResponse.data![i]));
+                          }else{
+                            shippingAddressDataOther.add( ShippingAddress.fromJson(mainResponse.data![i]));
+                          }
+                        }
+                        // mainResponse.data!.forEach((v) {
+                        //   if()
+                        //
+                        // });
                       }
                       // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
 
-
+                      // shippingAddressDataOther = shippingAddressData.removeAt(0) as List<ShippingAddress>?;
                       String? imageUrl = mainResponse.imageUrl ?? "";
                       String? message = mainResponse.message ?? AppConstants.noInternetConn;
-                      if (shippingAddressData.isNotEmpty) {
+                      if (shippingAddressData.isEmpty && shippingAddressDataOther.isEmpty) {
                         return Container(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height,
@@ -124,38 +160,46 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                           ),
                         );
                       }else{
-                       return ListView(
-                         // shrinkWrap: true,
-                         children: [
-                           SingleChildScrollView(child: Column(
-                             mainAxisAlignment: MainAxisAlignment.start,
-                             crossAxisAlignment: CrossAxisAlignment.start,
-                             children: [
-                               SizedBox(height: 20,),
-                                InkWell(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Text("+ ADD NEW ADDRESS",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.appRed,fontWeight: FontWeight.w700,fontSize: 16)),),
-                                  ),
-                                  onTap: () async {
-                                    final result =  await
-                                    Get.toNamed(Routes.addShippingAddress,arguments: [
-                                      {"editMode": false},
-                                      {"addressObj": ShippingAddress()}
-                                    ]);
-                                    print("Shipping Address Screen  $result");
-                                    if(result != null){
-                                      shippingAddressController.getAddress(shippingAddressController.customerId.value);
-                                    }
-                                  },
-                                ),
-                               Padding(
-                                 padding: const EdgeInsets.only(left: 12.0,right: 12),
-                                 child: AddressListTile(shippingAddressList: shippingAddressData,isBool: isBool!,),
-                               ),
-                             ],
-                           )),
-                         ],
+                       return Container(
+                         color: AppColors.ratingText,
+                         child: ListView(
+                           // shrinkWrap: true,
+                           children: [
+                             SingleChildScrollView(child: Column(
+                               mainAxisAlignment: MainAxisAlignment.start,
+                               crossAxisAlignment: CrossAxisAlignment.start,
+                               children: [
+                                 // SizedBox(height: 20,),
+
+                                 for(int i=0;i<shippingAddressData.length;i++)
+
+                                   if(shippingAddressData[i].setDefault=="1")
+                                 Padding(
+                                   padding: const EdgeInsets.only(top: 10.0,left: 16,bottom: 10),
+                                   child: Text("DEFAULT ADDRESS",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.black,fontWeight: FontWeight.w700,fontSize: 14))),
+                                 )else
+                                   Container(height: 0,),
+                                 AddressListTile(shippingAddressList: shippingAddressData,isBool: isBool!,),
+
+
+                                 if(shippingAddressDataOther.isNotEmpty)
+
+                                   if(shippingAddressDataOther[0].setDefault=="0")
+
+                                     Padding(
+                                   padding: shippingAddressData.isNotEmpty? EdgeInsets.only(top: 20.0,left: 16,bottom: 10):EdgeInsets.only(top: 10.0,left: 16,bottom: 10),
+                                   child: Text("OTHERS ADDRESS",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.black,fontWeight: FontWeight.w700,fontSize: 14))),
+                                 )
+                                   else
+                                   Container()else
+                                  Container(),
+
+
+                                 OthersAddressListTile(shippingAddressList: shippingAddressDataOther,isBool: isBool!,),
+                               ],
+                             )),
+                           ],
+                         ),
                        );
                       }
 

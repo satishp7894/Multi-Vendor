@@ -7,34 +7,38 @@ import 'package:get/get.dart';
 class BrandProductController extends GetxController {
   final LocalRepositoryInterface localRepositoryInterface;
   final ApiRepositoryInterface apiRepositoryInterface;
-  final String brandId;
+  // final String brandId;
 
   BrandProductController(
       {required this.apiRepositoryInterface,
-      required this.localRepositoryInterface,required this.brandId});
+      required this.localRepositoryInterface});
 
   RxBool isLoadingBrandProduct= false.obs;
   var brandProductObj = MainResponse().obs;
+
+  RxBool isLoadingGetAllBrand= false.obs;
+  var getAllBrandObj = MainResponse().obs;
 
   RxBool isRefresh = false.obs;
 
   @override
   void onInit() {
     CheckInternet.checkInternet();
-    brandProduct(brandId, false);
+    // brandProduct(brandId, false);
     super.onInit();
   }
 
 
-  brandProduct(String brandId,bool refresh) async {
+
+  getAllBrand() async {
     try {
-      isLoadingBrandProduct(true);
-      isRefresh(refresh);
-      await apiRepositoryInterface.brandProduct(brandId).then((value) {
-        brandProductObj(value);
+      isLoadingGetAllBrand(false);
+      // isRefresh(refresh);
+      await apiRepositoryInterface.getAllBrand().then((value) {
+        getAllBrandObj(value);
       });
     } finally {
-      isLoadingBrandProduct(false);
+      isLoadingGetAllBrand(true);
     }
   }
 }

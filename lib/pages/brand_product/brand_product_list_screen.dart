@@ -1,4 +1,5 @@
 import 'package:eshoperapp/config/theme.dart';
+import 'package:eshoperapp/models/all_brand_model.dart';
 import 'package:eshoperapp/models/categories.dart';
 import 'package:eshoperapp/models/category.dart';
 import 'package:eshoperapp/models/product.dart';
@@ -7,16 +8,22 @@ import 'package:eshoperapp/utils/check_internet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
+import '../../constants/app_costants.dart';
+import '../../models/main_response.dart';
 import '../../models/products.dart';
 import '../../widgets/app_bar_title.dart';
+import '../category_product/category_product_screen.dart';
+import '../category_product/common_product_list_screen.dart';
+import 'brand_product_controller.dart';
 
 
 class BrandProductListScreen extends StatefulWidget {
-  final Categories? category;
+  final String? title;
 
-  const BrandProductListScreen({Key? key, required this.category})
+  const BrandProductListScreen({Key? key,this.title})
       : super(key: key);
 
   @override
@@ -24,7 +31,8 @@ class BrandProductListScreen extends StatefulWidget {
 }
 
 class _BrandProductListScreenState extends State<BrandProductListScreen> {
-  Categories? categories;
+  // Categories? categories;
+  BrandProductController? brandProductController;
 
   List<Products> itemsString = [
     Products(productName: "A",image: ["Aarika","AD By Arvind","AD By Arvind","American Eagle","Aarika","AD By Arvind","AD By Arvind","American Eagle"]),
@@ -43,7 +51,10 @@ class _BrandProductListScreenState extends State<BrandProductListScreen> {
     // categories = argumentData[0]['categoryObj'];
 
     // dynamic argumentData = Get.arguments;
-    categories = widget.category;
+    brandProductController = Get.put(BrandProductController(
+        apiRepositoryInterface: Get.find(), localRepositoryInterface: Get.find()));
+    brandProductController!.getAllBrand();
+    // categories = widget.category;
 
 
     super.initState();
@@ -187,61 +198,152 @@ class _BrandProductListScreenState extends State<BrandProductListScreen> {
                   // return categoryProductController!.categoryProduct(categories!.categoryId!);
                 },
                 child:
-                ListView.builder(
-                    itemCount: itemsString.length,
-                    itemBuilder: (context, index) {
-                  return StickyHeader(
-                    overlapHeaders : false,
-                    header: Stack(
-                      children: [
-                        Container(
-                          height: 25.0,
-                          color:AppColors.white,
 
-                        ),
-                        Container(
-                          height: 25.0,
-                          color:AppColors.brandTopTitle,
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          alignment: Alignment.centerLeft,
-                          child: Text('${itemsString[index].productName}',
-                              style: GoogleFonts.inriaSans(textStyle: const TextStyle(fontSize: 12,fontWeight: FontWeight.w700,color: AppColors.black))
-                          ),
-                        ),
-                      ],
-                    ),
-                    content: Padding(
-                      padding: const EdgeInsets.only(left: 15.0,right: 15.0),
-                      child: Column(children: itemsString[index].image!.map((e) => Container(
+                Obx(() {
+                  if (brandProductController!.isLoadingGetAllBrand.value ==
+                      true) {
+                    MainResponse? mainResponse =
+                        brandProductController!.getAllBrandObj.value;
+                    List<AllBrandModel>? allBrandData = [];
+                    // print(
+                    //     "bestSellerProductObj.data! ${mainResponse.data!}");
+                    if (mainResponse.data != null) {
+                      mainResponse.data!.forEach((v) {
+                        allBrandData.add(AllBrandModel.fromJson(v));
+                      });
+                    }
+                    // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
+
+                    String? imageUrl = mainResponse.imageUrl ?? "";
+                    String? message =
+                        mainResponse.message ?? AppConstants.noInternetConn;
+                    if (allBrandData.isEmpty) {
+                      return SizedBox(
+                        height: 200.0,
                         width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              //                   <--- left side
-                              width: 1,
-                              color: AppColors.toggleBg,
-                            ),
-
-                            // style: BorderStyle.solid,
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Column(
+                              children: <Widget>[
+                                Text(
+                                  message!,
+                                  style: const TextStyle(
+                                      color: Colors.black45),
+                                )
+                              ],
+                            )
+                          ],
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 16.0,bottom: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("$e", style: GoogleFonts.inriaSans(textStyle: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: AppColors.black))),
-                              Image.asset("assets/img/arrow_right.png",fit: BoxFit.fill,height: 12,width: 8,),
-                            ],
-                          ),
-                        ),
-                      )).toList()
+                      );
+                    } else {
+
+                      return  ListView.builder(
+                          itemCount: allBrandData.length,
+                          itemBuilder: (context, index) {
+                            return StickyHeader(
+                                overlapHeaders : false,
+                                header: Stack(
+                                  children: [
+                                    Container(
+                                      height: 25.0,
+                                      color:AppColors.white,
+
+                                    ),
+                                    Container(
+                                      height: 25.0,
+                                      color:AppColors.brandTopTitle,
+                                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                      alignment: Alignment.centerLeft,
+                                      child: Text('${allBrandData[index].letter}',
+                                          style: GoogleFonts.inriaSans(textStyle: const TextStyle(fontSize: 12,fontWeight: FontWeight.w700,color: AppColors.black))
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                content: Padding(
+                                  padding: const EdgeInsets.only(left: 15.0,right: 15.0),
+                                  child: Column(children: allBrandData[index].value!.map((brandObj) =>
+                                      InkWell(
+                                        onTap: () async {
+                                          // Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //     builder: (context) => CategoryProductScreen(category: Categories(),title: "ALL BRANDS",
+                                          //
+                                          //     ),
+                                          //   ),
+                                          // );
+                                          print("brandObj.brandName  =============== > ${brandObj.brandName}");
+                                          print("brandObj.brandId  =============== > ${brandObj.brandId}");
+                                          SharedPreferences sharedPreferences = await SharedPreferences.getInstance() ;
+                                          var chooseType = sharedPreferences.getString(AppConstants.chooseType!);
+
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => CommonProductListScreen(title: brandObj.brandName,
+                                                apiType: 'brandProduct',
+                                                id: brandObj.brandId,
+                                                offerId: "",
+                                                chooseType: widget.title,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          width: MediaQuery.of(context).size.width,
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              bottom: BorderSide(
+                                                //                   <--- left side
+                                                width: 1,
+                                                color: AppColors.toggleBg,
+                                              ),
+
+                                              // style: BorderStyle.solid,
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 16.0,bottom: 16.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("${brandObj.brandName}", style: GoogleFonts.inriaSans(textStyle: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: AppColors.black))),
+                                                Image.asset("assets/img/arrow_right.png",fit: BoxFit.fill,height: 12,width: 8,),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )).toList()
 
 
-                     ,),
-                    )
-                  );
-                })
+                                    ,),
+                                )
+                            );
+                          });
+                      // return Padding(
+                      //   padding: const EdgeInsets.only(
+                      //       left: 5.0, bottom: 3, right: 5.0),
+                      //   child: PopulorProduct(
+                      //     products: bestSellerProductsData,
+                      //     imageUrl: imageUrl,
+                      //   ),
+                      // );
+                    }
+                  } else {
+                    return Container(
+                      height: MediaQuery.of(context).size.height,
+                      child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor))
+                    );
+                  }
+                }),
+
+
+
+
+
 
                 // Obx(() {
                 //   if (categoryProductController!.isLoadingCategoryProduct.value != true) {

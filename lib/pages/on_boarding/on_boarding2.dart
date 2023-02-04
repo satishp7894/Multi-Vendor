@@ -42,7 +42,7 @@ class _OnBoarding2State extends State<OnBoarding2> {
     await Future.delayed(
       const Duration(seconds: 3),
     );
-    Get.offNamed(Routes.onBoarding3);
+    Get.offAndToNamed(Routes.onBoarding3);
 
   }
   @override
@@ -63,13 +63,18 @@ class _OnBoarding2State extends State<OnBoarding2> {
                   alignment: Alignment.centerRight,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 60.0, right: 20),
-                    child: Text(
-                      "Skip",
-                      style: GoogleFonts.inriaSans(
-                          textStyle: const TextStyle(
-                              color: AppColors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 18)),
+                    child: InkWell(
+                      onTap: (){
+                        Get.offAllNamed(Routes.login);
+                      },
+                      child: Text(
+                        "Skip",
+                        style: GoogleFonts.inriaSerif(
+                            textStyle: const TextStyle(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18)),
+                      ),
                     ),
                   ),
                 ),

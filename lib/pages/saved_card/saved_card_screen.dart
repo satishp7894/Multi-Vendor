@@ -132,142 +132,315 @@ class _SavedCardScreenState extends State<SavedCardScreen> {
                     itemCount: 3,
                     itemBuilder: (BuildContext c,int index){
 
-                  if(index == 0){
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onTap: (){
+                      if(groupValue == index){
+                        return Padding(
+                          padding:  index == 0 ?const EdgeInsets.all(16.0):const EdgeInsets.only(left: 16.0,bottom: 16,right: 16),
+                          child: InkWell(
+                            onTap: (){
 
-                          setState(() {
-                            groupValue = int.parse(index.toString());
-                          });
+                              setState(() {
+                                groupValue = int.parse(index.toString());
+                              });
 
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(5)
-                            ),
-                            border: Border.all(
-                              width: 1,
-                              color: AppColors.toggleBg,
-                              // style: BorderStyle.solid,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8.0,bottom: 8.0,right: 11),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: const BorderRadius.all(
+                                    const Radius.circular(5)
+                                ),
+                                border: Border.all(
+                                  width: 1,
+                                  color: AppColors.appRed,
+                                  // style: BorderStyle.solid,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8.0,bottom: 8.0,right: 11),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Radio(
-                                      value: index,
-                                      groupValue:  groupValue,
-                                      onChanged: (value) async {
-                                        setState(() {
-                                          //shippingAddressController!.addressTypeTextController!.text = value.toString();
-                                          // groupValue = int.parse(value!.toString());
-                                        });
-                                        print("value value value $value");
-                                        // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                                        // sharedPreferences.setInt(AppConstants.prefAddressId!, int.parse(value.toString()));
-                                        // print("value value value $value");
-                                        // Get.back(result: value);
+                                    Row(
+                                      children: [
+                                        // Radio(
+                                        //   value: index,
+                                        //   groupValue:  groupValue,
+                                        //   onChanged: (value) async {
+                                        //     setState(() {
+                                        //       //shippingAddressController!.addressTypeTextController!.text = value.toString();
+                                        //       // groupValue = int.parse(value!.toString());
+                                        //     });
+                                        //     print("value value value $value");
+                                        //     // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                                        //     // sharedPreferences.setInt(AppConstants.prefAddressId!, int.parse(value.toString()));
+                                        //     // print("value value value $value");
+                                        //     // Get.back(result: value);
+                                        //
+                                        //
+                                        //   },
+                                        //   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        // ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 10.0,right: 8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border:
+                                              Border.all(color: AppColors.appRed, width: 1),
+                                              color: AppColors.white,
+                                              borderRadius: const BorderRadius.all(
+                                                  Radius.circular(
+                                                      100.0) //                 <--- border radius here
+                                              ),
+                                              // boxShadow: const [
+                                              //   BoxShadow(
+                                              //     color: Colors.black26,
+                                              //     blurRadius: 10,
+                                              //     offset:
+                                              //     Offset(4, 8), // Shadow position
+                                              //   ),
+                                              // ],
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(1.5),
+                                              child: Container(
+                                               height: 13,width: 13,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: AppColors.appRed,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
 
-
-                                      },
-                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        Image.asset("assets/img/visa.png",fit: BoxFit.fill,height: 32,width: 56,)
+                                      ],
                                     ),
-                                    Image.asset("assets/img/visa.png",fit: BoxFit.fill,height: 32,width: 56,)
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text("**** **** **** 1111",style: CustomTextStyle.cardNumber,),
+                                        Text("VISA",style: CustomTextStyle.cardNumber,)
+                                      ],
+                                    )
                                   ],
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text("**** **** **** 1111",style: CustomTextStyle.cardNumber,),
-                                    Text("VISA",style: CustomTextStyle.cardNumber,)
-                                  ],
-                                )
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  }else{
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onTap: (){
-                          setState(() {
-                            groupValue = int.parse(index.toString());
-                          });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(5)
-                            ),
-                            border: Border.all(
-                              width: 1,
-                              color: AppColors.toggleBg,
-                              // style: BorderStyle.solid,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8.0,bottom: 8.0,right: 11),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
+                        );
+                      }else{
+                        return Padding(
+                          padding:  index == 0 ?const EdgeInsets.all(16.0):const EdgeInsets.only(left: 16.0,bottom: 16,right: 16),
+                          child: InkWell(
+                            onTap: (){
+
+                              setState(() {
+                                groupValue = int.parse(index.toString());
+                              });
+
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: const BorderRadius.all(
+                                    const Radius.circular(5)
+                                ),
+                                border: Border.all(
+                                  width: 1,
+                                  color: AppColors.bestSellingBorder,
+                                  // style: BorderStyle.solid,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8.0,bottom: 8.0,right: 11),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Radio(
-                                      value: index,
-                                      groupValue:  groupValue,
-                                      onChanged: (value) async {
-                                        setState(() {
-                                          //shippingAddressController!.addressTypeTextController!.text = value.toString();
-                                          // groupValue = int.parse(value!.toString());
-                                        });
-                                        print("value value value $value");
-                                        // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                                        // sharedPreferences.setInt(AppConstants.prefAddressId!, int.parse(value.toString()));
-                                        // print("value value value $value");
-                                        // Get.back(result: value);
-
-
-                                      },
-                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    Row(
+                                      children: [
+                                        // Radio(
+                                        //   value: index,
+                                        //   groupValue:  groupValue,
+                                        //   onChanged: (value) async {
+                                        //     setState(() {
+                                        //       //shippingAddressController!.addressTypeTextController!.text = value.toString();
+                                        //       // groupValue = int.parse(value!.toString());
+                                        //     });
+                                        //     print("value value value $value");
+                                        //     // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                                        //     // sharedPreferences.setInt(AppConstants.prefAddressId!, int.parse(value.toString()));
+                                        //     // print("value value value $value");
+                                        //     // Get.back(result: value);
+                                        //
+                                        //
+                                        //   },
+                                        //   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        // ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 10.0,right: 8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border:
+                                              Border.all(color: AppColors.bestSellingBorder, width: 1),
+                                              color: AppColors.white,
+                                              borderRadius: const BorderRadius.all(
+                                                  Radius.circular(
+                                                      100.0) //                 <--- border radius here
+                                              ),
+                                              // boxShadow: const [
+                                              //   BoxShadow(
+                                              //     color: Colors.black26,
+                                              //     blurRadius: 10,
+                                              //     offset:
+                                              //     Offset(4, 8), // Shadow position
+                                              //   ),
+                                              // ],
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(1.5),
+                                              child: Container(
+                                                height: 13,width: 13,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: AppColors.bestSellingBorder,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Image.asset("assets/img/visa.png",fit: BoxFit.fill,height: 32,width: 56,)
+                                      ],
                                     ),
-                                    Image.asset("assets/img/visa.png",fit: BoxFit.fill,height: 32,width: 56,)
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text("**** **** **** 1111",style: CustomTextStyle.cardNumber,),
+                                        Text("VISA",style: CustomTextStyle.cardNumber,)
+                                      ],
+                                    )
                                   ],
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text("**** **** **** 1111",style: CustomTextStyle.cardNumber,),
-                                    Text("VISA",style: CustomTextStyle.cardNumber,)
-                                  ],
-                                )
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  }
+                        );
+                      }
+
 
                 }),
               ),
             ],
           ),
         ),
-      )
+      ),
+
+
+      bottomNavigationBar: Wrap(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 60,
+
+            child: InkWell(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8.0,bottom: 8.0,left: 20.0,right: 20.0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  color: AppColors.appRed,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 8.0,
+                        top: 8.0,
+                      ),
+                      child: Text(
+                        "SAVE",
+                        style: GoogleFonts.inriaSans(
+                          textStyle: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700),
+                        ),
+                        // style: const TextStyle(
+                        //     fontSize: 23,
+                        //     fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                // if (_formKey.currentState!.validate()) {
+                //   print("_formKey true");
+                // } else {
+                //   print("_formKey false");
+                //   // create();
+                // }
+                // openCheckout();
+
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Dialog(
+
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.circular(0.0)),
+                       //this right here
+                        child: Container(
+                          height: 85,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(child: Center(child: Text("Are you sure you want to Logout?",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.black,fontWeight: FontWeight.w400,fontSize: 16))))),
+                                  Icon(Icons.close,color: AppColors.black,)
+
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                                child: Container(height: 1,width: MediaQuery.of(context).size.width,color: AppColors.appLine,),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5.0,bottom: 5.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    InkWell(
+
+                                      child: Text("NO",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.appLine,fontWeight: FontWeight.w700,fontSize: 14))),
+
+                                       ),
+                                    Container(height: 22,width: 1.5,color: AppColors.appLine,),
+                                    InkWell(
+                                      child: Text("YES",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.appRed,fontWeight: FontWeight.w700,fontSize: 14)),
+                                      ),
+                                      onTap: (){
+
+                                      },
+                                    )
+                                  ],),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+
+              },
+            ),
+          ),
+        ],
+      ),
 
     );
   }

@@ -4,11 +4,13 @@ import 'package:eshoperapp/pages/landing_home/home_controller.dart';
 import 'package:eshoperapp/pages/login/views/form.dart';
 import 'package:eshoperapp/pages/profile/profile_controller.dart';
 import 'package:eshoperapp/routes/navigation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../config/theme.dart';
+import '../../constants/app_costants.dart';
 import '../../models/customer.dart';
 import '../../utils/snackbar_dialog.dart';
 import 'login_controller.dart';
@@ -17,9 +19,14 @@ class LoginScreen extends GetWidget<LoginController> {
   final profileController =
   Get.put(ProfileController(
   apiRepositoryInterface: Get.find(), customer: Customer(), localRepositoryInterface: Get.find()));
-  final homeController = Get.find<HomeController>();
+  // final homeController = Get.find<HomeController>();
+
+
   void login() async {
-    Get.toNamed(Routes.otpScreen);
+    Get.toNamed(Routes.otpScreen,arguments: [
+          {"editMode": true},
+          {"phone": controller.mobileTextController.text},
+        ]);
     // CheckLogin? checkLogin = await controller.checkLogin();
     // if (checkLogin.status!) {
     //   Get.back();
@@ -42,7 +49,10 @@ class LoginScreen extends GetWidget<LoginController> {
 
   void register() async {
     print('register call in screen');
-    Get.toNamed(Routes.otpScreen);
+    Get.toNamed(Routes.otpScreen,arguments: [
+      {"editMode": false},
+      {"phone": controller.mobileTextController.text},
+    ]);
     // RegisterCustomer? registerCustomer = await controller.registerCustomer();
     // if (registerCustomer.status!) {
     //   controller.customerNameTexcontroller.clear();
@@ -86,26 +96,41 @@ class LoginScreen extends GetWidget<LoginController> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.white,
-          leading: Center(
-            child: IconButton(
-              icon: Image.asset(
-                "assets/img/arrow_left.png",
-                fit: BoxFit.fill,
-                height: 14,width: 17,
-              ),
-              onPressed: () => Get.back(),
-            ),
-          ),
+          // leading: Center(
+          //   child: IconButton(
+          //     icon: Image.asset(
+          //       "assets/img/arrow_left.png",
+          //       fit: BoxFit.fill,
+          //       height: 14,width: 17,
+          //     ),
+          //     onPressed: () => Get.back(),
+          //   ),
+          // ),
           actions: [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text("Skip",
-                  style: GoogleFonts.inriaSerif(
-                      textStyle: TextStyle(
-                          letterSpacing: 1.0,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.black))),
+              child: InkWell(
+                onTap: () async {
+                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance() ;
+
+                  print("sharedPreferences.getString(AppConstants.chooseType!) ===============> ${sharedPreferences.getString(AppConstants.chooseType!)}");
+
+                  if(sharedPreferences.getString(AppConstants.chooseType!) != null ){
+                    Get.offNamed(Routes.landingHome);
+                  }else{
+                    Get.offNamed(Routes.chooseYourStoreScreen);
+                  }
+
+
+                },
+                child: Text("Skip",
+                    style: GoogleFonts.inriaSerif(
+                        textStyle: TextStyle(
+                            letterSpacing: 1.0,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.black))),
+              ),
             ),
           ],
         ),

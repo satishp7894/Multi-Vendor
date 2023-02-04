@@ -12,6 +12,7 @@ import 'package:eshoperapp/style/theme.dart' as Style;
 import 'package:google_fonts/google_fonts.dart';
 import '../../config/theme.dart';
 import '../../widgets/app_bar.dart';
+import '../../widgets/app_bar_title.dart';
 import '../brand_product/brand_product_list_screen.dart';
 import '../category_product/categoty_product_list_screen.dart';
 import 'categories_controller.dart';
@@ -234,10 +235,50 @@ class CategorieScreen extends StatelessWidget {
             //   ),
             // ),
 
-            RefreshIndicator(
+            Column(
+              children: [
+                Container(
+                  color: AppColors.white,
+                  child:
+                  Column(children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: AppSizes.sidePadding,right: AppSizes.sidePadding,top: 26,bottom: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Category',
+                              style: GoogleFonts.inriaSans(textStyle: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: AppColors.appText))),
+
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              InkWell(child: Image.asset('assets/img/search.png',fit: BoxFit.fill,height: 18,width: 18,),
+                                onTap: (){
+                                  Get.toNamed(Routes.searchScreen);
+                                },),
+                              SizedBox(width: 18.0,),
+                              InkWell(child: Image.asset('assets/img/heart.png',fit: BoxFit.fill,height: 18,width: 18,),
+                                onTap: (){
+                                  Get.toNamed(Routes.wishList);
+                                },),
+                              SizedBox(width: 18.0,),
+                              InkWell(child: Image.asset('assets/img/Notification.png',fit: BoxFit.fill,height: 18,width: 16,),
+                                onTap: (){
+                                  Get.toNamed(Routes.notification);
+                                },
+                              )
+                            ],)
+                        ],
+                      ),
+                    ),
+                    Container(height: 1,width: MediaQuery.of(context).size.width,color: AppColors.tileLine,),
+                  ],),
+                ),
+                Expanded(
+                  child: RefreshIndicator(
           onRefresh: () {
-            CheckInternet.checkInternet();
-            return controller.getCategory(true);
+                  CheckInternet.checkInternet();
+                  return controller.getCategory(true);
           },
           child:
 
@@ -443,45 +484,49 @@ class CategorieScreen extends StatelessWidget {
 
 
 
-              Column(
-                children: [
-                  // Padding(
-                  //   padding: const EdgeInsets.only(left: AppSizes.sidePadding,right: AppSizes.sidePadding),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       Image.asset('assets/logos/app_logo.png',fit: BoxFit.fill,height: 55,width: 100,),
-                  //       Row(
-                  //         crossAxisAlignment: CrossAxisAlignment.end,
-                  //         children: [
-                  //           Image.asset('assets/img/search.png',fit: BoxFit.fill,height: 18,width: 18,),
-                  //           SizedBox(width: 18.0,),
-                  //           Image.asset('assets/img/heart.png',fit: BoxFit.fill,height: 18,width: 18,),
-                  //           SizedBox(width: 18.0,),
-                  //           Image.asset('assets/img/Notification.png',fit: BoxFit.fill,height: 18,width: 16,)
-                  //         ],)
-                  //     ],
-                  //   ),
-                  // ),
-                  // Container(height: 0.5,width: MediaQuery.of(context).size.width,color: AppColors.tileLine,),
-                  AppbarWidget(flag: false,),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(children: [
-                      _categoryWidget(Color.fromRGBO(255, 0, 245, 0.2),"Women","Shop Westernwear,Indianwear \nand More","assets/img/womens.png",context),
-                      SizedBox(height: 16,),
-                      _categoryWidget(Color.fromRGBO(0, 163, 255, 0.2),"Men","Shop Formals, Casuals and \nDenims","assets/img/mens.png",context),
-                      SizedBox(height: 16,),
-                      _categoryWidget(Color.fromRGBO(255, 107, 0, 0.2),"Kids","Shop for Boys, Girls and Infant","assets/img/kids.png",context),
-                      SizedBox(height: 16,),
-                      _categoryWidget(Color.fromRGBO(217, 217, 217, 0.3),"All Brands","Shop our accurate selection \nof brands","assets/img/brands.png",context),
-                      SizedBox(height: 16,)
+                    ListView(
+                      children: [
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: AppSizes.sidePadding,right: AppSizes.sidePadding),
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //     children: [
+                        //       Image.asset('assets/logos/app_logo.png',fit: BoxFit.fill,height: 55,width: 100,),
+                        //       Row(
+                        //         crossAxisAlignment: CrossAxisAlignment.end,
+                        //         children: [
+                        //           Image.asset('assets/img/search.png',fit: BoxFit.fill,height: 18,width: 18,),
+                        //           SizedBox(width: 18.0,),
+                        //           Image.asset('assets/img/heart.png',fit: BoxFit.fill,height: 18,width: 18,),
+                        //           SizedBox(width: 18.0,),
+                        //           Image.asset('assets/img/Notification.png',fit: BoxFit.fill,height: 18,width: 16,)
+                        //         ],)
+                        //     ],
+                        //   ),
+                        // ),
+                        // Container(height: 0.5,width: MediaQuery.of(context).size.width,color: AppColors.tileLine,),
+                        // AppbarWidget(flag: false,),
 
-                    ],),
-                  ),
-                ],
-              )
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(children: [
+                            _categoryWidget(Color.fromRGBO(255, 0, 245, 0.2),"Women","Shop Westernwear,Indianwear \nand More","assets/img/womens.png",context),
+                            SizedBox(height: 16,),
+                            _categoryWidget(Color.fromRGBO(0, 163, 255, 0.2),"Men","Shop Formals, Casuals and \nDenims","assets/img/mens.png",context),
+                            SizedBox(height: 16,),
+                            _categoryWidget(Color.fromRGBO(255, 107, 0, 0.2),"Kids","Shop for Boys, Girls and Infant","assets/img/kids.png",context),
+                            SizedBox(height: 16,),
+                            _categoryWidget(Color.fromRGBO(217, 217, 217, 0.3),"All Brands","Shop our accurate selection \nof brands","assets/img/brands.png",context),
+                            SizedBox(height: 16,)
+
+                          ],),
+                        ),
+                      ],
+                    )
         ),
+                ),
+              ],
+            ),
         bottomMenuIndex: 1,
       ),
     );
@@ -490,14 +535,27 @@ class CategorieScreen extends StatelessWidget {
   _categoryWidget(Color color,String title,String description,String image,BuildContext context){
     return InkWell(
       onTap: (){
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CategoryProductListScreen(category: Categories(),
+        if(title == "All Brands"){
 
-                                ),
-                              ),
-                            );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BrandProductListScreen(
+                    title: title,
+              ),
+            ),
+          );
+        }else{
+          Get.toNamed(Routes.categoryProductList,arguments: title);
+        }
+
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => CategoryProductListScreen(category: Categories(),
+                            //     ),
+                            //   ),
+                            // );
 
                             // Navigator.push(
                             //   context,

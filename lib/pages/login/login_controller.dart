@@ -41,19 +41,19 @@ class LoginController extends GetxController {
     showPassword(!showPassword.value);
   }
 
-  Future<CheckLogin> checkLogin() async {
+  Future<CheckLogin> checkLogin(String phone) async {
     final email = emailTextController.text;
     final password = passwordTextController.text;
 
     try {
       isLoading(true);
       final loginResponse =
-      await apiRepositoryInterface.checkLogin(LoginRequest(email, password));
+      await apiRepositoryInterface.checkLogin(LoginRequest(phone, password));
 
       // if (loginResponse != null) {
         // await localRepositoryInterface.saveToken(loginResponse.token);
       print("loginResponse ${loginResponse!.message}");
-      if (loginResponse.data != null){
+      if (loginResponse.data!.isNotEmpty){
         print("loginResponse ${loginResponse.data![0]}");
 
         await localRepositoryInterface.saveUser(loginResponse.data![0]);
@@ -81,7 +81,7 @@ class LoginController extends GetxController {
     }
   }
 
-  Future<RegisterCustomer> registerCustomer() async {
+  Future<CheckLogin> registerCustomer() async {
     final customerName = customerNameTexcontroller.text;
     final gender = genderTextController.text;
     final email = emailTextController.text;
@@ -119,7 +119,7 @@ class LoginController extends GetxController {
     } on Exception {
       isLoading(false);
 
-      return RegisterCustomer();
+      return CheckLogin();
     }
   }
 

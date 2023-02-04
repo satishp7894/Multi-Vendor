@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "114465180082",
+    "project_id": "mvendors-c8c2c",
+    "storage_bucket": "mvendors-c8c2c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:114465180082:android:9fadf7804ccbb0ad277cab",
+        "android_client_info": {
+          "package_name": "com.example.eshoperapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "114465180082-8kv52ork48bo63o2fngkkkg34fgbvuc7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmSAod9jBnZ0WH24TzcHN2c8Quf-lDsys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "114465180082-8kv52ork48bo63o2fngkkkg34fgbvuc7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

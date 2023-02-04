@@ -1,22 +1,27 @@
 import 'package:eshoperapp/config/theme.dart';
 import 'package:eshoperapp/models/categories.dart';
 import 'package:eshoperapp/models/category.dart';
+import 'package:eshoperapp/models/child_category_model.dart';
 import 'package:eshoperapp/models/product.dart';
 import 'package:eshoperapp/style/theme.dart' as Style;
 import 'package:eshoperapp/utils/check_internet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants/app_costants.dart';
+import '../../models/main_response.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/app_bar_title.dart';
 import 'category_product_controller.dart';
 import 'category_product_screen.dart';
+import 'common_product_list_screen.dart';
 
 class CategoryProductListScreen extends StatefulWidget {
-  final Categories? category;
+  // final Categories? category;
 
-  const CategoryProductListScreen({Key? key, required this.category})
+  const CategoryProductListScreen({Key? key})
       : super(key: key);
 
   @override
@@ -25,7 +30,7 @@ class CategoryProductListScreen extends StatefulWidget {
 
 class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
   CategoryProductController? categoryProductController;
-  Categories? categories;
+  // Categories? categories;
 
   /// Will used to access the Animated list
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
@@ -54,32 +59,35 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
     19
   ];
 
-  List<String> itemsString = [
-    "Dresses",
-    "Tops & Tunics",
-    "Shirts",
-    "T-Shirts",
-    "Jeans & Jeggings",
-    "Bottoms",
-    "Skirts",
-    "Jumpsuits",
-    "Co-ord sets",
-    "Jackets, Coats & Hoodies",
-    "Kurtis",
-    "Sweatshirts",
-    "Cardigans",
-    "Bras",
-    "Panties",
-    "Blazer",
-    "Shapewear",
-    "Stockings",
-    "Shrugs",
-    "Gowns",
-  ];
+  List<String> itemsString = [];
+  List<String> itemsStringImage = [];
+  // [
+  //   "Dresses",
+  //   "Tops & Tunics",
+  //   "Shirts",
+  //   "T-Shirts",
+  //   "Jeans & Jeggings",
+  //   "Bottoms",
+  //   "Skirts",
+  //   "Jumpsuits",
+  //   "Co-ord sets",
+  //   "Jackets, Coats & Hoodies",
+  //   "Kurtis",
+  //   "Sweatshirts",
+  //   "Cardigans",
+  //   "Bras",
+  //   "Panties",
+  //   "Blazer",
+  //   "Shapewear",
+  //   "Stockings",
+  //   "Shrugs",
+  //   "Gowns",
+  // ];
   List<int> _items = [];
 
   /// This holds the item count
   int counter = 0;
+  String title = Get.arguments;
 
   @override
   void initState() {
@@ -88,29 +96,43 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
     // categories = argumentData[0]['categoryObj'];
 
     // dynamic argumentData = Get.arguments;
-    categories = widget.category;
+    // categories = widget.category;
     // print("categoryObj categoryId ${categories!.categoryId}");
     // categoryProductController = Get.put(CategoryProductController(
     //     apiRepositoryInterface: Get.find(), categoryId: categories!.categoryId!, localRepositoryInterface: Get.find()));
     // initData(categoryProductController!,categories!);
-    _loadItems();
+    categoryProductController = Get.put(CategoryProductController(
+        apiRepositoryInterface: Get.find(),
+        localRepositoryInterface: Get.find(), categoryId: ''));
+    categoryProductController!.getChildCategory(title);
+    // _loadItems();
     super.initState();
   }
 
-  Future<void> _loadItems() async {
-    for (int item in _fetchedItems) {
-      // 1) Wait for one second
-      await Future.delayed(Duration(milliseconds: 500));
+  Future<void> _loadItems(List<ChildCategory> childCategoryData) async {
+    for(int i=0;i<childCategoryData.length;i++){
+      await Future.delayed(Duration(milliseconds: 200));
       // 2) Adding data to actual variable that holds the item.
-      _items.add(item);
+      _items.add(i);
+      itemsString.add(childCategoryData[i].categoryName!);
+      itemsStringImage.add(childCategoryData[i].categoryImage!);
       // 3) Telling animated list to start animation
       listKey.currentState?.insertItem(_items.length - 1);
     }
+    // for (ChildCategory item in childCategoryData.length) {
+    //   // 1) Wait for one second
+    //   await Future.delayed(Duration(milliseconds: 200));
+    //   // 2) Adding data to actual variable that holds the item.
+    //   _items.add(item);
+    //   // 3) Telling animated list to start animation
+    //   listKey.currentState?.insertItem(_items.length - 1);
+    // }
   }
 
-  Widget slideIt(BuildContext context, int index, animation) {
-    int item = _items[index];
-    String itemString = itemsString[index];
+  Widget slideIt(BuildContext context, int index, animation, List<ChildCategory> childCategoryData, String imageUrl) {
+    // int item = _items[index];
+    String? itemString = itemsString[index];
+    String? itemStringImage = itemsStringImage[index];
     TextStyle? textStyle = Theme.of(context).textTheme.headline4;
     return SlideTransition(
       textDirection: TextDirection.rtl,
@@ -122,13 +144,28 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
         curve: Curves.easeInSine,
       )),
       child: InkWell(
-        onTap: (){
+        onTap: () async {
+
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => CategoryProductScreen(category: Categories(),title: title,
+          //
+          //     ),
+          //   ),
+          // );
+          print("childCategoryData[index].categoryId  =============== > ${childCategoryData[index].categoryId}");
+          SharedPreferences sharedPreferences = await SharedPreferences.getInstance() ;
+          var chooseType = sharedPreferences.getString(AppConstants.chooseType!);
 
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CategoryProductScreen(category: Categories(),
-
+              builder: (context) => CommonProductListScreen(title: childCategoryData[index].categoryName,
+                apiType: 'categoryProduct',
+                id: childCategoryData[index].categoryId,
+                offerId: "",
+                chooseType: title,
               ),
             ),
           );
@@ -149,7 +186,7 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(top: 16.0,bottom: 16),
+            padding: const EdgeInsets.only(top: 10.0,bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -165,7 +202,7 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
                   decoration: BoxDecoration(
                       color: AppColors.grey, shape: BoxShape.circle),
                   child:  ClipRRect(borderRadius:
-                  BorderRadius.circular(100),child: Image(image: AssetImage("assets/img/pic.png"),fit: BoxFit.contain,)),
+                  BorderRadius.circular(100),child: Image(image: NetworkImage(imageUrl+itemStringImage),fit: BoxFit.cover,)),
                 )
               ],
             ),
@@ -207,26 +244,104 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            AppbarTitleWidget(title: "WOMEN",),
+            AppbarTitleWidget(title: title,),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () {
-                  return CheckInternet.checkInternet();
+                   CheckInternet.checkInternet();
+                 return categoryProductController!.getChildCategory(title);
                   // return categoryProductController!.categoryProduct(categories!.categoryId!);
                 },
-                child: SizedBox(
-                  height: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16,right: 16),
-                    child: AnimatedList(
-                      key: listKey,
-                      initialItemCount: _items.length,
-                      itemBuilder: (context, index, animation) {
-                        return slideIt(context, index, animation);
-                      },
-                    ),
-                  ),
-                ),
+                child:
+                Obx(() {
+                  if (categoryProductController!.isLoadingChildCategory.value !=
+                      true) {
+                    MainResponse? mainResponse =
+                        categoryProductController!.childCategoryObj.value;
+                    _items = [];
+                    itemsString = [];
+                    itemsStringImage = [];
+
+                    List<ChildCategory>? childCategoryData = [];
+                    // print(
+                    //     "bestSellerProductObj.data! ${mainResponse.data!}");
+                    if (mainResponse.data != null) {
+                      mainResponse.data!.forEach((v) {
+                        childCategoryData.add(ChildCategory.fromJson(v));
+                      });
+                      _loadItems(childCategoryData);
+
+                    }
+                    // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
+
+                    String? imageUrl = mainResponse.imageUrl ?? "";
+                    String? message =
+                        mainResponse.message ?? AppConstants.noInternetConn;
+                    if (childCategoryData.isEmpty) {
+                      return SizedBox(
+                        height: 200.0,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Column(
+                              children: <Widget>[
+                                Text(
+                                  message!,
+                                  style: const TextStyle(
+                                      color: Colors.black45),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    } else {
+
+                      return  SizedBox(
+                        height: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16,right: 16),
+                          child: AnimatedList(
+                            key: listKey,
+                            initialItemCount: _items.length,
+                            itemBuilder: (context, index, animation) {
+                              return slideIt(context, index, animation, childCategoryData,imageUrl);
+                            },
+                          ),
+                        ),
+                      );
+                      // return Padding(
+                      //   padding: const EdgeInsets.only(
+                      //       left: 5.0, bottom: 3, right: 5.0),
+                      //   child: PopulorProduct(
+                      //     products: bestSellerProductsData,
+                      //     imageUrl: imageUrl,
+                      //   ),
+                      // );
+                    }
+                  } else {
+                    return Container(
+                      height: 200,
+                      // child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor))
+                    );
+                  }
+                }),
+
+                // SizedBox(
+                //   height: double.infinity,
+                //   child: Padding(
+                //     padding: const EdgeInsets.only(left: 16,right: 16),
+                //     child: AnimatedList(
+                //       key: listKey,
+                //       initialItemCount: _items.length,
+                //       itemBuilder: (context, index, animation) {
+                //         return slideIt(context, index, animation);
+                //       },
+                //     ),
+                //   ),
+                // ),
 
                 // Obx(() {
                 //   if (categoryProductController!.isLoadingCategoryProduct.value != true) {
@@ -450,13 +565,13 @@ class _CategoryProductListScreenState extends State<CategoryProductListScreen> {
     );
   }
 
-  Future<void> initData(CategoryProductController categoryProductController,
-      Categories categories) async {
-    print("categories.categoryId! ${categories.categoryId!}");
-    await Future.delayed(const Duration(microseconds: 0), () {
-      categoryProductController.categoryProduct(categories.categoryId!);
-    });
-  }
+  // Future<void> initData(CategoryProductController categoryProductController,
+  //     Categories categories) async {
+  //   print("categories.categoryId! ${categories.categoryId!}");
+  //   await Future.delayed(const Duration(microseconds: 0), () {
+  //     categoryProductController.categoryProduct(categories.categoryId!);
+  //   });
+  // }
 }
 
 class CategoryArguments {

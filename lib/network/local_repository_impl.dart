@@ -44,11 +44,11 @@ class LocalRepositoryImpl extends LocalRepositoryInterface {
       mobile: prefMobile,
       email: prefEmail,
       password: prefPassword,
-      showPassword: prefShowPassword,
+      // showPassword: prefShowPassword,
       // createdBy: prefCreatedBy,
       // modifiedBy: prefModifiedBy,
-      created: prefCreated,
-      modified: prefModified,
+      // created: prefCreated,
+      // modified: prefModified,
       isActive: prefIsActive,
 
     );
@@ -60,15 +60,15 @@ class LocalRepositoryImpl extends LocalRepositoryInterface {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString(AppConstants.prefCustomerId!, checkLoginData!.customerId!);
     sharedPreferences.setString(AppConstants.prefCustomerName!, checkLoginData.customerName!);
-    sharedPreferences.setString(AppConstants.prefGender!, checkLoginData.gender!);
+    sharedPreferences.setString(AppConstants.prefGender!, checkLoginData.gender != null ?checkLoginData.gender! : "");
     sharedPreferences.setString(AppConstants.prefMobile!, checkLoginData.mobile!);
     sharedPreferences.setString(AppConstants.prefEmail!, checkLoginData.email!);
     sharedPreferences.setString(AppConstants.prefPassword!, checkLoginData.password!);
-    sharedPreferences.setString(AppConstants.prefShowPassword!, checkLoginData.showPassword!);
+    // sharedPreferences.setString(AppConstants.prefShowPassword!, checkLoginData.showPassword!);
     // sharedPreferences.setString(AppConstants.prefCreatedBy!, checkLoginData.createdBy!);
     // sharedPreferences.setString(AppConstants.prefModifiedBy!, checkLoginData.modifiedBy!);
-    sharedPreferences.setString(AppConstants.prefCreated!, checkLoginData.created!);
-    sharedPreferences.setString(AppConstants.prefModified!, checkLoginData.modified!);
+    // sharedPreferences.setString(AppConstants.prefCreated!, checkLoginData.created!);
+    // sharedPreferences.setString(AppConstants.prefModified!, checkLoginData.modified!);
     sharedPreferences.setString(AppConstants.prefIsActive!, checkLoginData.isActive!);
     return checkLoginData;
   }

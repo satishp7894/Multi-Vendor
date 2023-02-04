@@ -13,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../config/theme.dart';
 import '../../utils/snackbar_dialog.dart';
+import '../../widgets/app_bar_title.dart';
 
 
 class ChangePasswordScreen extends GetWidget<ProfileController> {
@@ -57,21 +58,22 @@ class ChangePasswordScreen extends GetWidget<ProfileController> {
         return true;
       },
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 1,
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Image.asset("assets/img/arrow_left.png",fit: BoxFit.fill,height: 20,width: 22,),
-
-            // Icon(
-            //   Icons.arrow_back,
-            //   color: Style.Colors.appColor,
-            //   size: 30,
-            // ),
-            onPressed: () =>  Get.back(),
-          ),
-          title: Text("${AppConstants.changePassword}", style: GoogleFonts.inriaSans(textStyle: TextStyle(color:AppColors.appText,fontSize: 20,fontWeight: FontWeight.w700 ))),
-        ),
+        backgroundColor: AppColors.appBg,
+        // appBar: AppBar(
+        //   elevation: 1,
+        //   backgroundColor: Colors.white,
+        //   leading: IconButton(
+        //     icon: Image.asset("assets/img/arrow_left.png",fit: BoxFit.fill,height: 20,width: 22,),
+        //
+        //     // Icon(
+        //     //   Icons.arrow_back,
+        //     //   color: Style.Colors.appColor,
+        //     //   size: 30,
+        //     // ),
+        //     onPressed: () =>  Get.back(),
+        //   ),
+        //   title: Text("${AppConstants.changePassword}", style: GoogleFonts.inriaSans(textStyle: TextStyle(color:AppColors.appText,fontSize: 20,fontWeight: FontWeight.w700 ))),
+        // ),
         // appBar: AppBar(
         //   elevation: 5,
         //   backgroundColor: Colors.white,
@@ -86,25 +88,27 @@ class ChangePasswordScreen extends GetWidget<ProfileController> {
         //   title: const Text("${AppConstants.changePassword}", style: TextStyle(fontSize: 20,color: Style.Colors.appColor)),
         // ),
         body: SafeArea(
-          child: Container(
-            // alignment: Alignment.center,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ChangePassForm(
-                      currentPassword: controller.currentPasswordTexcontroller,
-                      newPassword: controller.newPasswordTexcontroller,
-                      confirmPassword: controller.confirmPasswordTexcontroller,
-                      submitAction:submit,
-                    )
-                  ],
+          child: Column(
+            children: [
+              AppbarTitleWidget(title: "${AppConstants.changePassword}",flag: false,),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 16,),
+                      ChangePassForm(
+                        currentPassword: controller.currentPasswordTexcontroller,
+                        newPassword: controller.newPasswordTexcontroller,
+                        confirmPassword: controller.confirmPasswordTexcontroller,
+                        submitAction:submit,
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),

@@ -6,6 +6,7 @@ import 'package:eshoperapp/routes/navigation.dart';
 import 'package:get/get.dart';
 
 import '../../models/categories.dart';
+import '../../utils/snackbar_dialog.dart';
 
 class MyOrderController extends GetxController {
   final LocalRepositoryInterface localRepositoryInterface;
@@ -14,8 +15,15 @@ class MyOrderController extends GetxController {
   var productList = <Product>[].obs;
   RxBool isLoading = true.obs;
 
-  RxInt groupValueStatus = 0.obs;
-  RxInt groupValueTime = 0.obs;
+  String customerId = "";
+  String customerName = "";
+
+  RxString groupValueStatus = "All".obs;
+  RxString groupValueTime = "Anytime".obs;
+  RxString searchKeyword = "".obs;
+
+  RxString timeValue = "Anytime".obs;
+  RxString statusValue = "All".obs;
 
   RxBool isLoadingGetOrderHistory = false.obs;
   var getOrderHistoryObj = MainResponse().obs;
@@ -39,7 +47,7 @@ class MyOrderController extends GetxController {
   ];
 
 
-  List<String> statusList = ["All","On the Way","Delivered","Cancelled","Returned"];
+  List<String> statusList = ["All","Processing","Delivered","Returned"];
 
   List<String> timeList = ["Anytime","Last 30 days","Last 6 months","Last year"];
 
@@ -61,6 +69,8 @@ class MyOrderController extends GetxController {
       await localRepositoryInterface.getUser().then((value) {
         print("getUser customerId ${value!.customerId}");
         if (value.customerId != null) {
+          customerId = value.customerId!;
+          customerName = value.customerName!;
           getOrderHistory(value.customerId!);
         }else{
           getOrderHistory("");
@@ -76,43 +86,60 @@ class MyOrderController extends GetxController {
 
   getOrderHistory(String customerId) async {
     try {
-      isLoadingGetOrderHistory(true);
+      isLoadingGetOrderHistory(false);
       await apiRepositoryInterface.orderHistory(customerId).then((value) {
         getOrderHistoryObj(value);
       });
     } finally {
-      isLoadingGetOrderHistory(false);
+      isLoadingGetOrderHistory(true);
       // refreshTotal();
     }
   }
 
-  orderDetail(String orderId) async {
+  searchInOrder(String customerId,keyword,status,time) async {
     try {
-      isLoadingOrderDetail(true);
-      await apiRepositoryInterface.orderDetail(orderId).then((value) {
-        orderDetailObj(value);
+      isLoadingGetOrderHistory(false);
+      await apiRepositoryInterface.searchInOrder(customerId,keyword,status,time).then((value) {
+        getOrderHistoryObj(value);
       });
     } finally {
-      isLoadingOrderDetail(false);
+      isLoadingGetOrderHistory(true);
       // refreshTotal();
     }
   }
 
-  // void fetchProduct() async {
-  //   final token = await localRepositoryInterface.getToken();
-  //   isLoading(false);
+  // getOrderByFilter(String customerId,status,time) async {
   //   try {
-  //     var products = await apiRepositoryInterface.fetchingProdcut(token);
-  //     if (products != null) {
-  //       productList(products);
-  //     }
+  //     isLoadingGetOrderHistory(false);
+  //     await apiRepositoryInterface.getOrderByFilter(customerId,status,time).then((value) {
+  //       getOrderHistoryObj(value);
+  //     });
   //   } finally {
-  //     isLoading(true);
+  //     isLoadingGetOrderHistory(true);
+  //     // refreshTotal();
   //   }
   // }
 
+  orderDetail(String orderId,productId) async {
+    try {
+      isLoadingOrderDetail(false);
+      await apiRepositoryInterface.orderDetail(orderId,productId).then((value) {
+        orderDetailObj(value);
+      });
+    } finally {
+      isLoadingOrderDetail(true);
+      // refreshTotal();
+    }
+  }
 
-
-
-
+  void addProductRatingReviews(String orderId, productId, customerId, customerName, starRate, reviewContent, reviewTitle) async {
+    MainResponse? mainResponse  = await apiRepositoryInterface.addProductRatingReviews(productId, customerId,customerName,starRate,reviewContent,reviewTitle);
+    if (mainResponse!.status!) {
+      orderDetail(orderId,productId);
+      Get.back();
+      SnackBarDialog.showSnackbar('Success',mainResponse.message!);
+    } else {
+      SnackBarDialog.showSnackbar('Error',mainResponse.message!);
+    }
+  }
 }

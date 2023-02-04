@@ -10,6 +10,8 @@ import 'package:eshoperapp/repository/local_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../models/check_login.dart';
+
 class ProfileController extends GetxController {
   final ApiRepositoryInterface apiRepositoryInterface;
   final LocalRepositoryInterface localRepositoryInterface;
@@ -56,28 +58,7 @@ class ProfileController extends GetxController {
     currentPasswordTexcontroller = TextEditingController();
     newPasswordTexcontroller = TextEditingController();
     confirmPasswordTexcontroller = TextEditingController();
-    if (customer != null) {
-      emailTextController = TextEditingController(text: customer!.email);
-      genderTexcontroller = TextEditingController(text: customer!.gender);
-      nameTexcontroller = TextEditingController(text: customer!.customerName);
-      mobileTextController = TextEditingController(text: customer!.mobile);
-      birthdateTexcontroller = TextEditingController();
-      locationTextController = TextEditingController();
-      numberTexcontroller = TextEditingController();
-      hintTextController = TextEditingController();
-      // passwordTextController = TextEditingController(text: customer!.customerName);
-      // passwordTextController = TextEditingController(text: customer!.customerName);
-      // passwordTextController = TextEditingController(text: customer!.customerName);
-    } else {
-      emailTextController = TextEditingController();
-      genderTexcontroller = TextEditingController();
-      nameTexcontroller = TextEditingController();
-      mobileTextController = TextEditingController();
-      birthdateTexcontroller = TextEditingController();
-      locationTextController = TextEditingController();
-      numberTexcontroller = TextEditingController();
-      hintTextController = TextEditingController();
-    }
+
 
     // customerProfile();
     getUser();
@@ -231,29 +212,35 @@ class ProfileController extends GetxController {
     }
   }
 
-  Future<MainResponse> updateCustomerProfile() async {
+  Future<CheckLogin> updateCustomerProfile() async {
     final customerName = nameTexcontroller!.text;
     final gender = genderTexcontroller!.text;
     final email = emailTextController!.text;
     final mobile = mobileTextController!.text;
     final password = passwordTextController!.text;
+    final alterNateNumber = numberTexcontroller!.text;
+    final birthDate = birthdateTexcontroller!.text;
 
     try {
       isLoading(true);
-      final mainResponse = await apiRepositoryInterface.updateCustomerProfile(
-          RegisterRequest(customerName, gender, email, mobile, password), customerId.value);
+      final checkLogin = await apiRepositoryInterface.updateCustomerProfile(
+          RegisterRequest(customerName, gender, email, mobile, password), customerId.value,alterNateNumber,birthDate);
 
       // if (loginResponse != null) {
       // await localRepositoryInterface.saveToken(loginResponse.token);
-      print("loginResponse ${mainResponse!.message}");
-      if (mainResponse.status == true) {
-        print("loginResponse ${mainResponse.message}");
+      print("loginResponse ${checkLogin!.message}");
+      if (checkLogin.status == true) {
+        print("loginResponse ${checkLogin.message}");
+
+        if(checkLogin.data != null){
+          await localRepositoryInterface.saveUser(checkLogin.data![0]);
+        }
 
         // await localRepositoryInterface.saveUser(loginResponse.data![0]);
-        return mainResponse;
+        return checkLogin;
       } else {
         isLoading(false);
-        return mainResponse;
+        return checkLogin;
       }
 
       // } else{
@@ -265,7 +252,7 @@ class ProfileController extends GetxController {
     } on Exception {
       isLoading(false);
 
-      return MainResponse();
+      return CheckLogin();
     }
   }
 

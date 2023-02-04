@@ -1,6 +1,8 @@
+import 'package:eshoperapp/constants/app_costants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../config/theme.dart';
 import '../../routes/navigation.dart';
@@ -202,8 +204,10 @@ class _ChooseYourStoreScreenState extends State<ChooseYourStoreScreen> {
   
   Widget storeContainer(String path,label){
     return InkWell(
-      onTap: (){
-        Get.toNamed(Routes.landingHome);
+      onTap: () async {
+        SharedPreferences sharedPreferences = await SharedPreferences.getInstance() ;
+        sharedPreferences.setString(AppConstants.chooseType!, label);
+        Get.offAllNamed(Routes.landingHome);
       },
       child: Column(
         children: [
@@ -216,7 +220,7 @@ class _ChooseYourStoreScreenState extends State<ChooseYourStoreScreen> {
               ),
               // borderRadius:
               // BorderRadius.circular(15),
-              child: Image.asset(path,fit: BoxFit.fill,height: 100,
+              child: Image.asset(path,fit: BoxFit.cover,height: 100,
                 width: 100,)),
           SizedBox(height: 8,),
           Text(label,style:CustomTextStyle.storeLabel)

@@ -34,11 +34,11 @@ class CheckLoginData {
   String? mobile;
   String? email;
   String? password;
-  String? showPassword;
-  // String? createdBy;
-  // String? modifiedBy;
-  String? created;
-  String? modified;
+  // String? showPassword;
+  // // String? createdBy;
+  // // String? modifiedBy;
+  // String? created;
+  // String? modified;
   String? isActive;
 
   CheckLoginData(
@@ -48,12 +48,13 @@ class CheckLoginData {
         this.mobile,
         this.email,
         this.password,
-        this.showPassword,
-        // this.createdBy,
-        // this.modifiedBy,
-        this.created,
-        this.modified,
-        this.isActive});
+        // this.showPassword,
+        // // this.createdBy,
+        // // this.modifiedBy,
+        // this.created,
+        // this.modified,
+        this.isActive
+      });
 
   CheckLoginData.fromJson(Map<String, dynamic> json) {
     customerId = json['customer_id'];
@@ -62,28 +63,28 @@ class CheckLoginData {
     mobile = json['mobile'];
     email = json['email'];
     password = json['password'];
-    showPassword = json['show_password'];
-    // createdBy = json['created_by'];
-    // modifiedBy = json['modified_by'];
-    created = json['created'];
-    modified = json['modified'];
+    // showPassword = json['show_password'];
+    // // createdBy = json['created_by'];
+    // // modifiedBy = json['modified_by'];
+    // created = json['created'];
+    // modified = json['modified'];
     isActive = json['is_active'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['customer_id'] = this.customerId;
-    data['customer_name'] = this.customerName;
-    data['gender'] = this.gender;
-    data['mobile'] = this.mobile;
-    data['email'] = this.email;
-    data['password'] = this.password;
-    data['show_password'] = this.showPassword;
-    // data['created_by'] = this.createdBy;
-    // data['modified_by'] = this.modifiedBy;
-    data['created'] = this.created;
-    data['modified'] = this.modified;
-    data['is_active'] = this.isActive;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['customer_id'] = customerId;
+    data['customer_name'] = customerName;
+    data['gender'] = gender;
+    data['mobile'] = mobile;
+    data['email'] = email;
+    data['password'] = password;
+    // data['show_password'] = showPassword;
+    // // data['created_by'] = this.createdBy;
+    // // data['modified_by'] = this.modifiedBy;
+    // data['created'] = created;
+    // data['modified'] = modified;
+    data['is_active'] = isActive;
     return data;
   }
 }

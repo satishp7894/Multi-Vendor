@@ -86,17 +86,17 @@ class CheckOutController extends GetxController {
     }
   }
 
-  orderDetail(String orderId) async {
-    try {
-      isLoadingOrderDetail(true);
-      await apiRepositoryInterface.orderDetail(orderId).then((value) {
-        orderDetailObj(value);
-      });
-    } finally {
-      isLoadingOrderDetail(false);
-      // refreshTotal();
-    }
-  }
+  // orderDetail(String orderId) async {
+  //   try {
+  //     isLoadingOrderDetail(true);
+  //     await apiRepositoryInterface.orderDetail(orderId).then((value) {
+  //       orderDetailObj(value);
+  //     });
+  //   } finally {
+  //     isLoadingOrderDetail(false);
+  //     // refreshTotal();
+  //   }
+  // }
 
   // void fetchProduct() async {
   //   final token = await localRepositoryInterface.getToken();

@@ -40,6 +40,7 @@ class ProductDetail {
   String? vendorName;
   String? categoryName;
   String? brandName;
+  bool? wishList;
 
   ProductDetail(
       {this.productId,
@@ -82,7 +83,8 @@ class ProductDetail {
         this.isActive,
         this.vendorName,
         this.categoryName,
-        this.brandName});
+        this.brandName,
+        this.wishList});
 
   ProductDetail.fromJson(Map<String, dynamic> json) {
     productId = json['product_id'];
@@ -126,6 +128,7 @@ class ProductDetail {
     vendorName = json['vendor_name'];
     categoryName = json['category_name'];
     brandName = json['brand_name'];
+    wishList = json['wishlist'];
   }
 
   Map<String, dynamic> toJson() {
@@ -171,6 +174,7 @@ class ProductDetail {
     data['vendor_name'] = this.vendorName;
     data['category_name'] = this.categoryName;
     data['brand_name'] = this.brandName;
+    data['wishlist'] = this.wishList;
     return data;
   }
 }

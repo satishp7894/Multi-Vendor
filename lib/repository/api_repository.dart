@@ -17,33 +17,57 @@ import 'package:eshoperapp/models/register_request.dart';
 import 'package:eshoperapp/models/update_customer_password.dart';
 
 import '../models/country_and_state.dart';
+import '../models/product_filter_oprion_model.dart';
 
 abstract class ApiRepositoryInterface {
-  Future<RegisterCustomer?> registerCustomer(RegisterRequest register);
+  Future<CheckLogin?> registerCustomer(RegisterRequest register);
   Future<CheckLogin?> checkLogin(LoginRequest login);
   Future<UpdateCustomerPassword?> updateCustomerPassword(ChangePasswordRequest changePasswordRequest,String customerId);
   Future<ForgetPassword?> forgetPassword(String email);
   Future<MainResponse?> customerProfile(String customerId);
-  Future<MainResponse?> updateCustomerProfile(RegisterRequest updateRequest,String customerId);
+  Future<CheckLogin?> updateCustomerProfile(RegisterRequest updateRequest,String customerId, String alterNateMobile, String birthDate);
   Future<GetSlider?> getSlider();
-  Future<MainResponse?> bestSellerProduct();
+  Future<MainResponse?> bestSellerProduct(String chooseType, String customerId);
+  Future<MainResponse?> getRecentsearchkeywords(String chooseType, String customerId);
+  Future<MainResponse?> chooseColor(String? chooseType );
+  Future<MainResponse?> getNewLaunch(String? chooseType);
+  Future<MainResponse?> getTrendingBrand(String? chooseType);
+  Future<MainResponse?> getOfferWithCategoryList(String? chooseType);
+  Future<MainResponse?> getChildCategory(String? chooseType);
+  Future<MainResponse?> getProductFilterOption(String? categoryId,String brandId,String chooseType);
+  Future<MainResponse?> getProductByAttributeAndCategory(String? id ,String? chooseType,String customerId);
   Future<MainResponse?> getCategory();
   Future<MainResponse?> getBrand();
-  Future<MainResponse?> brandProduct(String brandId);
-  Future<MainResponse?> productDetails(String productId);
-  Future<CategoryProduct?> categoryProduct(String categoryID);
+  Future<MainResponse?> getAllBrand();
+  Future<MainResponse?> brandProduct(String brandId,String customerId,String chooseType);
+  Future<MainResponse?> productDetails(String productId,String variantCode,String customerId);
+  Future<MainResponse?> getSimilarProduct(String productId,String categoryId,String customerId);
+  Future<MainResponse?> categoryProduct(String categoryID,String customerId);
+  Future<MainResponse?> getCategoryProductWithOffers(String offerId,String categoryID,String customerId);
+  Future<MainResponse?> searchBykeywords(String keyword,String customerId,String chooseType);
+  Future<MainResponse?> productSortByWithFilter(String categoryId,String shorBy,dynamic flutterOption,String customerId, String gender, String chooseCode
+      ,String tag,String mimPrice,String maxPrice);
   Future<MainResponse?> allProducts();
   Future<MainResponse?> newProducts();
   Future<LoginResponse?> getUserFromToken(String token);
   Future<MainResponse?> getCartItems(String customerId);
   Future<MainResponse?> updateProductQty(String customerId,String productId,String quantity);
+  Future<MainResponse?> addProductRatingReviews(String productId,String customerId,String customerName,String starRate,String reviewContent,String reviewTitle);
+  Future<MainResponse?> getProductFromVariant(String currentAttribute,String selectedAttribute,String variantCode);
   Future<MainResponse?> removeFromCart(String customerId,String productId);
   Future<MainResponse?> emptyCart(String customerId );
   Future<MainResponse?> addToCart(String customerId,String productId,String quantity);
-
-  Future<MainResponse?> placeOrder(String customerId , String paymentType);
+  Future<MainResponse?> addToWishList(String customerId,String productId);
+  Future<MainResponse?> moveToWishList(String customerId,String productId);
+  Future<MainResponse?> removeToWishList(String customerId,String productId);
+  Future<MainResponse?> removeRecentSearch(String customerId,String searchId);
+  Future<MainResponse?> getWishList(String selectedCriteria,String customerId);
+  Future<MainResponse?> getFrequentSearch(String selectedCriteria,String customerId);
+  Future<MainResponse?> addOrder(String customerId,String productID,String paymentType);
   Future<MainResponse?> orderHistory(String customerId );
-  Future<MainResponse?> orderDetail(String orderId );
+  Future<MainResponse?> searchInOrder(String customerId ,String keyword,String status,String time);
+  Future<MainResponse?> getOrderByFilter(String customerId ,String status, String time);
+  Future<MainResponse?> orderDetail(String orderId,String productId);
   Future<MainResponse?> getOrderInvoice(String orderId );
 
   Future<MainResponse?> getAddress(String customerId);

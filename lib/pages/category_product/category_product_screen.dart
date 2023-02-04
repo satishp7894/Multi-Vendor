@@ -16,7 +16,8 @@ import 'category_product_controller.dart';
 class CategoryProductScreen extends StatefulWidget {
   final Categories? category;
 
-  const CategoryProductScreen({Key? key, required this.category})
+  final String? title;
+  const CategoryProductScreen({Key? key, required this.category, required this.title})
       : super(key: key);
 
   @override
@@ -96,7 +97,67 @@ class _CategoryProductScreenState extends State<CategoryProductScreen> {
               child: Column(
 
                 children: [
-                  AppbarWidget(flag: true,),
+              Column(children: [
+              Padding(
+              padding: widget.title == "ALL BRANDS"?const EdgeInsets.only(left: AppSizes.sidePadding,right: AppSizes.sidePadding,bottom: 5,top: 20):const EdgeInsets.only(left: AppSizes.sidePadding,right: AppSizes.sidePadding,bottom: 5,top: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                       InkWell(child: Image.asset('assets/img/arrow_left.png',fit: BoxFit.fill,height: 15,width: 18,),
+                        onTap: (){
+                          Get.back();
+                        },),
+                      // SizedBox(width:  8,),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text("SHIRTS",
+                                style: GoogleFonts.inriaSans(
+                                    textStyle: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.black))),
+                          ),
+                          widget.title != "ALL BRANDS"?
+                          Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text("10 products",
+                                  style: GoogleFonts.inriaSans(
+                                      textStyle: const TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.appText)))):Container(),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      InkWell(child: Image.asset('assets/img/search.png',fit: BoxFit.fill,height: 20,width: 20,),
+                        onTap: (){
+                          Get.toNamed(Routes.searchScreen);
+                        },),
+                      SizedBox(width: 18.0,),
+                      InkWell(child: Image.asset('assets/img/heart.png',fit: BoxFit.fill,height: 20,width: 20,),
+                        onTap: (){
+                          Get.toNamed(Routes.wishList);
+                        },),
+                      SizedBox(width: 18.0,),
+                      InkWell(child: Image.asset('assets/img/Notification.png',fit: BoxFit.fill,height: 20,width: 18,),
+                        onTap: (){
+                          Get.toNamed(Routes.notification);
+                        },
+                      )
+                    ],)
+                ],
+              ),
+            ),
+      Container(height: 0.5,width: MediaQuery.of(context).size.width,color: AppColors.tileLine,),
+      ],),
                   Expanded(
                     child: RefreshIndicator(
                         onRefresh: () {
@@ -107,31 +168,31 @@ class _CategoryProductScreenState extends State<CategoryProductScreen> {
                           child:
                           Padding(
                             padding: const EdgeInsets.only(
-                                top: 25.0, left: 10.0, right: 10.0, bottom: 10),
+                                top: 16.0, left: 10.0, right: 10.0, bottom: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
 
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5.0),
-                                  child: Text("SHIRTS",
-                                      style: GoogleFonts.inriaSans(
-                                          textStyle: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w700,
-                                              color: AppColors.black))),
-                                ),
-                                Padding(
-                                    padding: const EdgeInsets.only(left: 5.0),
-                                    child: Text("10 products",
-                                        style: GoogleFonts.inriaSans(
-                                            textStyle: const TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.appText)))),
-                                SizedBox(
-                                  height: 15.0,
-                                ),
+                                // Padding(
+                                //   padding: const EdgeInsets.only(left: 5.0),
+                                //   child: Text("SHIRTS",
+                                //       style: GoogleFonts.inriaSans(
+                                //           textStyle: const TextStyle(
+                                //               fontSize: 20,
+                                //               fontWeight: FontWeight.w700,
+                                //               color: AppColors.black))),
+                                // ),
+                                // Padding(
+                                //     padding: const EdgeInsets.only(left: 5.0),
+                                //     child: Text("10 products",
+                                //         style: GoogleFonts.inriaSans(
+                                //             textStyle: const TextStyle(
+                                //                 fontSize: 12,
+                                //                 fontWeight: FontWeight.w400,
+                                //                 color: AppColors.appText)))),
+                                // SizedBox(
+                                //   height: 15.0,
+                                // ),
                                 Container(
                                   // padding: const EdgeInsets.only(top: 18,left: 18,right: 18,bottom: 16),
                                   // height: 400,
@@ -157,7 +218,7 @@ class _CategoryProductScreenState extends State<CategoryProductScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>  ProductDetailsScreen(
-                                                    products: Products(productId: "10",productName: "productName!"),
+                                                    products: Products(productId: categoryProductController!.productGrid[index].productId,productName: categoryProductController!.productGrid[index].productId,variantCode: categoryProductController!.productGrid[index].variantCode),
                                                     // article: articles[index],
                                                   )));
                                         },
@@ -489,7 +550,9 @@ class _CategoryProductScreenState extends State<CategoryProductScreen> {
                 ],
               ),
             ),
-        bottomNavigationBar: Container(
+        bottomNavigationBar:
+        widget.title == "Kids" || widget.title == "ALL BRANDS"?
+        Container(
           height: 55,
           width: MediaQuery.of(context).size.width,
           color: AppColors.white,
@@ -649,16 +712,120 @@ class _CategoryProductScreenState extends State<CategoryProductScreen> {
               ],
             ),
           ),
-        ));
+        ): Container(
+          height: 55,
+          width: MediaQuery.of(context).size.width,
+          color: AppColors.white,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Wrap(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 16.0),
+                                      child: Text("SORT BY",
+                                          style: GoogleFonts.inriaSans(
+                                              textStyle: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: AppColors.black))),
+                                    ),
+                                    Container(height: 1,width: MediaQuery.of(context).size.width,color: AppColors.line,),
+                                    SizedBox(height: 16,),
+                                    ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: categoryProductController!.sortList.length,
+                                        itemBuilder: (BuildContext context, int index){
+                                          return   Padding(
+                                            padding: const EdgeInsets.only(bottom: 24.0),
+                                            child: Text(categoryProductController!.sortList[index],
+                                                style: GoogleFonts.inriaSans(
+                                                    textStyle: const TextStyle(
+                                                        fontSize: 14,
+
+                                                        color: AppColors.black))),
+                                          );
+                                        })
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'assets/img/sort.png',
+                        fit: BoxFit.fill,
+                        height: 20,
+                        width: 20,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text("SORT",  style: GoogleFonts.inriaSans(
+                          textStyle: const TextStyle(
+                              fontSize: 16,
+
+                              color: AppColors.black))),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 55,
+                  width: 1,
+                  color: AppColors.appText1,
+                ),
+                InkWell(
+                  onTap: () {
+                    Get.toNamed(Routes.filterScreen);
+                  },
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'assets/img/filter.png',
+                        fit: BoxFit.fill,
+                        height: 20,
+                        width: 20,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text("FILTER",  style: GoogleFonts.inriaSans(
+                          textStyle: const TextStyle(
+                              fontSize: 16,
+
+                              color: AppColors.black))),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+    );
   }
 
-  Future<void> initData(CategoryProductController categoryProductController,
-      Categories categories) async {
-    print("categories.categoryId! ${categories.categoryId!}");
-    await Future.delayed(const Duration(microseconds: 0), () {
-      categoryProductController.categoryProduct(categories.categoryId!);
-    });
-  }
+  // Future<void> initData(CategoryProductController categoryProductController,
+  //     Categories categories) async {
+  //   print("categories.categoryId! ${categories.categoryId!}");
+  //   await Future.delayed(const Duration(microseconds: 0), () {
+  //     categoryProductController.categoryProduct(categories.categoryId!);
+  //   });
+  // }
 }
 
 class CategoryArguments {

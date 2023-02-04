@@ -145,6 +145,7 @@ import 'package:eshoperapp/models/main_response.dart';
 import 'package:eshoperapp/models/product.dart';
 import 'package:eshoperapp/models/product_comment.dart';
 import 'package:eshoperapp/models/user.dart';
+import 'package:eshoperapp/models/variant_model.dart';
 import 'package:eshoperapp/repository/api_repository.dart';
 import 'package:eshoperapp/repository/local_repository.dart';
 import 'package:eshoperapp/routes/navigation.dart';
@@ -183,9 +184,33 @@ class ProductDetailsController extends GetxController {
   RxBool isLoadingProductDetail= false.obs;
   var productDetailObj = MainResponse().obs;
 
+  RxBool isLoadingGetSimilarProduct= false.obs;
+  var getSimilarProductObj = MainResponse().obs;
+
   RxBool isRefresh = false.obs;
 
   List<Color> colorList = [
+    Colors.red,
+    Colors.yellow,
+    Colors.green,
+    Colors.blue,
+    Colors.pink,
+    Colors.orange,
+
+    Colors.red,
+    Colors.yellow,
+    Colors.green,
+    Colors.blue,
+    Colors.pink,
+    Colors.orange,
+
+    Colors.red,
+    Colors.yellow,
+    Colors.green,
+    Colors.blue,
+    Colors.pink,
+    Colors.orange,
+
     Colors.red,
     Colors.yellow,
     Colors.green,
@@ -281,15 +306,42 @@ class ProductDetailsController extends GetxController {
     initbool(!initbool.value);
   }
 
-  productDetails(String productId, bool refresh) async {
+  productDetails(String productId,variantCode, bool refresh,customerId) async {
     try {
       isLoadingProductDetail(true);
       isRefresh(refresh);
-      await apiRepositoryInterface.productDetails(productId).then((value) {
+      await apiRepositoryInterface.productDetails(productId,variantCode,customerId).then((value) {
         productDetailObj(value);
       });
     } finally {
       isLoadingProductDetail(false);
+    }
+  }
+
+
+   getProductFromVariant(String currentAttribute, selectedAttribute, variantCode,customerId) async {
+    MainResponse? mainResponse  = await apiRepositoryInterface.getProductFromVariant(currentAttribute, selectedAttribute,variantCode);
+    List<VariantModel>? variantModelData = [];
+    if (mainResponse!.status!) {
+      if (mainResponse.data != null) {
+        mainResponse.data!.forEach((v) {
+          variantModelData.add(VariantModel.fromJson(v));
+        });
+      }
+
+      //SnackBarDialog.showSnackbar('Success',mainResponse.message!);
+      return variantModelData;
+    }
+  }
+
+  getSimilarProduct(String productId,categoryId,customerId) async {
+    try {
+      isLoadingGetSimilarProduct(false);
+      await apiRepositoryInterface.getSimilarProduct(productId,categoryId,customerId).then((value) {
+        getSimilarProductObj(value);
+      });
+    } finally {
+      isLoadingGetSimilarProduct(true);
     }
   }
 

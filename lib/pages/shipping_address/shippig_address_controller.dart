@@ -62,45 +62,45 @@ class ShippingAddressController extends GetxController {
 
   @override
   void onInit() {
-    stateList([]);
-    print("stateList init");
-    CheckInternet.checkInternet();
-    getAddressId();
-    getUser();
-    getCountry();
-    if(editMode){
-      print("shippingAddress.firstName ${shippingAddress.firstName}");
-      firstNameTextController = TextEditingController(text: shippingAddress.firstName);
-      lastNameTextController = TextEditingController(text: shippingAddress.lastName);
-      emailTextController = TextEditingController(text: shippingAddress.email);
-      mobileTextController = TextEditingController(text: shippingAddress.mobile);
-      addressTextController = TextEditingController(text: shippingAddress.address);
-      localityTextController = TextEditingController();
-      landmarkTextController = TextEditingController();
-      cityTextController = TextEditingController(text: shippingAddress.city);
-      stateTextController = TextEditingController(text: shippingAddress.state);
-      pincodeTextController = TextEditingController(text: shippingAddress.pincode);
-      countryTextController = TextEditingController(text: shippingAddress.country);
-      addressTypeTextController = TextEditingController(text: shippingAddress.addressType);
-      checkBoxValue=int.parse(shippingAddress.setDefault!);
-      print("controller.checkBoxValue init  ${checkBoxValue}");
-    }else{
-
-      firstNameTextController = TextEditingController();
-      lastNameTextController = TextEditingController();
-      emailTextController = TextEditingController();
-      mobileTextController = TextEditingController();
-      addressTextController = TextEditingController();
-      localityTextController = TextEditingController();
-      landmarkTextController = TextEditingController();
-      cityTextController = TextEditingController();
-      stateTextController = TextEditingController();
-      pincodeTextController = TextEditingController();
-      countryTextController = TextEditingController();
-      addressTypeTextController = TextEditingController();
-      checkBoxValue=0;
-
-    }
+    // stateList([]);
+    // print("stateList init");
+    // CheckInternet.checkInternet();
+    // getAddressId();
+    // getUser();
+    // getCountry();
+    // if(editMode){
+    //   print("shippingAddress.firstName ${shippingAddress.firstName}");
+    //   firstNameTextController = TextEditingController(text: shippingAddress.firstName);
+    //   lastNameTextController = TextEditingController(text: shippingAddress.lastName);
+    //   emailTextController = TextEditingController(text: shippingAddress.email);
+    //   mobileTextController = TextEditingController(text: shippingAddress.mobile);
+    //   addressTextController = TextEditingController(text: shippingAddress.address);
+    //   localityTextController = TextEditingController();
+    //   landmarkTextController = TextEditingController();
+    //   cityTextController = TextEditingController(text: shippingAddress.city);
+    //   stateTextController = TextEditingController(text: shippingAddress.state);
+    //   pincodeTextController = TextEditingController(text: shippingAddress.pincode);
+    //   countryTextController = TextEditingController(text: shippingAddress.country);
+    //   addressTypeTextController = TextEditingController(text: shippingAddress.addressType);
+    //   checkBoxValue=int.parse(shippingAddress.setDefault!);
+    //   print("controller.checkBoxValue init  ${checkBoxValue}");
+    // }else{
+    //
+    //   firstNameTextController = TextEditingController();
+    //   lastNameTextController = TextEditingController();
+    //   emailTextController = TextEditingController();
+    //   mobileTextController = TextEditingController();
+    //   addressTextController = TextEditingController();
+    //   localityTextController = TextEditingController();
+    //   landmarkTextController = TextEditingController();
+    //   cityTextController = TextEditingController();
+    //   stateTextController = TextEditingController();
+    //   pincodeTextController = TextEditingController();
+    //   countryTextController = TextEditingController();
+    //   addressTypeTextController = TextEditingController();
+    //   checkBoxValue=0;
+    //
+    // }
 
     // getAddress("4");
     super.onInit();
@@ -137,7 +137,7 @@ class ShippingAddressController extends GetxController {
         }else{
           customerId("");
           checkLoginData();
-          getAddress("3");
+          getAddress("");
         }
       });
     } on Exception {
@@ -190,11 +190,11 @@ class ShippingAddressController extends GetxController {
     print("customerId ${customerId}");
     final firstName = firstNameTextController!.text;
     final lastName = lastNameTextController!.text;
-    final email = emailTextController!.text;
+    // final email = emailTextController!.text;
     final mobile = mobileTextController!.text;
     final address = addressTextController!.text;
-    final locality = localityTextController!.text;
-    final landmark = landmarkTextController!.text;
+    // final locality = localityTextController!.text;
+    // final landmark = landmarkTextController!.text;
     final city = cityTextController!.text;
     final state = stateTextController!.text;
     final pincode = pincodeTextController!.text;
@@ -206,11 +206,8 @@ class ShippingAddressController extends GetxController {
       isLoadingAddAddress(true);
       final addAddressResponse = await apiRepositoryInterface.addAddress(AddressRequest(firstName,
           lastName,
-          email,
           mobile,
           address,
-          locality,
-          landmark,
           city,
           state,
           pincode,
@@ -242,11 +239,11 @@ class ShippingAddressController extends GetxController {
   Future<MainResponse> editAddress(String addressId) async {
     final firstName = firstNameTextController!.text;
     final lastName = lastNameTextController!.text;
-    final email = emailTextController!.text;
+    // final email = emailTextController!.text;
     final mobile = mobileTextController!.text;
     final address = addressTextController!.text;
-    final locality = localityTextController!.text;
-    final landmark = landmarkTextController!.text;
+    // final locality = localityTextController!.text;
+    // final landmark = landmarkTextController!.text;
     final city = cityTextController!.text;
     final state = stateTextController!.text;
     final pincode = pincodeTextController!.text;
@@ -257,11 +254,8 @@ class ShippingAddressController extends GetxController {
       isLoadingAddAddress(true);
       final editAddressResponse = await apiRepositoryInterface.editAddress(AddressRequest(firstName,
           lastName,
-          email,
           mobile,
           address,
-          locality,
-          landmark,
           city,
           state,
           pincode,

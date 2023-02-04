@@ -73,7 +73,7 @@ class SignForm extends StatelessWidget {
 
   Widget buildSignType() {
     String? selectedSalutation;
-    final title = controller.isSignIn.value ? 'Login' : 'Create Account';
+    final title =  'Login';
     final primary = controller.isSignIn.value
         ? 'You can find all products of \n the Dot Brand.'
         : '';
@@ -262,18 +262,35 @@ class SignForm extends StatelessWidget {
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'This field is required';
-                      }
-                      if (value.length < 4) {
-                        return 'Enter a minimum 4 character';
+                      }else if (value.length < 10) {
+                        return 'Enter a minimum 10 number';
+                      }else if (value.length > 10) {
+                        return 'Enter a maximum 10 number';
                       } else {
                         return null;
                       }
+
+                      if (mobile!.text.isEmpty) {
+                        // return 'This field is required';
+                        SnackBarDialog.showSnackbar('Error',"Please enter a mobile number");
+                      } else if (mobile!.text.length < 10) {
+                        //return 'Enter a minimum 10 number';
+                        SnackBarDialog.showSnackbar('Error',"Enter a minimum 10 number");
+                      } else if (mobile!.text.length > 10) {
+                       // return 'Enter a maximum 10 number';
+                        SnackBarDialog.showSnackbar('Error',"Enter a maximum 10 number");
+                      }else{
+                        logOrRegAction!();
+                      }
                     },
                     controller: mobile,
+                    maxLength: 10,
+
                     // obscureText: controller.showPassword.value,
                     style: GoogleFonts.inriaSans(textStyle: TextStyle(fontSize: 14,color: AppColors.black)),
                     cursorColor: AppColors.appText1,
                     decoration: InputDecoration(
+                        counter: Offstage(),
                           labelStyle : GoogleFonts.inriaSans(textStyle: TextStyle(fontSize: 12)),
                         // labelStyle: TextStyle(
                         //     color: myFocusNode.hasFocus ? Colors.purple : AppColors.appText1
@@ -306,6 +323,7 @@ class SignForm extends StatelessWidget {
                           ],
                         ),
                       ),
+
                       hintStyle: GoogleFonts.inriaSans(textStyle: TextStyle(fontSize: 12)),
 
 
@@ -320,6 +338,14 @@ class SignForm extends StatelessWidget {
                         borderSide: const BorderSide(color: AppColors.appText1, width: 1.0),
                         borderRadius: BorderRadius.circular(2.0),
                       ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: AppColors.red, width: 1.0),
+                          borderRadius: BorderRadius.circular(2.0),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: AppColors.red, width: 1.0),
+                          borderRadius: BorderRadius.circular(2.0),
+                        )
                         // labelStyle:  GoogleFonts.inriaSans(textStyle: TextStyle(fontSize: 15))
 
                       // border: OutlineInputBorder(),
@@ -450,24 +476,24 @@ class SignForm extends StatelessWidget {
                 return
                   InkWell(
                     onTap: () {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      // if (_formKey.currentState!.validate()) {
-                      //   logOrRegAction!();
-                      // } else {
-                      //   // create();
-                      // }
-                            if (mobile!.text.isEmpty) {
-                              // return 'This field is required';
-                              SnackBarDialog.showSnackbar('Error',"Please enter a mobile number");
-                            } else if (mobile!.text.length < 10) {
-                              //return 'Enter a minimum 10 number';
-                              SnackBarDialog.showSnackbar('Error',"Enter a minimum 10 number");
-                            } else if (mobile!.text.length > 10) {
-                             // return 'Enter a maximum 10 number';
-                              SnackBarDialog.showSnackbar('Error',"Enter a maximum 10 number");
-                            }else{
-                              logOrRegAction!();
-                            }
+                      // FocusManager.instance.primaryFocus?.unfocus();
+                      if (_formKey.currentState!.validate()) {
+                        logOrRegAction!();
+                      } else {
+                        // create();
+                      }
+                            // if (mobile!.text.isEmpty) {
+                            //   // return 'This field is required';
+                            //   SnackBarDialog.showSnackbar('Error',"Please enter a mobile number");
+                            // } else if (mobile!.text.length < 10) {
+                            //   //return 'Enter a minimum 10 number';
+                            //   SnackBarDialog.showSnackbar('Error',"Enter a minimum 10 number");
+                            // } else if (mobile!.text.length > 10) {
+                            //  // return 'Enter a maximum 10 number';
+                            //   SnackBarDialog.showSnackbar('Error',"Enter a maximum 10 number");
+                            // }else{
+                            //   logOrRegAction!();
+                            // }
                     },
                     child: DefaultBTN(
                       btnText: btnText,
@@ -505,31 +531,31 @@ class SignForm extends StatelessWidget {
           // ),
 
           // Center(child: Text('___________')),
-          SizedBox(
-            height: 24,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                secondary,
-                //style: GoogleFonts.rubik()
-                style: GoogleFonts.inriaSerif(
-                  textStyle: const TextStyle(fontSize: 12,color: AppColors.appText1,fontWeight: FontWeight.w400),
-                ),
-              ),
-              SizedBox(width: 4.0,),
-              InkWell(
-                onTap: () {
-                  controller.toggleFormType();
-                },
-                child: Text(signInOrRegister,
-                    style:GoogleFonts.inriaSans(
-                      textStyle: const TextStyle(fontSize: 12,color: AppColors.appRed, fontWeight: FontWeight.w400),
-                    ),),
-              )
-            ],
-          ),
+          // SizedBox(
+          //   height: 24,
+          // ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Text(
+          //       secondary,
+          //       //style: GoogleFonts.rubik()
+          //       style: GoogleFonts.inriaSerif(
+          //         textStyle: const TextStyle(fontSize: 12,color: AppColors.appText1,fontWeight: FontWeight.w400),
+          //       ),
+          //     ),
+          //     SizedBox(width: 4.0,),
+          //     InkWell(
+          //       onTap: () {
+          //         controller.toggleFormType();
+          //       },
+          //       child: Text(signInOrRegister,
+          //           style:GoogleFonts.inriaSans(
+          //             textStyle: const TextStyle(fontSize: 12,color: AppColors.appRed, fontWeight: FontWeight.w400),
+          //           ),),
+          //     )
+          //   ],
+          // ),
           SizedBox(
             height: 50,
           ),

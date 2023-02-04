@@ -9,7 +9,9 @@ import '../../profile/profile_controller.dart';
 
 class AddToCard extends StatelessWidget {
   final VoidCallback? onChanged;
-  AddToCard({this.onChanged, this.product, });
+  final VoidCallback? addToWishList;
+  final bool? wishList;
+  AddToCard({this.onChanged,this.addToWishList, this.product,this.wishList });
   final Product? product;
   // final String? customerId;
   final profileController = Get.put(ProfileController(
@@ -20,7 +22,8 @@ class AddToCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return
       Container(
-      height: 70,
+      height: 77,
+        color: AppColors.white,
       // decoration: BoxDecoration(
       //     color: Colors.white,
       //     border: Border.all(color: Colors.black.withOpacity(0.2))),
@@ -28,40 +31,45 @@ class AddToCard extends StatelessWidget {
         children: [
           Container(
             height: 1,width: MediaQuery.of(context).size.width,
-            color: Colors.black.withOpacity(0.2),
+            color: AppColors.toggleBg,
           ),
           Container(
-            height: 69,
+            height: 76,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      onChanged!();
+                      addToWishList!();
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0,right: 5.0,bottom: 10,top: 10),
+                      padding: const EdgeInsets.only(left: 16.0,right: 8.0,bottom: 16,top: 16),
                       child: Container(
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: const BorderRadius.all(Radius.circular(2)),
-                              border: Border.all(color: Colors.black.withOpacity(0.2))),
+                              border: Border.all(color: AppColors.toggleBg)),
                           child: Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                wishList == false?
                                 Image.asset(
                                   "assets/img/heart.png",
+                                  fit: BoxFit.fill,height: 18,width: 18,
+                                ): Image.asset(
+                                  "assets/img/Heart_WishList.png",
+                                  fit: BoxFit.fill,height: 18,width: 18,
                                 ),
-                                SizedBox(width: 8,),
+                                SizedBox(width: 4,),
                                 Text('WISHLIST',
                                     style: GoogleFonts.inriaSans(
                                         textStyle: const TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight:
                                             FontWeight
-                                                .w700,
+                                                .bold,
                                             color: AppColors
                                                 .black))),
                               ],
@@ -76,7 +84,7 @@ class AddToCard extends StatelessWidget {
                       onChanged!();
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 5.0,right: 10.0,bottom: 10,top: 10),
+                      padding: const EdgeInsets.only(left: 8.0,right: 16.0,bottom: 16,top: 16),
                       child: Container(
                           decoration: BoxDecoration(
                             color: Colors.redAccent,
@@ -88,15 +96,16 @@ class AddToCard extends StatelessWidget {
                               children: [
                                 Image.asset(
                                   "assets/img/bag.png",color: AppColors.white,
+                                  fit: BoxFit.fill,height: 20,width: 20,
                                 ),
-                                SizedBox(width: 8,),
+                                SizedBox(width: 4,),
                                 Text('ADD TO BAG',
                                     style: GoogleFonts.inriaSans(
                                         textStyle: const TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight:
                                             FontWeight
-                                                .w700,
+                                                .bold,
                                             color: AppColors
                                                 .white))),
                               ],

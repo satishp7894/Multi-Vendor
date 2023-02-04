@@ -50,7 +50,7 @@ class _AddCardsScreenState extends State<AddCardsScreen> {
                     width: MediaQuery.of(context).size.width,
                     color: AppColors.white,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 17.0,top: 11,right: 17,bottom: 50),
+                      padding: const EdgeInsets.only(left: 16.0,top: 11,right: 16,bottom: 50),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -64,7 +64,7 @@ class _AddCardsScreenState extends State<AddCardsScreen> {
                                     color: AppColors.appText,
                                     fontWeight: FontWeight.w700)),
                           ),
-                          SizedBox(height: 15,),
+                          SizedBox(height: 16,),
                           Container(
                             child: TextFormField(
                               textInputAction: TextInputAction.done,
@@ -85,11 +85,8 @@ class _AddCardsScreenState extends State<AddCardsScreen> {
                               },
                               // controller: widget.newPassword,
                               // obscureText: controller.showNewPassword.value,
+
                               decoration: InputDecoration(
-                                labelStyle: TextStyle(
-                                    color: AppColors.appRed,fontSize: 12
-                                ),
-                                hintStyle: GoogleFonts.inriaSans(textStyle: TextStyle(fontSize: 14)),
                                 // suffixIcon: IconButton(
                                 //     onPressed: () {
                                 //       controller.toggleShowNewPassword();
@@ -97,28 +94,12 @@ class _AddCardsScreenState extends State<AddCardsScreen> {
                                 //     icon: controller.showNewPassword.value
                                 //         ? Icon(Icons.visibility_off)
                                 //         : Icon(Icons.visibility)),
-
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color:AppColors.appText1),
-                                  //  when the TextFormField in focused
-                                ) ,
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color:AppColors.appText1),
-                                  //  when the TextFormField in focused
-                                ),
-                                errorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color:AppColors.appText1),
-                                  //  when the TextFormField in focused
-                                ),
-                                focusedErrorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color:AppColors.appText1),
-                                  //  when the TextFormField in focused
-                                ),
                                 hintText: 'Card Number *',
                                 labelText: 'Card Number *',
                                 // border: OutlineInputBorder(),
-
                               ),
+
+
                             ),
                           ),
                           SizedBox(height: 10,),

@@ -44,16 +44,17 @@ class _OnBoarding3State extends State<OnBoarding3> {
     );
 
 
-    Get.offNamed(Routes.chooseYourStoreScreen);
-    // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    // final prefCustomerId = sharedPreferences.getString(AppConstants.prefCustomerId!);
-    // print("prefCustomerId ----------------------- ${prefCustomerId}");
-    //
-    // if(prefCustomerId != null){
-    //   Get.offNamed(Routes.landingHome);
-    // }else{
-    //   Get.offNamed(Routes.landingHome);
-    // }
+    // Get.offAndToNamed(Routes.login);
+    // Get.offNamed(Routes.chooseYourStoreScreen);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final prefCustomerId = sharedPreferences.getString(AppConstants.prefCustomerId!);
+    print("prefCustomerId ----------------------- ${prefCustomerId}");
+
+    if(prefCustomerId != null){
+      Get.offNamed(Routes.landingHome);
+    }else{
+      Get.offAndToNamed(Routes.login);
+    }
 
     // final token = await localRepositoryInterface.getUser();
     // if (token != null) {
@@ -80,13 +81,18 @@ class _OnBoarding3State extends State<OnBoarding3> {
                   alignment: Alignment.centerRight,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 60.0, right: 20),
-                    child: Text(
-                      "Skip",
-                      style: GoogleFonts.inriaSans(
-                          textStyle: const TextStyle(
-                              color: AppColors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 18)),
+                    child: InkWell(
+                      onTap: (){
+                        Get.offAllNamed(Routes.login);
+                      },
+                      child: Text(
+                        "Skip",
+                        style: GoogleFonts.inriaSerif(
+                            textStyle: const TextStyle(
+                                color: AppColors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18)),
+                      ),
                     ),
                   ),
                 ),

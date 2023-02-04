@@ -17,6 +17,7 @@ import 'package:get/get.dart';
 import 'package:eshoperapp/style/theme.dart' as Style;
 import 'package:google_fonts/google_fonts.dart';
 import '../../routes/navigation.dart';
+import '../../utils/snackbar_dialog.dart';
 import '../details/prodcut_details_screen.dart';
 import 'cart_controller.dart';
 
@@ -36,6 +37,10 @@ class _CartScreenState extends State<CartScreen> {
   //     apiRepositoryInterface: Get.find()));
 
   final cardController = Get.put(CartController(
+      apiRepositoryInterface: Get.find(),
+      localRepositoryInterface: Get.find()));
+
+  final homeController = Get.put(HomeController(
       apiRepositoryInterface: Get.find(),
       localRepositoryInterface: Get.find()));
 
@@ -86,28 +91,34 @@ class _CartScreenState extends State<CartScreen> {
             Column(children: [
               Container(
                 color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: AppSizes.sidePadding,right: AppSizes.sidePadding,top: 26,bottom: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          InkWell(child: Image.asset('assets/img/close.png',fit: BoxFit.fill,height: 12,width: 12,),onTap: (){
-                            Get.back();
-                          },),
-                          SizedBox(width: 16,),
-                          Text('SHOPPING BAG',
-                              style: GoogleFonts.inriaSans(textStyle: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: AppColors.appText))),
-                        ],
-                      ),
-
-                      InkWell(child: Image.asset('assets/img/heart.png',fit: BoxFit.fill,height: 18,width: 18,),
-                        onTap: (){
-                          Get.toNamed(Routes.cart);
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        InkWell(child: Padding(
+                          padding: const EdgeInsets.only(left: AppSizes.sidePadding,right: AppSizes.sidePadding,top: 26,bottom: 8),
+                          child: Image.asset('assets/img/close.png',fit: BoxFit.fill,height: 12,width: 12,),
+                        ),onTap: (){
+                          Get.back();
                         },),
-                    ],
-                  ),
+                        // SizedBox(width: 16,),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 0,right: 0,top: 26,bottom: 8),
+                          child: Text('SHOPPING BAG',
+                              style: GoogleFonts.inriaSans(textStyle: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: AppColors.appText))),
+                        ),
+                      ],
+                    ),
+
+                    InkWell(child: Padding(
+                      padding: const EdgeInsets.only(left: AppSizes.sidePadding,right: AppSizes.sidePadding,top: 26,bottom: 8),
+                      child: Image.asset('assets/img/heart.png',fit: BoxFit.fill,height: 18,width: 18,),
+                    ),
+                      onTap: (){
+                        Get.toNamed(Routes.wishList);
+                      },),
+                  ],
                 ),
               ),
               Container(height: 0.5,width: MediaQuery.of(context).size.width,color: AppColors.tileLine,),
@@ -120,7 +131,7 @@ class _CartScreenState extends State<CartScreen> {
                   // cardController.homecontroller.getBrand();
                   // cardController.homecontroller.bestSellerProduct();
                   // cardController.homecontroller.allProducts();
-                  await cardController.homecontroller.loadUser(false);
+                  await cardController.homecontroller.loadUser(true);
                   return cardController.homecontroller.newProducts(true);
                 },
                 child: Obx(() {
@@ -133,11 +144,12 @@ class _CartScreenState extends State<CartScreen> {
                         Obx(() {
                           if (cardController.homecontroller.isLoadingGetCartItems.value != true) {
                             MainResponse? mainResponse = cardController.homecontroller.getCartItemsObj.value;
-                            // List<Carts>? getCartData = [];
+                            List<Carts>? getCartData = [];
 
                             if(mainResponse.data != null){
                               mainResponse.data!.forEach((v) {
-                                // getCartData.add(Carts.fromJson(v));
+                                getCartData.add(Carts.fromJson(v));
+                                // cardController.getCartDataBottomView!.add(Carts.fromJson(v));
                               });
 
                             }
@@ -161,7 +173,7 @@ class _CartScreenState extends State<CartScreen> {
                               // Do something
                               // cardController.homecontroller.selectAllCart(getCartData);
                             });
-                            if (cardController.cartList.isEmpty) {
+                            if (getCartData.isEmpty) {
                               // return Container(
                               //   height: 90.0,
                               //   width: MediaQuery.of(context).size.width,
@@ -264,12 +276,12 @@ class _CartScreenState extends State<CartScreen> {
                                             children: [
                                               InkWell(
                                                 onTap: (){
-                                                  cardController.selectAllCart(cardController.cartList);
+                                                  cardController.selectAllCart(getCartData);
 
-                                                  print("controller.isAllCartSelected(getCartData) ${cardController.homecontroller.isAllCartSelected(cardController.cartList)}");
-                                                  if(cardController.homecontroller.isAllCartSelected(cardController.cartList)){
+                                                  print("controller.isAllCartSelected(getCartData) ${cardController.homecontroller.isAllCartSelected(getCartData)}");
+                                                  if(cardController.homecontroller.isAllCartSelected(getCartData)){
                                                     cardController.homecontroller.productIds.clear();
-                                                    cardController.cartList.forEach((element) {
+                                                    getCartData.forEach((element) {
                                                       cardController.homecontroller.productIds.add(element.productId);
                                                     });
                                                     print("productIds ${cardController.homecontroller.productIds}");
@@ -278,7 +290,7 @@ class _CartScreenState extends State<CartScreen> {
                                                     print("productIds ${cardController.homecontroller.productIds}");
                                                   }
                                                 },
-                                                child: cardController.homecontroller.isAllCartSelected(cardController.cartList)
+                                                child: cardController.homecontroller.isAllCartSelected(getCartData)
                                                     ? Image.asset("assets/img/checked.png",fit: BoxFit.fill,height: 20,width: 20,)
                                                     : Image.asset("assets/img/unchecked.png",fit: BoxFit.fill,height: 20,width: 20,),
 
@@ -288,7 +300,7 @@ class _CartScreenState extends State<CartScreen> {
                                               ),
                                               SizedBox(width: 8,),
                                               Text(
-                                                '2/2 ITEMS SELECTED',
+                                                '${getCartData.length}/${cardController.homecontroller.productIds.length} ITEMS SELECTED',
                                                 style: GoogleFonts.inriaSans(
                                                     textStyle:
                                                     const TextStyle(
@@ -301,7 +313,8 @@ class _CartScreenState extends State<CartScreen> {
                                               ),
 
                                               Text(
-                                                '(₹2,039)',
+                                            "(\u{20B9} ${homeController.totalAmount.toInt()})",
+                                                // '(₹2,039)',
                                                 style: GoogleFonts.inriaSans(
                                                     textStyle:
                                                     const TextStyle(
@@ -313,11 +326,113 @@ class _CartScreenState extends State<CartScreen> {
                                                             .appRed)),
                                               ),
                                               Spacer(),
-                                              Image.asset(
-                                                "assets/img/wishlist_heart.png",
-                                                fit: BoxFit.fill,
-                                                height: 20,
-                                                width: 20,
+                                              InkWell(
+
+                                                child: Image.asset(
+                                                  "assets/img/wishlist_heart.png",
+                                                  fit: BoxFit.fill,
+                                                  height: 20,
+                                                  width: 20,
+                                                ),
+                                                onTap: (){
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) {
+                                                        return Dialog(
+
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                              BorderRadius.circular(0.0)),
+                                                          //this right here
+                                                          child: Container(
+                                                            height: 135,
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Expanded(child: Text("Move ${cardController.homecontroller.productIds.length} items to wishlist?",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.black,fontWeight: FontWeight.w400,fontSize: 16)))),
+                                                                      InkWell(
+
+                                                                        child: Icon(Icons.close,color: AppColors.black,),onTap: (){Get.back();},)
+
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(left: 8.0,right: 8.0,bottom: 16.0),
+                                                                  child: Text("Are you sure you want to move ${cardController.homecontroller.productIds.length} items from bag?",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.appText1,fontWeight: FontWeight.w400,fontSize: 14))),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                                                                  child: Container(height: 1,width: MediaQuery.of(context).size.width,color: AppColors.appLine,),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(top: 5.0,bottom: 5.0),
+                                                                  child: Row(
+                                                                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                    children: [
+                                                                      Expanded(
+                                                                        child: InkWell(
+
+                                                                          child: Center(child: Text("NO",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.appLine,fontWeight: FontWeight.w700,fontSize: 14)))),
+                                                                          onTap: (){
+                                                                            Get.back();
+                                                                          },
+                                                                        ),
+                                                                      ),
+                                                                      Container(height: 22,width: 1.5,color: AppColors.appLine,),
+                                                                      Expanded(
+                                                                        child: InkWell(
+                                                                          child: Center(
+                                                                            child: Text("MOVE TO WISHLIST",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.appRed,fontWeight: FontWeight.w700,fontSize: 14)),
+                                                                            ),
+                                                                          ),
+                                                                          onTap: ()  async {
+
+
+
+                                                                            // List<int> productIdList = [];
+                                                                            String productIdS="";
+                                                                            print("cardController.homecontroller.productIds ==================? ${cardController.homecontroller.productIds}");
+                                                                            getCartData.forEach((element1) {
+                                                                              cardController.homecontroller.productIds.forEach((element2) {
+                                                                                print("element1.productId 11111 outside ${element1.productId}");
+                                                                                print("element2.productId 22222 outside ${element2}");
+                                                                                if(element1.productId == element2){
+                                                                                  print("element1.productId 11111 ${element1.productId}");
+
+                                                                                  print("element2.productId element1 ${element1.productName}");
+                                                                                  // productIdList.add(int.parse(element1.productId!));
+                                                                                  productIdS = productIdS+element1.productId!.toString()+",";
+                                                                                }else{
+                                                                                  print("element1.productId 11111 else ${element1.productId}");
+                                                                                  print("element2.productId 22222 else ${element2}");
+                                                                                }
+                                                                              });
+
+                                                                            });
+
+                                                                            print(" productIdS ================ > $productIdS");
+                                                                            print(" customerId ================ > ${cardController.homecontroller.customerId.value}");
+                                                                            Get.back();
+
+                                                                            cardController.homecontroller.moveToWishList(productIdS,cardController.homecontroller.customerId.value);
+
+                                                                          },
+                                                                        ),
+                                                                      )
+                                                                    ],),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        );
+                                                      });
+                                                },
                                               )
                                             ],
                                           ),
@@ -330,25 +445,19 @@ class _CartScreenState extends State<CartScreen> {
                                   Column(
                                     children: [
                                       ...List.generate(
-                                          cardController.cartList.length,
+                                          getCartData.length,
                                               (index) {
-                                            double mrp = double.parse(cardController.cartList[index].mrpPrice!) * double.parse(cardController.cartList[index].quantity!);
-                                            double totalQty = double.parse(cardController.cartList[index].netPrice!) * double.parse(cardController.cartList[index].quantity!);
+                                            double mrp = double.parse(getCartData[index].mrpPrice!) * double.parse(getCartData[index].quantity!);
+                                            double totalQty = double.parse(getCartData[index].netPrice!) * double.parse(getCartData[index].quantity!);
                                             return InkWell(
                                               onTap: () {
                                                 Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>  ProductDetailsScreen(
-                                                          products: Products(productId: cardController.cartList[index].productId!,productName: cardController.cartList[index].productName!),
+                                                          products: Products(productId: getCartData[index].productId!,productName: getCartData[index].productName!,variantCode: getCartData[index].variantCode!),
                                                           // article: articles[index],
                                                         )));
-
-
-
-
-
-
                                               },
                                               child: Padding(
                                                 padding: const EdgeInsets.only(bottom: 8.0),
@@ -389,13 +498,13 @@ class _CartScreenState extends State<CartScreen> {
                                                                 child: SizedBox(
                                                                   height: 100,
                                                                   width: 104,
-                                                                  child: Image.asset(
+                                                                  child: Image.network(
                                                                     // 'https://onlinehatiya.herokuapp.com' +
                                                                     //     cart!.product!.image!,
 
-                                                                    // imageUrl + getCartData[index].productId! + "/" + getCartData[index].coverImg!,
-                                                                    cardController.cartList[index].coverImg!,
-                                                                    fit: BoxFit.fill,),
+                                                                    imageUrl + getCartData[index].productId! + "/" + getCartData[index].coverImg!,
+                                                                    // getCartData[index].coverImg!,
+                                                                    fit: BoxFit.cover,),
                                                                 ),
                                                               ),
                                                               Obx(() {
@@ -403,7 +512,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                 return InkWell(
                                                                   onTap: (){
                                                                     // productIds.clear();
-                                                                    cardController.selectCart(cardController.cartList[index]);
+                                                                    cardController.selectCart(getCartData[index]);
                                                                     print("productIds first ${cardController.homecontroller.productIds}");
                                                                     // print("contains ${productIds.contains(getCartData[index].cartId.toString())}");
                                                                     // // print("contains ${productIds.where((item) => item.contains(getCartData[index].cartId.toString()))}" );
@@ -416,18 +525,18 @@ class _CartScreenState extends State<CartScreen> {
                                                                     // print("productIds ${productIds}");
 
                                                                     // List<String> myList = ['US', 'SG', 'US'];
-                                                                    print(cardController.homecontroller.productIds.where((item) => item.contains(cardController.cartList[index].productId!)));
-                                                                    var contain = cardController.homecontroller.productIds.where((item) => item.contains(cardController.cartList[index].productId!));
+                                                                    print(cardController.homecontroller.productIds.where((item) => item.contains(getCartData[index].productId!)));
+                                                                    var contain = cardController.homecontroller.productIds.where((item) => item.contains(getCartData[index].productId!));
                                                                     if (contain.isEmpty){
-                                                                      cardController.homecontroller.productIds.add(cardController.cartList[index].productId!);
+                                                                      cardController.homecontroller.productIds.add(getCartData[index].productId!);
                                                                       print("productIds if ${cardController.homecontroller.productIds}");
                                                                     }else{
-                                                                      cardController.homecontroller.productIds.removeWhere((item) => item == cardController.cartList[index].productId);
+                                                                      cardController.homecontroller.productIds.removeWhere((item) => item == getCartData[index].productId);
                                                                       // productIds.removeAt(index);
                                                                       print("productIds ${cardController.homecontroller.productIds}");
                                                                     }
                                                                   },
-                                                                  child: cardController.homecontroller.selectedCarts.contains(cardController.cartList[index].cartId)
+                                                                  child: cardController.homecontroller.selectedCarts.contains(getCartData[index].cartId)
                                                                       ? Padding(
                                                                     padding: const EdgeInsets.only(left: 2.0),
                                                                     child: Container(
@@ -452,40 +561,40 @@ class _CartScreenState extends State<CartScreen> {
                                                                     ),
                                                                   ),
                                                                 );
-                                                                return IconButton(
-                                                                    padding: EdgeInsets.all(0),
-                                                                    onPressed: () {
-                                                                      // productIds.clear();
-                                                                      cardController.selectCart(cardController.cartList[index]);
-                                                                      print("productIds first ${cardController.homecontroller.productIds}");
-                                                                      // print("contains ${productIds.contains(getCartData[index].cartId.toString())}");
-                                                                      // // print("contains ${productIds.where((item) => item.contains(getCartData[index].cartId.toString()))}" );
-                                                                      // if(productIds.contains(getCartData[index].cartId.toString())){
-                                                                      //   productIds.removeAt(index);
-                                                                      // }else{
-                                                                      //   productIds.add(getCartData[index].productId!);
-                                                                      // }
-                                                                      //
-                                                                      // print("productIds ${productIds}");
-
-                                                                      // List<String> myList = ['US', 'SG', 'US'];
-                                                                      print(cardController.homecontroller.productIds.where((item) => item.contains(cardController.cartList[index].productId!)));
-                                                                      var contain = cardController.homecontroller.productIds.where((item) => item.contains(cardController.cartList[index].productId!));
-                                                                      if (contain.isEmpty){
-                                                                        cardController.homecontroller.productIds.add(cardController.cartList[index].productId!);
-                                                                        print("productIds if ${cardController.homecontroller.productIds}");
-                                                                      }else{
-                                                                        cardController.homecontroller.productIds.removeWhere((item) => item == cardController.cartList[index].productId);
-                                                                        // productIds.removeAt(index);
-                                                                        print("productIds ${cardController.homecontroller.productIds}");
-                                                                      }
-
-
-                                                                    },
-                                                                    // icon: homeController.selectedCarts.contains(cart!.id)
-                                                                    icon: cardController.homecontroller.selectedCarts.contains(cardController.cartList[index].cartId)
-                                                                        ? const Icon(Icons.check_box)
-                                                                        : const Icon(Icons.check_box_outline_blank));
+                                                                // return IconButton(
+                                                                //     padding: EdgeInsets.all(0),
+                                                                //     onPressed: () {
+                                                                //       // productIds.clear();
+                                                                //       cardController.selectCart(cardController.cartList[index]);
+                                                                //       print("productIds first ${cardController.homecontroller.productIds}");
+                                                                //       // print("contains ${productIds.contains(getCartData[index].cartId.toString())}");
+                                                                //       // // print("contains ${productIds.where((item) => item.contains(getCartData[index].cartId.toString()))}" );
+                                                                //       // if(productIds.contains(getCartData[index].cartId.toString())){
+                                                                //       //   productIds.removeAt(index);
+                                                                //       // }else{
+                                                                //       //   productIds.add(getCartData[index].productId!);
+                                                                //       // }
+                                                                //       //
+                                                                //       // print("productIds ${productIds}");
+                                                                //
+                                                                //       // List<String> myList = ['US', 'SG', 'US'];
+                                                                //       print(cardController.homecontroller.productIds.where((item) => item.contains(cardController.cartList[index].productId!)));
+                                                                //       var contain = cardController.homecontroller.productIds.where((item) => item.contains(cardController.cartList[index].productId!));
+                                                                //       if (contain.isEmpty){
+                                                                //         cardController.homecontroller.productIds.add(cardController.cartList[index].productId!);
+                                                                //         print("productIds if ${cardController.homecontroller.productIds}");
+                                                                //       }else{
+                                                                //         cardController.homecontroller.productIds.removeWhere((item) => item == cardController.cartList[index].productId);
+                                                                //         // productIds.removeAt(index);
+                                                                //         print("productIds ${cardController.homecontroller.productIds}");
+                                                                //       }
+                                                                //
+                                                                //
+                                                                //     },
+                                                                //     // icon: homeController.selectedCarts.contains(cart!.id)
+                                                                //     icon: cardController.homecontroller.selectedCarts.contains(cardController.cartList[index].cartId)
+                                                                //         ? const Icon(Icons.check_box)
+                                                                //         : const Icon(Icons.check_box_outline_blank));
                                                               }),
                                                             ],
                                                           ),
@@ -499,7 +608,8 @@ class _CartScreenState extends State<CartScreen> {
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                                 children: [
-                                                                  Text(cardController.cartList[index].productName!,
+                                                                  Text(getCartData[index].productName!,
+                                                                      maxLines: 1,
                                                                       style: GoogleFonts.inriaSans(
                                                                           textStyle: const TextStyle(
                                                                               fontSize: 14,
@@ -509,7 +619,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                   // const SizedBox(
                                                                   //   height: 3,
                                                                   // ),
-                                                                  Text(cardController.cartList[index].description!,
+                                                                  Text(getCartData[index].shortCode!,
                                                                       // style: GoogleFonts.ptSans(),
                                                                       overflow: TextOverflow.ellipsis,
                                                                       maxLines: 1,
@@ -533,26 +643,18 @@ class _CartScreenState extends State<CartScreen> {
                                                                             children: [
                                                                               Container(
 
-                                                                                child: InkWell(
-                                                                                    onTap: () {
-                                                                                      cardController.quantity(int.parse(cardController.cartList[index].quantity!));
-                                                                                      cardController.showButtomSheed(
-                                                                                          context, () {
-
-                                                                                      }, int.parse(cardController.cartList[index].productId!),cardController.homecontroller.customerId.value);
-                                                                                    },
-                                                                                    child: Padding(
-                                                                                      padding: const EdgeInsets.all(2.0),
-                                                                                      child: Text('Size:38 ▾',
-                                                                                          style: GoogleFonts.inriaSans(
-                                                                                              textStyle: TextStyle(
-                                                                                                  fontSize: 12,
-                                                                                                  fontWeight:
-                                                                                                  FontWeight.w400,
-                                                                                                  color: AppColors
-                                                                                                      .black))
-                                                                                      ),
-                                                                                    )),
+                                                                                child: Padding(
+                                                                                  padding: const EdgeInsets.all(2.0),
+                                                                                  child: Text('${getCartData[index].quantity}',
+                                                                                      style: GoogleFonts.inriaSans(
+                                                                                          textStyle: TextStyle(
+                                                                                              fontSize: 12,
+                                                                                              fontWeight:
+                                                                                              FontWeight.w400,
+                                                                                              color: AppColors
+                                                                                                  .black))
+                                                                                  ),
+                                                                                ),
                                                                                 decoration: BoxDecoration(
                                                                                     borderRadius: BorderRadius.circular(3),
                                                                                     color:Colors.grey[100]
@@ -566,15 +668,15 @@ class _CartScreenState extends State<CartScreen> {
                                                                                 ),
                                                                                 child: InkWell(
                                                                                     onTap: () {
-                                                                                      cardController.quantity(int.parse(cardController.cartList[index].quantity!));
+                                                                                      cardController.quantity(int.parse(getCartData[index].quantity!));
                                                                                       cardController.showButtomSheed(
                                                                                           context, () {
 
-                                                                                      }, int.parse(cardController.cartList[index].productId!),cardController.homecontroller.customerId.value);
+                                                                                      }, int.parse(getCartData[index].productId!),cardController.homecontroller.customerId.value);
                                                                                     },
                                                                                     child: Padding(
                                                                                       padding: const EdgeInsets.all(2.0),
-                                                                                      child: Text('Qty:${cardController.cartList[index].quantity} ▾',
+                                                                                      child: Text('Qty:${getCartData[index].quantity} ▾',
                                                                                           style: GoogleFonts.inriaSans(
                                                                                               textStyle: TextStyle(
                                                                                                   fontSize: 12,
@@ -621,7 +723,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                               ),
                                                                               SizedBox(width: 5,),
                                                                               Text(
-                                                                                  '\u{20B9} ' + cardController.cartList[index].discount.toString() ,
+                                                                                 getCartData[index].discount.toString()+" % OFF" ,
                                                                                   style: GoogleFonts.inriaSans(
                                                                                       textStyle: TextStyle(
                                                                                           fontSize: 12,
@@ -680,16 +782,16 @@ class _CartScreenState extends State<CartScreen> {
                                                             AlertDialogs.showAlertDialog("Delete?", "Are you sure you want to delete from this Item?", () async {
                                                               Navigator.pop(context);
                                                               print("productIds ${cardController.homecontroller.productIds}");
-                                                              var contain = cardController.homecontroller.productIds.where((item) => item.contains(cardController.cartList[index].productId!));
+                                                              var contain = cardController.homecontroller.productIds.where((item) => item.contains(getCartData[index].productId!));
                                                               if (contain.isEmpty){
 
                                                                 print("productIds if cancel ${cardController.homecontroller.productIds}");
                                                               }else{
-                                                                cardController.homecontroller.productIds.removeWhere((item) => item == cardController.cartList[index].productId);
+                                                                cardController.homecontroller.productIds.removeWhere((item) => item == getCartData[index].productId);
                                                                 // productIds.removeAt(index);
                                                                 print("productIds cancel ${cardController.homecontroller.productIds}");
                                                               }
-                                                              cardController.homecontroller.removeFromCart(cardController.cartList[index].productId!,cardController.homecontroller.customerId.value,index);
+                                                              cardController.homecontroller.removeFromCart(getCartData[index].productId!,cardController.homecontroller.customerId.value,index);
                                                               // if(isBool){
                                                               //
                                                               //
@@ -788,7 +890,7 @@ class _CartScreenState extends State<CartScreen> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
 
                                           children: [
-                                            Text("PRICE DETAILS(2 ITEMS)",
+                                            Text("PRICE DETAILS(${cardController.homecontroller.productIds.length} ITEMS)",
                                                 style: GoogleFonts.inriaSans(
                                                     textStyle: const TextStyle(
                                                         fontSize: 14,
@@ -810,7 +912,7 @@ class _CartScreenState extends State<CartScreen> {
                                                             fontSize: 12,
                                                             fontWeight: FontWeight.w400,
                                                             color: AppColors.black))),
-                                                Text("₹3,289",
+                                                Text("₹ ${homeController.totalMRP.toInt()}",
                                                     style: GoogleFonts.inriaSans(
                                                         textStyle: const TextStyle(
                                                             fontSize: 12,
@@ -828,7 +930,7 @@ class _CartScreenState extends State<CartScreen> {
                                                             fontSize: 12,
                                                             fontWeight: FontWeight.w400,
                                                             color: AppColors.black))),
-                                                Text("-₹1,252",
+                                                Text("-₹ ${homeController.totalDISCOUNT.toInt()}",
                                                     style: GoogleFonts.inriaSans(
                                                         textStyle: const TextStyle(
                                                             fontSize: 12,
@@ -917,7 +1019,7 @@ class _CartScreenState extends State<CartScreen> {
                                                             fontSize: 12,
                                                             fontWeight: FontWeight.w700,
                                                             color: AppColors.black))),
-                                                Text("₹2,039",
+                                                Text("₹ ${homeController.totalAmount.toInt()}",
                                                     style: GoogleFonts.inriaSans(
                                                         textStyle: const TextStyle(
                                                             fontSize: 12,
@@ -972,119 +1074,315 @@ class _CartScreenState extends State<CartScreen> {
       ),
 
 
-      bottomNavigationBar:cardController.cartList.isEmpty?Container(height: 0.0,):
-      Wrap(
-        children: [
-          Container(
+      bottomNavigationBar:
+      Obx(() {
+        if (cardController.homecontroller.isLoadingGetCartItems.value != true) {
+          MainResponse? mainResponse = cardController.homecontroller.getCartItemsObj.value;
+          List<Carts>? getCartData = [];
 
-            width: MediaQuery.of(context).size.width,
-            child: Column(children: [
-              Container(
+          if(mainResponse.data != null){
+            mainResponse.data!.forEach((v) {
+              getCartData.add(Carts.fromJson(v));
+            });
 
-                width: MediaQuery.of(context).size.width,
-                height: 20,
-                color: AppColors.selectedItem,
-                child: Center(
-                  child: Text("2 Items selected for order", style: GoogleFonts.inriaSans(
-                      textStyle: TextStyle(
-                          fontSize: 12,
-                          fontWeight:
-                          FontWeight.w400,
-                          color: AppColors
-                              .black))),
-                ),
-              ),
-              InkWell(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0,bottom: 8.0,left: 16.0,right: 16.0),
-                  child: Container(
-                    height: 36,
-                    width: MediaQuery.of(context).size.width,
-                    color: AppColors.appRed,
-                    child: Center(
+          }
+
+
+          // print("getCartData total ------------- ${getCartData[0].totalAmt!}");
+          // cardController.homecontroller.cartList(getCartData);
+          Future.delayed(Duration.zero, () { // <-- add this
+            cardController.homecontroller.refreshTotal();
+          });
+
+          // cardController.homecontroller.refreshTotal();
+          // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
+
+
+          String? imageUrl = mainResponse.imageUrl ?? "";
+          String? message = mainResponse.message ?? AppConstants.noInternetConn;
+
+
+          Future.delayed(Duration(seconds: 1), () {
+            // Do something
+            // cardController.homecontroller.selectAllCart(getCartData);
+          });
+          if (getCartData.isEmpty) {
+            // return Container(
+            //   height: 90.0,
+            //   width: MediaQuery.of(context).size.width,
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     crossAxisAlignment: CrossAxisAlignment.center,
+            //     children: <Widget>[
+            //       Column(
+            //         children: <Widget>[
+            //           Text(
+            //             message!,
+            //             style: TextStyle(color: Colors.black45),
+            //           )
+            //         ],
+            //       )
+            //     ],
+            //   ),
+            // );
+
+            return Container(height: 0,
+
+            );
+          }else{
+            // cardController.selectAllCartInit(getCartData);
+            return Wrap(
+              children: [
+                Container(
+
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(children: [
+                    // Container(
+                    //
+                    //   width: MediaQuery.of(context).size.width,
+                    //   height: 20,
+                    //   color: AppColors.selectedItem,
+                    //   child: Center(
+                    //     child: Text("${cardController.homecontroller.productIds.length} Items selected for order", style: GoogleFonts.inriaSans(
+                    //         textStyle: TextStyle(
+                    //             fontSize: 12,
+                    //             fontWeight:
+                    //             FontWeight.w400,
+                    //             color: AppColors
+                    //                 .black))),
+                    //   ),
+                    // ),
+                    InkWell(
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: 8.0,
-                          top: 8.0,
-                        ),
-                        child: Text(
-                          "PLACE ORDER",
-                          style: GoogleFonts.inriaSans(
-                            textStyle: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
+                        padding: const EdgeInsets.only(top: 8.0,bottom: 8.0,left: 16.0,right: 16.0),
+                        child: Container(
+                          height: 36,
+                          width: MediaQuery.of(context).size.width,
+                          color: AppColors.appRed,
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 8.0,
+                                top: 8.0,
+                              ),
+                              child: Text(
+                                "PLACE ORDER",
+                                style: GoogleFonts.inriaSans(
+                                  textStyle: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // style: const TextStyle(
+                                //     fontSize: 23,
+                                //     fontWeight: FontWeight.w500),
+                              ),
+                            ),
                           ),
-                          // style: const TextStyle(
-                          //     fontSize: 23,
-                          //     fontWeight: FontWeight.w500),
                         ),
                       ),
-                    ),
-                  ),
+                      onTap: () {
+                        // String stringList = cardController.homecontroller.productIds.join(",");
+                        // print("product list ${stringList}");
+                        //
+                        // if(profileController.customerId.value == ""){
+                        //   AlertDialogs.showLoginRequiredDialog();
+                        // }else if(cartList.isEmpty){
+                        //   AlertDialogs.showAlertDialog("Cart?", "Please minimum 1 item add to cart", ()  {
+                        //     Get.back();
+                        //   });
+                        // } else if(productIds.isEmpty){
+                        //   AlertDialogs.showAlertDialog("Cart?", "Please select minimum 1 item", ()  {
+                        //     Get.back();
+                        //   });
+                        // }else{
+                        //   List<Carts> finaCartList = [];
+                        //   cartList.forEach((element1) {
+                        //     productIds.forEach((element2) {
+                        //       print("element1.productId 11111 outside ${element1.productId}");
+                        //       print("element2.productId 22222 outside ${element2}");
+                        //       if(element1.productId == element2){
+                        //         print("element1.productId 11111 ${element1.productId}");
+                        //
+                        //         print("element2.productId element1 ${element1.productName}");
+                        //         finaCartList.add(element1);
+                        //       }else{
+                        //         print("element1.productId 11111 else ${element1.productId}");
+                        //         print("element2.productId 22222 else ${element2}");
+                        //       }
+                        //     });
+                        //
+                        //   });
+                        //   // homeController.checkOut(stringList);
+                        //   Get.toNamed(Routes.checkOut,arguments: [{"cartList": finaCartList}, {"imagePath": imagePath}]);
+                        // }
+
+
+                        if(cardController.homecontroller.productIds.isEmpty){
+                          SnackBarDialog.showSnackbar('Error',"Please select minimum 1 item");
+                        }else{
+                          List<Carts> finaCartList = [];
+                          List<int> productIdList = [];
+                          print("cardController.homecontroller.productIds ==================? ${cardController.homecontroller.productIds}");
+                          getCartData.forEach((element1) {
+                            cardController.homecontroller.productIds.forEach((element2) {
+                              print("element1.productId 11111 outside ${element1.productId}");
+                              print("element2.productId 22222 outside ${element2}");
+                              if(element1.productId == element2){
+                                print("element1.productId 11111 ${element1.productId}");
+
+                                print("element2.productId element1 ${element1.productName}");
+                                finaCartList.add(element1);
+                                productIdList.add(int.parse(element1.productId!));
+                              }else{
+                                print("element1.productId 11111 else ${element1.productId}");
+                                print("element2.productId 22222 else ${element2}");
+                              }
+                            });
+
+                          }
+
+                          );
+                          // homeController.checkOut(stringList);
+                          Get.toNamed(Routes.checkOut,arguments: [{"cartList": finaCartList}, {"imagePath": imageUrl},{"productIdList": productIdList}]);
+                        }
+
+
+                      },
+                    )
+                  ],),
                 ),
-                onTap: () {
-                  // String stringList = cardController.homecontroller.productIds.join(",");
-                  // print("product list ${stringList}");
-                  //
-                  // if(profileController.customerId.value == ""){
-                  //   AlertDialogs.showLoginRequiredDialog();
-                  // }else if(cartList.isEmpty){
-                  //   AlertDialogs.showAlertDialog("Cart?", "Please minimum 1 item add to cart", ()  {
-                  //     Get.back();
-                  //   });
-                  // } else if(productIds.isEmpty){
-                  //   AlertDialogs.showAlertDialog("Cart?", "Please select minimum 1 item", ()  {
-                  //     Get.back();
-                  //   });
-                  // }else{
-                  //   List<Carts> finaCartList = [];
-                  //   cartList.forEach((element1) {
-                  //     productIds.forEach((element2) {
-                  //       print("element1.productId 11111 outside ${element1.productId}");
-                  //       print("element2.productId 22222 outside ${element2}");
-                  //       if(element1.productId == element2){
-                  //         print("element1.productId 11111 ${element1.productId}");
-                  //
-                  //         print("element2.productId element1 ${element1.productName}");
-                  //         finaCartList.add(element1);
-                  //       }else{
-                  //         print("element1.productId 11111 else ${element1.productId}");
-                  //         print("element2.productId 22222 else ${element2}");
-                  //       }
-                  //     });
-                  //
-                  //   });
-                  //   // homeController.checkOut(stringList);
-                  //   Get.toNamed(Routes.checkOut,arguments: [{"cartList": finaCartList}, {"imagePath": imagePath}]);
-                  // }
+              ],
+            );
+          }
+
+        } else {
+          return Container(height: 0,);
+          return  Container(
+              height: 90,
+              child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor)));
+
+        }
+      }),
 
 
-                  List<Carts> finaCartList = [];
-                  cardController.cartList.forEach((element1) {
-                    cardController.homecontroller.productIds.forEach((element2) {
-                      print("element1.productId 11111 outside ${element1.productId}");
-                      print("element2.productId 22222 outside ${element2}");
-                      if(element1.productId == element2){
-                        print("element1.productId 11111 ${element1.productId}");
-
-                        print("element2.productId element1 ${element1.productName}");
-                        finaCartList.add(element1);
-                      }else{
-                        print("element1.productId 11111 else ${element1.productId}");
-                        print("element2.productId 22222 else ${element2}");
-                      }
-                    });
-
-                  });
-                  // homeController.checkOut(stringList);
-                  Get.toNamed(Routes.checkOut,arguments: [{"cartList": finaCartList}, {"imagePath": "imagePath"}]);
-                },
-              )
-            ],),
-          ),
-        ],
-      )
+      // cardController.getCartDataBottomView!.isEmpty?Container(height: 0,):
+      //
+      //
+      // Wrap(
+      //   children: [
+      //     Container(
+      //
+      //       width: MediaQuery.of(context).size.width,
+      //       child: Column(children: [
+      //         Container(
+      //
+      //           width: MediaQuery.of(context).size.width,
+      //           height: 20,
+      //           color: AppColors.selectedItem,
+      //           child: Center(
+      //             child: Text("2 Items selected for order", style: GoogleFonts.inriaSans(
+      //                 textStyle: TextStyle(
+      //                     fontSize: 12,
+      //                     fontWeight:
+      //                     FontWeight.w400,
+      //                     color: AppColors
+      //                         .black))),
+      //           ),
+      //         ),
+      //         InkWell(
+      //           child: Padding(
+      //             padding: const EdgeInsets.only(top: 8.0,bottom: 8.0,left: 16.0,right: 16.0),
+      //             child: Container(
+      //               height: 36,
+      //               width: MediaQuery.of(context).size.width,
+      //               color: AppColors.appRed,
+      //               child: Center(
+      //                 child: Padding(
+      //                   padding: const EdgeInsets.only(
+      //                     bottom: 8.0,
+      //                     top: 8.0,
+      //                   ),
+      //                   child: Text(
+      //                     "PLACE ORDER",
+      //                     style: GoogleFonts.inriaSans(
+      //                       textStyle: const TextStyle(
+      //                           fontSize: 16,
+      //                           color: Colors.white,
+      //                           fontWeight: FontWeight.bold),
+      //                     ),
+      //                     // style: const TextStyle(
+      //                     //     fontSize: 23,
+      //                     //     fontWeight: FontWeight.w500),
+      //                   ),
+      //                 ),
+      //               ),
+      //             ),
+      //           ),
+      //           onTap: () {
+      //             // String stringList = cardController.homecontroller.productIds.join(",");
+      //             // print("product list ${stringList}");
+      //             //
+      //             // if(profileController.customerId.value == ""){
+      //             //   AlertDialogs.showLoginRequiredDialog();
+      //             // }else if(cartList.isEmpty){
+      //             //   AlertDialogs.showAlertDialog("Cart?", "Please minimum 1 item add to cart", ()  {
+      //             //     Get.back();
+      //             //   });
+      //             // } else if(productIds.isEmpty){
+      //             //   AlertDialogs.showAlertDialog("Cart?", "Please select minimum 1 item", ()  {
+      //             //     Get.back();
+      //             //   });
+      //             // }else{
+      //             //   List<Carts> finaCartList = [];
+      //             //   cartList.forEach((element1) {
+      //             //     productIds.forEach((element2) {
+      //             //       print("element1.productId 11111 outside ${element1.productId}");
+      //             //       print("element2.productId 22222 outside ${element2}");
+      //             //       if(element1.productId == element2){
+      //             //         print("element1.productId 11111 ${element1.productId}");
+      //             //
+      //             //         print("element2.productId element1 ${element1.productName}");
+      //             //         finaCartList.add(element1);
+      //             //       }else{
+      //             //         print("element1.productId 11111 else ${element1.productId}");
+      //             //         print("element2.productId 22222 else ${element2}");
+      //             //       }
+      //             //     });
+      //             //
+      //             //   });
+      //             //   // homeController.checkOut(stringList);
+      //             //   Get.toNamed(Routes.checkOut,arguments: [{"cartList": finaCartList}, {"imagePath": imagePath}]);
+      //             // }
+      //
+      //
+      //             List<Carts> finaCartList = [];
+      //             // cardController.cartList.forEach((element1) {
+      //             //   cardController.homecontroller.productIds.forEach((element2) {
+      //             //     print("element1.productId 11111 outside ${element1.productId}");
+      //             //     print("element2.productId 22222 outside ${element2}");
+      //             //     if(element1.productId == element2){
+      //             //       print("element1.productId 11111 ${element1.productId}");
+      //             //
+      //             //       print("element2.productId element1 ${element1.productName}");
+      //             //       finaCartList.add(element1);
+      //             //     }else{
+      //             //       print("element1.productId 11111 else ${element1.productId}");
+      //             //       print("element2.productId 22222 else ${element2}");
+      //             //     }
+      //             //   });
+      //             //
+      //             // }
+      //             //
+      //             // );
+      //             // homeController.checkOut(stringList);
+      //             Get.toNamed(Routes.checkOut,arguments: [{"cartList": finaCartList}, {"imagePath": "imagePath"}]);
+      //           },
+      //         )
+      //       ],),
+      //     ),
+      //   ],
+      // )
 
 
 

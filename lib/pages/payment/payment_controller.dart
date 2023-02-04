@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../models/categories.dart';
+import '../landing_home/home_controller.dart';
 
 class PaymentController extends GetxController {
   final LocalRepositoryInterface localRepositoryInterface;
@@ -16,6 +17,11 @@ class PaymentController extends GetxController {
 
   List<PaymentModel> paymentList =  <PaymentModel>[];
   Razorpay? _razorpay;
+  String? paymentType;
+  String? productIdS="";
+  final homeController = Get.put(HomeController(
+      apiRepositoryInterface: Get.find(),
+      localRepositoryInterface: Get.find()));
   PaymentController({required this.localRepositoryInterface, required this.apiRepositoryInterface});
 
 
@@ -37,6 +43,9 @@ class PaymentController extends GetxController {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     print('Success Response: ${response.paymentId}');
+
+
+    homeController.addOrder(paymentType!,productIdS);
     /*Fluttertoast.showToast(
         msg: "SUCCESS: " + response.paymentId!,
         toastLength: Toast.LENGTH_SHORT); */
@@ -44,6 +53,7 @@ class PaymentController extends GetxController {
 
   void _handlePaymentError(PaymentFailureResponse response) {
     print('Error Response: ${response.message}');
+    homeController.addOrder(paymentType!,productIdS);
     /* Fluttertoast.showToast(
         msg: "ERROR: " + response.code.toString() + " - " + response.message!,
         toastLength: Toast.LENGTH_SHORT); */

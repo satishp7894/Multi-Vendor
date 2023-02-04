@@ -20,46 +20,61 @@ class AppbarTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
    return Container(
      color: AppColors.white,
-     child: Column(children: [
-       Padding(
-         padding: const EdgeInsets.only(left: AppSizes.sidePadding,right: AppSizes.sidePadding,top: 26,bottom: 8),
-         child: Row(
-           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-           children: [
-             Row(
-               children: [
-                 InkWell(child: Image.asset('assets/img/arrow_left.png',fit: BoxFit.fill,height: 15,width: 18,),onTap: (){
-                   Get.back();
-                 },),
-                 SizedBox(width: 16,),
-                 Text('$title',
+     child:
+     Column(children: [
+       Row(
+         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+         children: [
+           Row(
+             children: [
+               InkWell(onTap: (){
+             Get.back(result: "true");
+           },
+                 child: Padding(
+                   padding: const EdgeInsets.only(left: AppSizes.sidePadding,right: AppSizes.sidePadding,top: 26,bottom: 8),
+                   child: Image.asset('assets/img/arrow_left.png',fit: BoxFit.fill,height: 15,width: 18,),
+                 ),
+               ),
+               // SizedBox(width: 16,),
+               Padding(
+                 padding: const EdgeInsets.only(left: 0,right: AppSizes.sidePadding,top: 26,bottom: 8),
+                 child: Text('$title',
                      style: GoogleFonts.inriaSans(textStyle: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: AppColors.appText))),
-               ],
-             ),
-             flag! ?
-             Row(
-               crossAxisAlignment: CrossAxisAlignment.end,
-               children: [
-                 InkWell(child: Image.asset('assets/img/search.png',fit: BoxFit.fill,height: 18,width: 18,),
-                   onTap: (){
-                     Get.toNamed(Routes.searchScreen);
-                   },),
-                 SizedBox(width: 18.0,),
-                 InkWell(child: Image.asset('assets/img/heart.png',fit: BoxFit.fill,height: 18,width: 18,),
-                   onTap: (){
-                     Get.toNamed(Routes.wishList);
-                   },),
-                 SizedBox(width: 18.0,),
-                 InkWell(child: Image.asset('assets/img/Notification.png',fit: BoxFit.fill,height: 18,width: 16,),
-                   onTap: (){
-                     Get.toNamed(Routes.notification);
-                   },
-                 )
-               ],):Container()
-           ],
-         ),
+               ),
+             ],
+           ),
+           flag! ?
+           Row(
+             crossAxisAlignment: CrossAxisAlignment.end,
+             children: [
+               InkWell(child: Padding(
+                 padding: const EdgeInsets.only(left: 8,right: 8,top: 26,bottom: 8),
+                 child: Image.asset('assets/img/search.png',fit: BoxFit.fill,height: 18,width: 18,),
+               ),
+                 onTap: (){
+                   Get.toNamed(Routes.searchScreen);
+                 },),
+               // SizedBox(width: 18.0,),
+               InkWell(child: Padding(
+                 padding: const EdgeInsets.only(left: 8,right: 8,top: 26,bottom: 8),
+                 child: Image.asset('assets/img/heart.png',fit: BoxFit.fill,height: 18,width: 18,),
+               ),
+                 onTap: (){
+                   Get.toNamed(Routes.wishList);
+                 },),
+               // SizedBox(width: 18.0,),
+               InkWell(child: Padding(
+                 padding: const EdgeInsets.only(left: 8,right: 16,top: 26,bottom: 8),
+                 child: Image.asset('assets/img/Notification.png',fit: BoxFit.fill,height: 18,width: 16,),
+               ),
+                 onTap: (){
+                   Get.toNamed(Routes.notification);
+                 },
+               )
+             ],):Container()
+         ],
        ),
-       Container(height: 0.5,width: MediaQuery.of(context).size.width,color: AppColors.tileLine,),
+       Container(height: 1,width: MediaQuery.of(context).size.width,color: AppColors.tileLine,),
      ],),
    );
   }

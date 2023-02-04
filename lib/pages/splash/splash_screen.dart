@@ -12,11 +12,7 @@ class SplashScreen extends GetWidget<SplashController> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-
-
               Image.asset('assets/logos/app_logo.png'),
-
-
           ],
         ),
       ),

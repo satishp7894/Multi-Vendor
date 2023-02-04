@@ -1,4 +1,5 @@
 import 'package:eshoperapp/config/theme.dart';
+import 'package:eshoperapp/constants/app_costants.dart';
 import 'package:eshoperapp/models/cart.dart';
 import 'package:eshoperapp/models/carts.dart';
 import 'package:eshoperapp/models/check_login.dart';
@@ -13,6 +14,7 @@ import 'package:eshoperapp/utils/check_internet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/categories.dart';
 import '../../utils/snackbar_dialog.dart';
@@ -31,6 +33,8 @@ class HomeController extends GetxController {
   var productList = <Product>[].obs;
 
   RxDouble totalAmount = 0.0.obs;
+  RxDouble totalMRP = 0.0.obs;
+  RxDouble totalDISCOUNT = 0.0.obs;
   // var total;
   RxList selectedCarts = [].obs;
 
@@ -52,11 +56,29 @@ class HomeController extends GetxController {
   RxBool isLoadingBestSellerProducts = false.obs;
   var bestSellerProductObj = MainResponse().obs;
 
+  RxBool isLoadingChooseColor = false.obs;
+  var chooseColorObj = MainResponse().obs;
+
+
+  RxBool isLoadingNewLaunch = false.obs;
+  var newLaunchObj = MainResponse().obs;
+
+  RxBool isLoadingTrendingBrand = false.obs;
+  var trendingBrandObj = MainResponse().obs;
+
+  RxBool isLoadingOfferWithCategoryList = false.obs;
+  var offerWithCategoryListObj = MainResponse().obs;
+
+  RxBool isLoadingProductByAttributeAndCategory = false.obs;
+  var productByAttributeAndCategoryObj = MainResponse().obs;
+
   RxString customerId = "".obs;
 
   RxBool isRefresh = false.obs;
 
   List productIds = [];
+
+  String? chooseType;
 
   final List<String> img = [
     'https://images.template.net/wp-content/uploads/2016/11/15115545/Free-Marketing-Product-Sale-Banner.jpg',
@@ -96,53 +118,96 @@ class HomeController extends GetxController {
 
   ];
 
+  List<Categories> shopByAgeList = [
+    // Categories(categoryName: "Newborn",categoryImage: "assets/img/producr1.png",color: AppColors.categoryBG1),
+    // Categories(categoryName: "Infant",categoryImage: "assets/img/producr1.png",color: AppColors.categoryBG2),
+    // Categories(categoryName: "Toddler",categoryImage: "assets/img/producr1.png",color: AppColors.categoryBG3),
+    // Categories(categoryName: "Newborn",categoryImage: "assets/img/producr1.png",color: AppColors.categoryBG1),
+    // Categories(categoryName: "Infant",categoryImage: "assets/img/producr1.png",color: AppColors.categoryBG2),
+    // Categories(categoryName: "Toddler",categoryImage: "assets/img/producr1.png",color: AppColors.categoryBG3),
+    Categories(categoryName: "ANITA DONGRE",categoryImage: "assets/img/wishlist1.png",color: AppColors.black),
+    Categories(categoryName: "SABYSACHI",categoryImage: "assets/shop/shop2.png",color: AppColors.shopBG1),
+    Categories(categoryName: "echke",categoryImage: "assets/shop/shop3.png",color: AppColors.categoryBG1),
+    Categories(categoryName: "masaba",categoryImage: "assets/shop/shop4.png",color: AppColors.categoryBG1),
+    Categories(categoryName: "rohit bal",categoryImage: "assets/shop/shop5.png",color: AppColors.categoryBG1),
+    Categories(categoryName: "Payal singhal",categoryImage: "assets/shop/shop6.png",color: AppColors.categoryBG1),
+
+  ];
+
 
   List<Categories> categoryList1 = [
-    Categories(categoryName: "Sarees",categoryImage: "assets/category/category1.png",color: AppColors.categoryBG1,fit: BoxFit.contain),
+    // Categories(categoryName: "Sarees",categoryImage: "assets/category/category1.png",color: AppColors.categoryBG1,fit: BoxFit.contain),
+    Categories(categoryName: "Sarees",categoryImage: "assets/img/wishlist1.png",color: AppColors.categoryBG1,fit: BoxFit.contain),
     Categories(categoryName: "Tops",categoryImage: "assets/category/category2.png",color: AppColors.categoryBG2,fit: BoxFit.contain),
     Categories(categoryName: "Jackets",categoryImage: "assets/category/category3.png",color: AppColors.categoryBG3,fit: BoxFit.contain),
     Categories(categoryName: "Shirts",categoryImage: "assets/category/category4.png",color: AppColors.categoryBG4,fit: BoxFit.contain),
-    Categories(categoryName: "Shorts",categoryImage: "assets/category/category5.png",color: AppColors.categoryBG5,fit: BoxFit.fill),
+    Categories(categoryName: "Shorts",categoryImage: "assets/category/category8.png",color: AppColors.categoryBG5,fit: BoxFit.fill),
 
   ];
 
   List<Categories> categoryList2 = [
     Categories(categoryName: "Kurta",categoryImage: "assets/category/category6.png",color: AppColors.categoryBG6),
-    Categories(categoryName: "Bra",categoryImage: "assets/category/category7.png",color: AppColors.categoryBG7),
+    Categories(categoryName: "Bra",categoryImage: "assets/category/category2.png",color: AppColors.categoryBG7),
     Categories(categoryName: "Jeans",categoryImage: "assets/category/category8.png",color: AppColors.categoryBG8),
     Categories(categoryName: "Leggins",categoryImage: "assets/category/category9.png",color: AppColors.categoryBG9),
     Categories(categoryName: "Jumpsuits",categoryImage: "assets/category/category10.png",color: AppColors.categoryBG10),
 
   ];
 
+  // List<Categories> budgetList1 = [
+  //   Categories(categoryName: "T-Shirt",categoryImage: "assets/budget/budget1.png"),
+  //   Categories(categoryName: "T-Shirt",categoryImage: "assets/budget/budget1.png"),
+  //   Categories(categoryName: "Kurti",categoryImage: "assets/budget/budget2.png"),
+  //   Categories(categoryName: "Innerwear",categoryImage: "assets/budget/budget3.png"),
+  //   Categories(categoryName: "Joggers",categoryImage: "assets/budget/budget4.png"),
+  //   Categories(categoryName: "Boxer",categoryImage: "assets/budget/budget5.png"),
+  // ];
+  //
+  // List<Categories> budgetList2 = [
+  //   Categories(categoryName: "T-Shirt",categoryImage: "assets/budget/budget1.png"),
+  //   Categories(categoryName: "Shirts",categoryImage: "assets/budget/budget6.png"),
+  //   Categories(categoryName: "Bow Tie",categoryImage: "assets/budget/budget7.png"),
+  //   Categories(categoryName: "Activewear",categoryImage: "assets/budget/budget8.png"),
+  //   Categories(categoryName: "Track Pants",categoryImage: "assets/budget/budget9.png"),
+  //   Categories(categoryName: "Shorts",categoryImage: "assets/budget/budget10.png"),
+  // ];
+  // List<Categories> budgetList3 = [
+  //   Categories(categoryName: "T-Shirt",categoryImage: "assets/budget/budget1.png"),
+  //   Categories(categoryName: "Jeans",categoryImage: "assets/budget/budget11.png"),
+  //   Categories(categoryName: "Sweatshirt",categoryImage: "assets/budget/budget12.png"),
+  //   Categories(categoryName: "Kurta Sets",categoryImage: "assets/budget/budget13.png"),
+  //   Categories(categoryName: "Trousers",categoryImage: "assets/budget/budget14.png"),
+  //   Categories(categoryName: "Jacketst",categoryImage: "assets/budget/budget15.png"),
+  // ];
+
   List<Categories> budgetList1 = [
-    Categories(categoryName: "T-Shirt",categoryImage: "assets/budget/budget1.png"),
-    Categories(categoryName: "T-Shirt",categoryImage: "assets/budget/budget1.png"),
-    Categories(categoryName: "Kurti",categoryImage: "assets/budget/budget2.png"),
-    Categories(categoryName: "Innerwear",categoryImage: "assets/budget/budget3.png"),
-    Categories(categoryName: "Joggers",categoryImage: "assets/budget/budget4.png"),
-    Categories(categoryName: "Boxer",categoryImage: "assets/budget/budget5.png"),
+    Categories(categoryName: "T-Shirt",categoryImage: "assets/img/wishlist1.png"),
+    Categories(categoryName: "T-Shirt",categoryImage: "assets/budget/bug1.png"),
+    Categories(categoryName: "Kurti",categoryImage: "assets/budget/bug2.png"),
+    Categories(categoryName: "Innerwear",categoryImage: "assets/budget/bug3.png"),
+    Categories(categoryName: "Joggers",categoryImage: "assets/budget/bug1.png"),
+    Categories(categoryName: "Boxer",categoryImage: "assets/budget/bug2.png"),
   ];
 
   List<Categories> budgetList2 = [
-    Categories(categoryName: "T-Shirt",categoryImage: "assets/budget/budget1.png"),
-    Categories(categoryName: "Shirts",categoryImage: "assets/budget/budget6.png"),
-    Categories(categoryName: "Bow Tie",categoryImage: "assets/budget/budget7.png"),
-    Categories(categoryName: "Activewear",categoryImage: "assets/budget/budget8.png"),
-    Categories(categoryName: "Track Pants",categoryImage: "assets/budget/budget9.png"),
-    Categories(categoryName: "Shorts",categoryImage: "assets/budget/budget10.png"),
+    Categories(categoryName: "T-Shirt",categoryImage: "assets/img/wishlist1.png"),
+    Categories(categoryName: "Shirts",categoryImage: "assets/budget/bug1.png"),
+    Categories(categoryName: "Bow Tie",categoryImage: "assets/budget/bug2.png"),
+    Categories(categoryName: "Activewear",categoryImage: "assets/budget/bug3.png"),
+    Categories(categoryName: "Track Pants",categoryImage: "assets/budget/bug1.png"),
+    Categories(categoryName: "Shorts",categoryImage: "assets/budget/bug2.png"),
   ];
   List<Categories> budgetList3 = [
-    Categories(categoryName: "T-Shirt",categoryImage: "assets/budget/budget1.png"),
-    Categories(categoryName: "Jeans",categoryImage: "assets/budget/budget11.png"),
-    Categories(categoryName: "Sweatshirt",categoryImage: "assets/budget/budget12.png"),
-    Categories(categoryName: "Kurta Sets",categoryImage: "assets/budget/budget13.png"),
-    Categories(categoryName: "Trousers",categoryImage: "assets/budget/budget14.png"),
-    Categories(categoryName: "Jacketst",categoryImage: "assets/budget/budget15.png"),
+    Categories(categoryName: "T-Shirt",categoryImage: "assets/img/wishlist1.png"),
+    Categories(categoryName: "Jeans",categoryImage: "assets/budget/bug1.png"),
+    Categories(categoryName: "Sweatshirt",categoryImage: "assets/budget/bug2.png"),
+    Categories(categoryName: "Kurta Sets",categoryImage: "assets/budget/bug3.png"),
+    Categories(categoryName: "Trousers",categoryImage: "assets/budget/bug1.png"),
+    Categories(categoryName: "Jacketst",categoryImage: "assets/budget/bug2.png"),
   ];
 
   List<Categories> shopList = [
-    Categories(categoryName: "ANITA DONGRE",categoryImage: "assets/shop/shop1.png",color: AppColors.black),
+    Categories(categoryName: "ANITA DONGRE",categoryImage: "assets/img/wishlist1.png",color: AppColors.black),
     Categories(categoryName: "SABYSACHI",categoryImage: "assets/shop/shop2.png",color: AppColors.shopBG1),
     Categories(categoryName: "echke",categoryImage: "assets/shop/shop3.png",color: AppColors.categoryBG1),
     Categories(categoryName: "masaba",categoryImage: "assets/shop/shop4.png",color: AppColors.categoryBG1),
@@ -152,7 +217,7 @@ class HomeController extends GetxController {
   ];
 
   List<Categories> modeList = [
-    Categories(categoryName: "Komal Pandey",categoryImage: "assets/mode/mode1.png"),
+    Categories(categoryName: "Komal Pandey",categoryImage: "assets/img/wishlist1.png"),
     Categories(categoryName: "Thatbohogirl",categoryImage: "assets/mode/mode2.png"),
     Categories(categoryName: "Aashna Shroff",categoryImage: "assets/mode/mode3.png"),
     Categories(categoryName: "shauryasanadhya",categoryImage: "assets/mode/mode4.png"),
@@ -162,15 +227,25 @@ class HomeController extends GetxController {
 
 
   List<Categories> discoverList = [
-    Categories(categoryName: "STARTING ₹1999 ",categoryImage: "assets/discover/discover1.png",description: "assets/discover/discover_logo1.png",color: AppColors.discover1,fit: BoxFit.contain),
-    Categories(categoryName: "40-60% OFF*",categoryImage: "assets/discover/discover2.png",description: "assets/discover/discover_logo2.png",color: AppColors.discover2,fit: BoxFit.contain),
-    Categories(categoryName: "MIN 40% OFF*",categoryImage: "assets/discover/discover3.png",description: "assets/discover/discover_logo2.png",color: AppColors.discover3,fit: BoxFit.contain),
+    Categories(categoryName: "STARTING ₹1999 ",categoryImage: "assets/img/wishlist1.png",description: "assets/discover/discover_logo1.png",color: AppColors.discover1,fit: BoxFit.contain),
+    Categories(categoryName: "40-60% OFF*",categoryImage: "assets/discover/discover2.png",description: "assets/discover/discover_logo6.png",color: AppColors.discover2,fit: BoxFit.contain),
+    Categories(categoryName: "MIN 40% OFF*",categoryImage: "assets/discover/discover3.png",description: "assets/discover/discover_logo1.png",color: AppColors.discover3,fit: BoxFit.contain),
     Categories(categoryName: "up to 70% OFF*",categoryImage: "assets/discover/discover4.png",description: "assets/discover/discover_logo4.png",color: AppColors.discover4,fit: BoxFit.contain),
     Categories(categoryName: "STARTING ₹999 ",categoryImage: "assets/discover/discover5.png",description: "assets/discover/discover_logo5.png",color: AppColors.categoryBG1,fit: BoxFit.cover),
     Categories(categoryName: "MIN 70% OFF*",categoryImage: "assets/discover/discover6.png",description: "assets/discover/discover_logo6.png",color: AppColors.discover6,fit: BoxFit.contain),
   ];
 
 
+  // List<Categories> discoverList = [
+  //   Categories(categoryName: "STARTING ₹1999 ",categoryImage: "assets/discover/dis.png",description: "assets/discover/discover_logo1.png",color: AppColors.discover1,fit: BoxFit.contain),
+  //   Categories(categoryName: "40-60% OFF*",categoryImage: "assets/discover/dis2.png",description: "assets/discover/discover_logo2.png",color: AppColors.discover2,fit: BoxFit.contain),
+  //   Categories(categoryName: "MIN 40% OFF*",categoryImage: "assets/discover/dis3.png",description: "assets/discover/discover_logo2.png",color: AppColors.discover3,fit: BoxFit.contain),
+  //   Categories(categoryName: "up to 70% OFF*",categoryImage: "assets/discover/discover4.png",description: "assets/discover/discover_logo4.png",color: AppColors.discover4,fit: BoxFit.contain),
+  //   Categories(categoryName: "STARTING ₹999 ",categoryImage: "assets/discover/discover5.png",description: "assets/discover/discover_logo5.png",color: AppColors.categoryBG1,fit: BoxFit.contain),
+  //   Categories(categoryName: "MIN 70% OFF*",categoryImage: "assets/discover/discover6.png",description: "assets/discover/discover_logo6.png",color: AppColors.discover6,fit: BoxFit.contain),
+  // ];
+
+  //
   List<Categories> finestList = [
     Categories(categoryName: "JADEBLUE",categoryImage: "assets/finest/finest1.jpg"),
     Categories(categoryName: "MANYAVAR",categoryImage: "assets/finest/finest2.jpg"),
@@ -181,30 +256,25 @@ class HomeController extends GetxController {
   ];
 
   List<Categories> finestList1 = [
-    Categories(categoryName: "JADEBLUE",categoryImage: "assets/finest/finest1.jpg"),
+    Categories(categoryName: "JADEBLUE",categoryImage: "assets/img/wishlist1.png"),
     Categories(categoryName: "MANYAVAR",categoryImage: "assets/finest/finest2.jpg"),
     Categories(categoryName: "fabindia",categoryImage: "assets/finest/finest3.jpg"),
   ];
 
   List<Categories> finestList2 = [
-    Categories(categoryName: "RAYMOND",categoryImage: "assets/finest/finest4.jpg"),
+    Categories(categoryName: "RAYMOND",categoryImage: "assets/img/wishlist1.png"),
     Categories(categoryName: "SAMYAKK",categoryImage: "assets/finest/finest5.jpg"),
     Categories(categoryName: "JAYPORE",categoryImage: "assets/finest/finest6.jpg"),
   ];
 
   List<Categories> launchList = [
-    Categories(categoryName: "allen solly",categoryImage: "assets/launch/launch1.jpg"),
+    Categories(categoryName: "allen solly",categoryImage: "assets/img/wishlist1.png"),
     Categories(categoryName: "Louis philippe",categoryImage: "assets/launch/launch2.jpg"),
     Categories(categoryName: "pepe jeans",categoryImage: "assets/launch/launch3.jpg"),
     Categories(categoryName: "arrow",categoryImage: "assets/launch/launch4.jpg"),
     Categories(categoryName: "bewakoof",categoryImage: "assets/launch/launch5.jpg"),
     Categories(categoryName: "peter england",categoryImage: "assets/launch/launch6.jpg"),
   ];
-
-
-
-
-
 
   List<Color> colorList = [
     Colors.black,
@@ -223,14 +293,7 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    CheckInternet.checkInternet();
-    getSlider();
-    getBrand();
-    bestSellerProduct();
-    allProducts();
-    newProducts(false);
-    loadUser(true);
-
+    init();
     // fetchProduct();
     super.onInit();
   }
@@ -247,11 +310,11 @@ class HomeController extends GetxController {
 
 
   loadUser(isBoll) async {
-
+    print("getUser customerId ===========================================");
     try {
       await localRepositoryInterface.getUser().then((value) {
         print("getUser customerId ${value!.customerId}");
-        if (value.customerId != null) {
+        if (value.customerId != null ) {
           customerId(value.customerId);
           getCartItems(value.customerId!, isBoll);
         }else{
@@ -324,7 +387,7 @@ class HomeController extends GetxController {
   getCartItems(String customerId, bool isBool) async {
     try {
       isLoadingGetCartItems(true);
-      await apiRepositoryInterface.getCartItems("3").then((value) {
+      await apiRepositoryInterface.getCartItems(customerId).then((value) {
         getCartItemsObj(value);
         MainResponse? mainResponse = getCartItemsObj.value;
         List<Carts>? getCartData = [];
@@ -349,6 +412,8 @@ class HomeController extends GetxController {
           cartList([]);
           productIds.clear();
           totalAmount(0.0);
+          totalMRP(0.0);
+          totalDISCOUNT(0.0);
         }
         // refreshTotal();
       });
@@ -370,15 +435,64 @@ class HomeController extends GetxController {
     }
   }
 
-  bestSellerProduct() async {
+  bestSellerProduct(String chooseType, customerId) async {
     try {
       isLoadingBestSellerProducts(true);
-      await apiRepositoryInterface.bestSellerProduct().then((value) {
+      await apiRepositoryInterface.bestSellerProduct(chooseType,customerId).then((value) {
         bestSellerProductObj(value);
       });
     } finally {
 
       isLoadingBestSellerProducts(false);
+    }
+  }
+
+  getNewLaunch(String chooseType) async {
+    try {
+      isLoadingNewLaunch(true);
+      await apiRepositoryInterface.getNewLaunch(chooseType).then((value) {
+        newLaunchObj(value);
+      });
+    } finally {
+
+      isLoadingNewLaunch(false);
+    }
+  }
+
+  getTrendingBrand(String chooseType) async {
+    try {
+      isLoadingTrendingBrand(true);
+      await apiRepositoryInterface.getTrendingBrand(chooseType).then((value) {
+        trendingBrandObj(value);
+      });
+    } finally {
+
+      isLoadingTrendingBrand(false);
+    }
+  }
+
+
+  getOfferWithCategoryList(String chooseType) async {
+    try {
+      isLoadingOfferWithCategoryList(true);
+      await apiRepositoryInterface.getOfferWithCategoryList(chooseType).then((value) {
+        offerWithCategoryListObj(value);
+      });
+    } finally {
+      isLoadingOfferWithCategoryList(false);
+    }
+  }
+
+
+  chooseColor(String chooseType) async {
+    try {
+      isLoadingChooseColor(true);
+      await apiRepositoryInterface.chooseColor(chooseType).then((value) {
+        chooseColorObj(value);
+      });
+    } finally {
+
+      isLoadingChooseColor(false);
     }
   }
 
@@ -413,16 +527,25 @@ class HomeController extends GetxController {
 
   void refreshTotal() async {
    double total = 0.0;
+   double totalMrp = 0.0;
+   double totalDiscount = 0.0;
    // print("cartList total ------------- ${cartList[0].totalAmt!}");
     cartList.forEach((element) {
       double totalQty = double.parse(element.netPrice!) * double.parse(element.quantity!);
+      double totalQtyMrp = double.parse(element.mrpPrice!) * double.parse(element.quantity!);
+      double totalQtyDiscount = double.parse(element.discountAmt!) * double.parse(element.quantity!);
       if (selectedCarts.contains(element.cartId)) {
         total += totalQty;
-        print("total ------------- ${totalQty}");
+        totalMrp += totalQtyMrp;
+        totalDiscount += totalQtyDiscount;
         print("total ------------- $total");
+        print("totalMrp ------------- $totalMrp");
+        print("totalDiscount ------------- $totalDiscount");
       }
     });
     totalAmount(total);
+    totalMRP(totalMrp);
+    totalDISCOUNT(totalDiscount);
     // update();
   }
 
@@ -452,12 +575,53 @@ class HomeController extends GetxController {
   //   }
   // }
 
-  void addToCard(String productId,String quantity) async {
+   addToCard(String productId,String quantity, String customerId) async {
     // var result = await apiRepositoryInterface.updateProductQty(token, id, quantity);
 
-    MainResponse? mainResponse  = await apiRepositoryInterface.addToCart(customerId.value, productId,quantity);
+
+    MainResponse? mainResponse  = await apiRepositoryInterface.addToCart(customerId, productId,quantity);
     if (mainResponse!.status!) {
-      getCartItems(customerId.value, true);
+      getCartItems(customerId, true);
+      SnackBarDialog.showSnackbar('Success',mainResponse.message!);
+      // Get.offAllNamed(Routes.landingHome);
+
+    } else {
+      SnackBarDialog.showSnackbar('Error',mainResponse.message!);
+    }
+
+    // if (result == true) {
+    //   AppWidget.snacbar('Added to cart successfully!');
+    //   homecontroller.getCartItems(customerId);
+    // }
+  }
+
+   addToWishList(String productId, String customerId) async {
+    // var result = await apiRepositoryInterface.updateProductQty(token, id, quantity);
+
+
+    MainResponse? mainResponse  = await apiRepositoryInterface.addToWishList(customerId, productId);
+    if (mainResponse!.status!) {
+      getCartItems(customerId, true);
+      SnackBarDialog.showSnackbar('Success',mainResponse.message!);
+      // Get.offAllNamed(Routes.landingHome);
+
+    } else {
+      SnackBarDialog.showSnackbar('Error',mainResponse.message!);
+    }
+
+    // if (result == true) {
+    //   AppWidget.snacbar('Added to cart successfully!');
+    //   homecontroller.getCartItems(customerId);
+    // }
+  }
+
+  moveToWishList(String productId, String customerId) async {
+    // var result = await apiRepositoryInterface.updateProductQty(token, id, quantity);
+
+
+    MainResponse? mainResponse  = await apiRepositoryInterface.moveToWishList(customerId, productId);
+    if (mainResponse!.status!) {
+      getCartItems(customerId, true);
       SnackBarDialog.showSnackbar('Success',mainResponse.message!);
       // Get.offAllNamed(Routes.landingHome);
 
@@ -522,16 +686,17 @@ class HomeController extends GetxController {
     // }
   }
 
-   placeOrder(String paymentType) async {
+   addOrder(String paymentType,productId) async {
     // var result = await apiRepositoryInterface.updateProductQty(token, id, quantity);
 
-    MainResponse? mainResponse  = await apiRepositoryInterface.placeOrder(customerId.value, paymentType);
+    MainResponse? mainResponse  = await apiRepositoryInterface.addOrder(customerId.value,productId, paymentType);
     if (mainResponse!.status!) {
 
 
 
 
-      getCartItems(customerId.value, false);
+      getCartItems(customerId.value, true);
+      Get.back();
       Get.back();
       SnackBarDialog.showSnackbar('Success',mainResponse.message!);
     } else {
@@ -562,6 +727,29 @@ class HomeController extends GetxController {
     //   AppWidget.snacbar('Added to cart successfully!');
     //   homecontroller.getCartItems(customerId);
     // }
+  }
+
+   init() async {
+
+     SharedPreferences sharedPreferences = await SharedPreferences.getInstance() ;
+     chooseType = sharedPreferences.getString(AppConstants.chooseType!);
+
+     print("chooseType ================= ${chooseType}");
+
+    CheckInternet.checkInternet();
+    getSlider();
+    // getBrand();
+     if(chooseType != null){
+       getNewLaunch(chooseType!);
+       getTrendingBrand(chooseType!);
+       getOfferWithCategoryList(chooseType!);
+       chooseColor(chooseType!);
+       bestSellerProduct(chooseType!,customerId.value);
+     }
+     allProducts();
+     newProducts(false);
+     await loadUser(true);
+
   }
 
   // void clearCart() {

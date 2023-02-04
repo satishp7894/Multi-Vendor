@@ -35,17 +35,17 @@ class AppbarWidget extends StatelessWidget {
            Row(
              crossAxisAlignment: CrossAxisAlignment.end,
              children: [
-               InkWell(child: Image.asset('assets/img/search.png',fit: BoxFit.fill,height: 18,width: 18,),
+               InkWell(child: Image.asset('assets/img/search.png',fit: BoxFit.fill,height: 20,width: 20,),
                onTap: (){
                  Get.toNamed(Routes.searchScreen);
                },),
                SizedBox(width: 18.0,),
-               InkWell(child: Image.asset('assets/img/heart.png',fit: BoxFit.fill,height: 18,width: 18,),
+               InkWell(child: Image.asset('assets/img/heart.png',fit: BoxFit.fill,height: 20,width: 20,),
                onTap: (){
                  Get.toNamed(Routes.wishList);
                },),
                SizedBox(width: 18.0,),
-               InkWell(child: Image.asset('assets/img/Notification.png',fit: BoxFit.fill,height: 18,width: 16,),
+               InkWell(child: Image.asset('assets/img/Notification.png',fit: BoxFit.fill,height: 20,width: 18,),
                  onTap: (){
                    Get.toNamed(Routes.notification);
                  },
@@ -54,7 +54,7 @@ class AppbarWidget extends StatelessWidget {
          ],
        ),
      ),
-     Container(height: 0.5,width: MediaQuery.of(context).size.width,color: AppColors.tileLine,),
+     Container(height: 1,width: MediaQuery.of(context).size.width,color: AppColors.tileLine,),
    ],);
   }
 }
