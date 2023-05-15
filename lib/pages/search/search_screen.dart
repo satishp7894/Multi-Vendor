@@ -621,7 +621,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                           context,
                                                           MaterialPageRoute(
                                                               builder: (context) =>  ProductDetailsScreen(
-                                                                products: Products(productId: getFrequentSearchListData[index].productId!,productName: getFrequentSearchListData[index].productName!,variantCode: getFrequentSearchListData[index].variantCode!),
+                                                                products: Products(productId: getFrequentSearchListData[index].productId!,productName: getFrequentSearchListData[index].productName!,variantCode: getFrequentSearchListData[index].variantCode??""),
                                                                 // article: articles[index],
                                                               )));
                                                     },
@@ -1319,7 +1319,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>  ProductDetailsScreen(
-                                                            products: Products(productId: bestSellerProductData[index].productId!,productName: bestSellerProductData[index].productName!,variantCode: bestSellerProductData[index].variantCode!),
+                                                            products: Products(productId: bestSellerProductData[index].productId!,productName: bestSellerProductData[index].productName!,variantCode: bestSellerProductData[index].variantCode??""),
                                                             // article: articles[index],
                                                           )));
                                                 },

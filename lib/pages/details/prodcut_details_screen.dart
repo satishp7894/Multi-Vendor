@@ -81,7 +81,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> with Ticker
         apiRepositoryInterface: Get.find(),
         productDetailId: products!.productId!,
         localRepositoryInterface: Get.find()));
-    productDetailsController!.productDetails(products!.productId!,products!.variantCode!, false,homecontroller.customerId.value);
+    Future.delayed(Duration.zero, () async {
+      productDetailsController!.productDetails(products!.productId!,products!.variantCode!, false,homecontroller.customerId.value);
+    });
+
     super.initState();
   }
 
@@ -120,7 +123,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> with Ticker
             // wishList = productDetailData[0].wishList;
             print("productDetailData[0].childCategory ${productDetailData[0].categoryId}");
             print("productDetailData[0].productId ${productDetailData[0].productId}");
-            productDetailsController!.getSimilarProduct(productDetailData[0].productId!,productDetailData[0].childCategory!,homecontroller.customerId.value);
+            Future.delayed(Duration.zero, () async {
+              productDetailsController!.getSimilarProduct(productDetailData[0].productId!,productDetailData[0].childCategory!,homecontroller.customerId.value);
+            });
+
           }
 
         }
@@ -1042,9 +1048,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> with Ticker
 
 
                                   }).toList(),),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
+                                  // SizedBox(
+                                  //   height: 10,
+                                  // ),
                                   // Container(
                                   //   color: AppColors.white,
                                   //   child: Padding(
@@ -1120,42 +1126,42 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> with Ticker
                                   // SizedBox(
                                   //   height: 10,
                                   // ),
-                                  Container(
-                                    color: AppColors.white,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("EMI option available",
-                                                  style: GoogleFonts.inriaSans(
-                                                      textStyle: const TextStyle(
-                                                          fontSize: 14,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: AppColors.black))),
-                                              Text("View Plan",
-                                                  style: GoogleFonts.inriaSans(
-                                                      textStyle: const TextStyle(
-                                                          fontSize: 14,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: AppColors.appRed))),
-                                            ],
-                                          ),
-                                          SizedBox(height: 2,),
-                                          Text("EMI starting from \u{20B9}150/month",
-                                              style: GoogleFonts.inriaSans(
-                                                  textStyle: const TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.w400,
-                                                      color: AppColors
-                                                          .productDescription))),
-
-                                        ],),
-                                    ),),
+                                  // Container(
+                                  //   color: AppColors.white,
+                                  //   child: Padding(
+                                  //     padding: const EdgeInsets.all(16.0),
+                                  //     child: Column(
+                                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                                  //       children: [
+                                  //         Row(
+                                  //           mainAxisAlignment:
+                                  //           MainAxisAlignment.spaceBetween,
+                                  //           children: [
+                                  //             Text("EMI option available",
+                                  //                 style: GoogleFonts.inriaSans(
+                                  //                     textStyle: const TextStyle(
+                                  //                         fontSize: 14,
+                                  //                         fontWeight: FontWeight.bold,
+                                  //                         color: AppColors.black))),
+                                  //             Text("View Plan",
+                                  //                 style: GoogleFonts.inriaSans(
+                                  //                     textStyle: const TextStyle(
+                                  //                         fontSize: 14,
+                                  //                         fontWeight: FontWeight.bold,
+                                  //                         color: AppColors.appRed))),
+                                  //           ],
+                                  //         ),
+                                  //         SizedBox(height: 2,),
+                                  //         Text("EMI starting from \u{20B9}150/month",
+                                  //             style: GoogleFonts.inriaSans(
+                                  //                 textStyle: const TextStyle(
+                                  //                     fontSize: 16,
+                                  //                     fontWeight: FontWeight.w400,
+                                  //                     color: AppColors
+                                  //                         .productDescription))),
+                                  //
+                                  //       ],),
+                                  //   ),),
 
                                   // SizedBox(
                                   //   height: 10,

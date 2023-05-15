@@ -1058,7 +1058,7 @@ class _CartScreenState extends State<CartScreen> {
                         // height: MediaQuery.of(context).size.height-120,
                           child: Center(
                               child: CircularProgressIndicator(
-                                  color: Colors.green))
+                                  color: AppColors.appColor))
                       );
                     } else {
                       return Container(

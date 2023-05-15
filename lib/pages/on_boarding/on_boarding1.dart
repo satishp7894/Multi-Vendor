@@ -60,18 +60,15 @@ class _OnBoarding1State extends State<OnBoarding1> {
             options: CarouselOptions(
               height: height,
               viewportFraction: 1.0,
-              autoPlayInterval: Duration(seconds: 4),
+              autoPlayInterval: Duration(seconds: 3),
+              pauseAutoPlayInFiniteScroll : true,
+              enableInfiniteScroll: false,
+              autoPlayAnimationDuration :const Duration(milliseconds: 300),
               autoPlay: true,
                         onPageChanged: (i, re) async {
-                          // if (kDebugMode) {
-                          //   print("index $i");
-                          // }
                           setState(() {
                             currentIndex = i;
-
-
                           });
-
                           if(currentIndex == 2){
                             SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                             final prefCustomerId = sharedPreferences.getString(AppConstants.prefCustomerId!);
@@ -87,8 +84,6 @@ class _OnBoarding1State extends State<OnBoarding1> {
                               Get.offNamed(Routes.login);
                             }
                           }
-
-
                         },
               // autoPlay: false,
             ),
@@ -116,11 +111,18 @@ class _OnBoarding1State extends State<OnBoarding1> {
 
                                 print("sharedPreferences.getString(AppConstants.chooseType!) ===============> ${sharedPreferences.getString(AppConstants.chooseType!)}");
 
-                                if(sharedPreferences.getString(AppConstants.chooseType!) != null ){
-                                  Get.offNamed(Routes.login);
-                                }else{
-                                  Get.offAndToNamed(Routes.chooseYourStoreScreen);
-                                }
+
+                                  final prefCustomerId = sharedPreferences.getString(AppConstants.prefCustomerId!);
+                                  if(prefCustomerId != null){
+                                    if(sharedPreferences.getString(AppConstants.chooseType!) != null ){
+                                    Get.offNamed(Routes.landingHome);
+                                    }else{
+                                      Get.offAndToNamed(Routes.chooseYourStoreScreen);
+                                    }
+                                  }else{
+                                    Get.offNamed(Routes.login);
+                                  }
+
                               },
                               child: Text(
                                 "Skip",

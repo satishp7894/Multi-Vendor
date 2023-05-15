@@ -4,6 +4,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eshoperapp/config/theme.dart';
 import 'package:eshoperapp/constants/app_costants.dart';
 import 'package:eshoperapp/models/get_slider.dart';
+import 'package:eshoperapp/models/home_category_model.dart';
+import 'package:eshoperapp/models/home_designer_model.dart';
 import 'package:eshoperapp/models/main_response.dart';
 import 'package:eshoperapp/models/products.dart';
 import 'package:eshoperapp/models/top_brands.dart';
@@ -20,6 +22,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../models/best_seller_product_model.dart';
 import '../../models/choos_color_model.dart';
+import '../../models/festive_fashion_model.dart';
 import '../../models/new_launch.dart';
 import '../../models/offer_with_category_model.dart';
 import '../../widgets/app_bar.dart';
@@ -102,6 +105,10 @@ class _HomeState extends State<Home> {
                   homeController.bestSellerProduct(
                       chooseTypes!, homeController.customerId.value);
                   homeController.allProducts();
+                  homeController.getHomeCategory(chooseTypes);
+                  homeController.getHomeDesigner(chooseTypes);
+                  homeController.getCategoryByAge(chooseTypes);
+                  homeController.getFestiveFashion(chooseTypes);
                   homeController.getNewLaunch(chooseTypes);
                   homeController.getTrendingBrand(chooseTypes);
                   homeController.getOfferWithCategoryList(chooseTypes);
@@ -208,16 +215,16 @@ class _HomeState extends State<Home> {
                           //   ).toList(),),
 
                           Obx(() {
-                            if (homeController.isLoadingNewLaunch.value !=
+                            if (homeController.isLoadingHomeCategory.value !=
                                 true) {
                               MainResponse? mainResponse =
-                                  homeController.newLaunchObj.value;
-                              List<NewLaunch>? newLaunchData = [];
+                                  homeController.getHomeCategoryObj.value;
+                              List<HomeCategoryModel>? getHomeCategoryData = [];
                               // print(
                               //     "bestSellerProductObj.data! ${mainResponse.data!}");
                               if (mainResponse.data != null) {
                                 mainResponse.data!.forEach((v) {
-                                  newLaunchData.add(NewLaunch.fromJson(v));
+                                  getHomeCategoryData.add(HomeCategoryModel.fromJson(v));
                                 });
                               }
                               // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
@@ -225,7 +232,7 @@ class _HomeState extends State<Home> {
                               String? imageUrl = mainResponse.imageUrl ?? "";
                               String? message = mainResponse.message ??
                                   AppConstants.noInternetConn;
-                              if (newLaunchData.isEmpty) {
+                              if (getHomeCategoryData.isEmpty) {
                                 return Container();
                               } else {
                                 return Padding(
@@ -240,7 +247,7 @@ class _HomeState extends State<Home> {
                                             const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
                                         itemCount:
-                                        newLaunchData.length,
+                                        getHomeCategoryData.length,
                                         gridDelegate:
                                             SliverGridDelegateWithFixedCrossAxisCount(
                                                 // crossAxisCount: 2,
@@ -254,54 +261,80 @@ class _HomeState extends State<Home> {
                                                     : 5),
                                         itemBuilder:
                                             (BuildContext context, int index) {
-                                          return Container(
-                                            // color: Colors.green,
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  height: MediaQuery.of(context).size.height* 0.065,
-                                                  width: MediaQuery.of(context).size.height* 0.065,
-
-                                                  decoration: BoxDecoration(
-                                                      // color: Colors.red,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15)),
-                                                  child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                      child:
-                                                          Image.network(imageUrl+newLaunchData[index].productId!+"/"+newLaunchData[index].coverImg!,fit: BoxFit.cover,
-                                                            // width: double.infinity,
-
-                                                          )
-                                                      //     Image.asset(
-                                                      //   homeController
-                                                      //       .categoryList[index]
-                                                      //       .categoryImage!,
-                                                      //   fit: BoxFit.contain,
-                                                      //
-                                                      //   width: double.infinity,
-                                                      // )
-
-                                            ),
+                                          return InkWell(
+                                            onTap: () async {
+                                              SharedPreferences
+                                              sharedPreferences =
+                                                  await SharedPreferences
+                                                  .getInstance();
+                                              var chooseType =
+                                              sharedPreferences
+                                                  .getString(
+                                                  AppConstants
+                                                      .chooseType!);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => CommonProductListScreen(title: getHomeCategoryData[index].categoryName,
+                                                    apiType: 'categoryProduct',
+                                                    id: getHomeCategoryData[index].categoryId,
+                                                    offerId: "",
+                                                    chooseType: chooseType,
+                                                  ),
                                                 ),
-                                                 SizedBox(
-                                                  height: MediaQuery.of(context).size.height* 0.008,
-                                                ),
-                                                Center(
-                                                    child: Text(
-                                                       "Name",
-                                                        style: GoogleFonts.inriaSans(
-                                                            textStyle:  TextStyle(
-                                                                fontSize: MediaQuery.of(context).size.height* 0.012,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: AppColors
-                                                                    .categoryText))))
-                                              ],
+                                              );
+                                            },
+                                            child: Container(
+                                              // color: Colors.green,
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    height: MediaQuery.of(context).size.height* 0.065,
+                                                    width: MediaQuery.of(context).size.height* 0.065,
+
+                                                    decoration: BoxDecoration(
+                                                        // color: Colors.red,
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                15)),
+                                                    child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                15),
+                                                        child:
+                                                            Image.network(imageUrl+getHomeCategoryData[index].categoryImage!,fit: BoxFit.cover,
+                                                              // width: double.infinity,
+
+                                                            )
+                                                        //     Image.asset(
+                                                        //   homeController
+                                                        //       .categoryList[index]
+                                                        //       .categoryImage!,
+                                                        //   fit: BoxFit.contain,
+                                                        //
+                                                        //   width: double.infinity,
+                                                        // )
+
+                                              ),
+                                                  ),
+                                                   SizedBox(
+                                                    height: MediaQuery.of(context).size.height* 0.008,
+                                                  ),
+                                                  Center(
+                                                      child: Text(
+                                                          getHomeCategoryData[index].categoryName!,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: GoogleFonts.inriaSans(
+                                                              textStyle:  TextStyle(
+                                                                  fontSize: MediaQuery.of(context).size.height* 0.012,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: AppColors
+                                                                      .categoryText))))
+                                                ],
+                                              ),
                                             ),
                                           );
                                         },
@@ -2426,158 +2459,356 @@ class _HomeState extends State<Home> {
                                   ))),
                             ],
                           ),
-                          const SizedBox(
-                            height: 24,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: AppSizes.sidePadding),
-                            child: Text("SHOP INDIAN DESIGNERS",
-                                style: GoogleFonts.hanuman(
-                                    textStyle: const TextStyle(
-                                        fontSize: 14, color: AppColors.black))),
-                          ),
-                          SizedBox(
-                            height: AppSizes.padding14,
-                          ),
-                          SizedBox(
-                            height: 200,
-                            width: MediaQuery.of(context).size.width,
-                            child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: homeController.shopList.length,
-                                itemBuilder: (c, index) {
-                                  return Padding(
-                                    padding: index == 0
-                                        ? const EdgeInsets.only(
-                                            right: AppSizes.sidePadding,
+                          // const SizedBox(
+                          //   height: 24,
+                          // ),
+                          // Padding(
+                          //   padding: const EdgeInsets.only(
+                          //       left: AppSizes.sidePadding),
+                          //   child: Text("SHOP INDIAN DESIGNERS",
+                          //       style: GoogleFonts.hanuman(
+                          //           textStyle: const TextStyle(
+                          //               fontSize: 14, color: AppColors.black))),
+                          // ),
+                          // SizedBox(
+                          //   height: AppSizes.padding14,
+                          // ),
+                          // SizedBox(
+                          //   height: 200,
+                          //   width: MediaQuery.of(context).size.width,
+                          //   child:
+                          //
+                          //   ListView.builder(
+                          //       scrollDirection: Axis.horizontal,
+                          //       itemCount: homeController.shopList.length,
+                          //       itemBuilder: (c, index) {
+                          //         return Padding(
+                          //           padding: index == 0
+                          //               ? const EdgeInsets.only(
+                          //                   right: AppSizes.sidePadding,
+                          //                   left: AppSizes.sidePadding,
+                          //                 )
+                          //               : const EdgeInsets.only(
+                          //                   right: AppSizes.sidePadding,
+                          //                 ),
+                          //           child: Stack(
+                          //             children: [
+                          //               Stack(
+                          //                 children: [
+                          //                   // Container(
+                          //                   //   width: 160,
+                          //                   //   height: 210,
+                          //                   //
+                          //                   //   decoration: BoxDecoration(
+                          //                   //     borderRadius: BorderRadius.circular(10.0),
+                          //                   //     color: homeController.shopList[index].color,
+                          //                   //   ),
+                          //                   // ),
+                          //                   Container(
+                          //                     width: 160,
+                          //                     height: 210,
+                          //                     decoration: BoxDecoration(
+                          //                       // color: Colors.red,
+                          //                       borderRadius: const BorderRadius
+                          //                               .all(
+                          //                           const Radius.circular(10)),
+                          //                     ),
+                          //                     child: ClipRRect(
+                          //                         borderRadius:
+                          //                             const BorderRadius.all(
+                          //                                 const Radius.circular(
+                          //                                     10)),
+                          //                         // borderRadius:
+                          //                         // BorderRadius.circular(15),
+                          //                         child: Image.asset(
+                          //                             homeController
+                          //                                 .shopList[index]
+                          //                                 .categoryImage!,
+                          //                             fit: BoxFit.cover,
+                          //                             width: double.infinity)),
+                          //                   ),
+                          //                 ],
+                          //               ),
+                          //               Column(
+                          //                 children: [
+                          //                   Container(
+                          //                       decoration: BoxDecoration(
+                          //                           borderRadius:
+                          //                               const BorderRadius.all(
+                          //                                   const Radius
+                          //                                       .circular(10)),
+                          //                           gradient: LinearGradient(
+                          //                             begin:
+                          //                                 Alignment.topCenter,
+                          //                             end: Alignment
+                          //                                 .bottomCenter,
+                          //                             stops: const [0.0, 2.0],
+                          //                             colors: [
+                          //                               AppColors.black
+                          //                                   .withOpacity(0.0),
+                          //                               AppColors.black
+                          //                                   .withOpacity(0.8),
+                          //                               // Colors.white.withOpacity(0.0),
+                          //                               // const Color(0xFF030305).withOpacity(0.1),
+                          //                             ],
+                          //                           )),
+                          //                       alignment:
+                          //                           Alignment.bottomCenter,
+                          //                       width: 160,
+                          //                       height: 200,
+                          //                       child: Padding(
+                          //                         padding:
+                          //                             const EdgeInsets.all(8.0),
+                          //                         child: Column(
+                          //                           mainAxisAlignment:
+                          //                               MainAxisAlignment.end,
+                          //                           children: [
+                          //                             Text(
+                          //                                 homeController
+                          //                                     .shopList[index]
+                          //                                     .categoryName!
+                          //                                     .toUpperCase(),
+                          //                                 style: GoogleFonts
+                          //                                     .averiaGruesaLibre(
+                          //                                         textStyle: const TextStyle(
+                          //                                             fontSize:
+                          //                                                 14,
+                          //                                             color: AppColors
+                          //                                                 .white))),
+                          //                             SizedBox(
+                          //                               height: 3,
+                          //                             ),
+                          //                             Text("UP TO 30% OFF",
+                          //                                 style: GoogleFonts.inriaSans(
+                          //                                     textStyle: const TextStyle(
+                          //                                         fontSize: 10,
+                          //                                         color: AppColors
+                          //                                             .white))),
+                          //                             SizedBox(
+                          //                               height: 3,
+                          //                             ),
+                          //                             Text(
+                          //                               "An exclusive range of Luxurious wedding wear",
+                          //                               style: GoogleFonts.inriaSans(
+                          //                                   textStyle:
+                          //                                       const TextStyle(
+                          //                                           fontSize: 8,
+                          //                                           color: AppColors
+                          //                                               .white)),
+                          //                               textAlign:
+                          //                                   TextAlign.center,
+                          //                             ),
+                          //                             const SizedBox(
+                          //                               height: 5,
+                          //                             ),
+                          //                           ],
+                          //                         ),
+                          //                       )),
+                          //                 ],
+                          //                 mainAxisAlignment:
+                          //                     MainAxisAlignment.end,
+                          //               ),
+                          //             ],
+                          //           ),
+                          //         );
+                          //       }),
+                          // ),
+                          Obx(() {
+                            if (homeController.isLoadingHomeDesigner.value !=
+                                true) {
+                              MainResponse? mainResponse =
+                                  homeController.getHomeDesignerObj.value;
+                              List<HomeDesignerModel>? getHomeDesignerData = [];
+                              // print(
+                              //     "bestSellerProductObj.data! ${mainResponse.data!}");
+                              if (mainResponse.data != null) {
+                                mainResponse.data!.forEach((v) {
+                                  getHomeDesignerData
+                                      .add(HomeDesignerModel.fromJson(v));
+                                });
+                              }
+                              // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
+
+                              String? imageUrl = mainResponse.imageUrl ?? "";
+                              String? message = mainResponse.message ??
+                                  AppConstants.noInternetConn;
+                              if (getHomeDesignerData.isEmpty) {
+                                return Container();
+                              } else {
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 24.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
                                             left: AppSizes.sidePadding,
-                                          )
-                                        : const EdgeInsets.only(
-                                            right: AppSizes.sidePadding,
-                                          ),
-                                    child: Stack(
-                                      children: [
-                                        Stack(
-                                          children: [
-                                            // Container(
-                                            //   width: 160,
-                                            //   height: 210,
-                                            //
-                                            //   decoration: BoxDecoration(
-                                            //     borderRadius: BorderRadius.circular(10.0),
-                                            //     color: homeController.shopList[index].color,
-                                            //   ),
-                                            // ),
-                                            Container(
-                                              width: 160,
-                                              height: 210,
-                                              decoration: BoxDecoration(
-                                                // color: Colors.red,
-                                                borderRadius: const BorderRadius
-                                                        .all(
-                                                    const Radius.circular(10)),
-                                              ),
-                                              child: ClipRRect(
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                          const Radius.circular(
-                                                              10)),
-                                                  // borderRadius:
-                                                  // BorderRadius.circular(15),
-                                                  child: Image.asset(
-                                                      homeController
-                                                          .shopList[index]
-                                                          .categoryImage!,
-                                                      fit: BoxFit.cover,
-                                                      width: double.infinity)),
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            Container(
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            const Radius
-                                                                .circular(10)),
-                                                    gradient: LinearGradient(
-                                                      begin:
-                                                          Alignment.topCenter,
-                                                      end: Alignment
-                                                          .bottomCenter,
-                                                      stops: const [0.0, 2.0],
-                                                      colors: [
-                                                        AppColors.black
-                                                            .withOpacity(0.0),
-                                                        AppColors.black
-                                                            .withOpacity(0.8),
-                                                        // Colors.white.withOpacity(0.0),
-                                                        // const Color(0xFF030305).withOpacity(0.1),
+                                            bottom: 10),
+                                        child: Text("SHOP INDIAN DESIGNERS",
+                                            style: GoogleFonts.hanuman(
+                                                textStyle: const TextStyle(
+                                                    fontSize: 14,
+                                                    color: AppColors.black))),
+                                      ),
+                                      SizedBox(
+                                        height: 200,
+                                        width: MediaQuery.of(context).size.width,
+                                        child:
+
+                                        ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: getHomeDesignerData.length,
+                                            itemBuilder: (c, index) {
+                                              return Padding(
+                                                padding: index == 0
+                                                    ? const EdgeInsets.only(
+                                                  right: AppSizes.sidePadding,
+                                                  left: AppSizes.sidePadding,
+                                                )
+                                                    : const EdgeInsets.only(
+                                                  right: AppSizes.sidePadding,
+                                                ),
+                                                child: Stack(
+                                                  children: [
+                                                    Stack(
+                                                      children: [
+                                                        // Container(
+                                                        //   width: 160,
+                                                        //   height: 210,
+                                                        //
+                                                        //   decoration: BoxDecoration(
+                                                        //     borderRadius: BorderRadius.circular(10.0),
+                                                        //     color: homeController.shopList[index].color,
+                                                        //   ),
+                                                        // ),
+                                                        Container(
+                                                          width: 160,
+                                                          height: 210,
+                                                          decoration: BoxDecoration(
+                                                            // color: Colors.red,
+                                                            borderRadius: const BorderRadius
+                                                                .all(
+                                                                const Radius.circular(10)),
+                                                          ),
+                                                          child: ClipRRect(
+                                                              borderRadius:
+                                                              const BorderRadius.all(
+                                                                  const Radius.circular(
+                                                                      10)),
+                                                              // borderRadius:
+                                                              // BorderRadius.circular(15),
+                                                              child: Image.network(
+                                                                  imageUrl+getHomeDesignerData[index]
+                                                                      .image!,
+                                                                  fit: BoxFit.cover,
+                                                                  width: double.infinity)),
+                                                        ),
                                                       ],
-                                                    )),
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                width: 160,
-                                                height: 200,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      Text(
-                                                          homeController
-                                                              .shopList[index]
-                                                              .categoryName!
-                                                              .toUpperCase(),
-                                                          style: GoogleFonts
-                                                              .averiaGruesaLibre(
-                                                                  textStyle: const TextStyle(
-                                                                      fontSize:
-                                                                          14,
-                                                                      color: AppColors
-                                                                          .white))),
-                                                      SizedBox(
-                                                        height: 3,
-                                                      ),
-                                                      Text("UP TO 30% OFF",
-                                                          style: GoogleFonts.inriaSans(
-                                                              textStyle: const TextStyle(
-                                                                  fontSize: 10,
-                                                                  color: AppColors
-                                                                      .white))),
-                                                      SizedBox(
-                                                        height: 3,
-                                                      ),
-                                                      Text(
-                                                        "An exclusive range of Luxurious wedding wear",
-                                                        style: GoogleFonts.inriaSans(
-                                                            textStyle:
-                                                                const TextStyle(
-                                                                    fontSize: 8,
-                                                                    color: AppColors
-                                                                        .white)),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )),
-                                          ],
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }),
-                          ),
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        Container(
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                const BorderRadius.all(
+                                                                    const Radius
+                                                                        .circular(10)),
+                                                                gradient: LinearGradient(
+                                                                  begin:
+                                                                  Alignment.topCenter,
+                                                                  end: Alignment
+                                                                      .bottomCenter,
+                                                                  stops: const [0.0, 2.0],
+                                                                  colors: [
+                                                                    AppColors.black
+                                                                        .withOpacity(0.0),
+                                                                    AppColors.black
+                                                                        .withOpacity(0.8),
+                                                                    // Colors.white.withOpacity(0.0),
+                                                                    // const Color(0xFF030305).withOpacity(0.1),
+                                                                  ],
+                                                                )),
+                                                            alignment:
+                                                            Alignment.bottomCenter,
+                                                            width: 160,
+                                                            height: 200,
+                                                            child: Padding(
+                                                              padding:
+                                                              const EdgeInsets.all(8.0),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                MainAxisAlignment.end,
+                                                                children: [
+                                                                  Text(
+                                                                      getHomeDesignerData[index]
+                                                                          .name!
+                                                                          .toUpperCase(),
+                                                                      style: GoogleFonts
+                                                                          .averiaGruesaLibre(
+                                                                          textStyle: const TextStyle(
+                                                                              fontSize:
+                                                                              14,
+                                                                              color: AppColors
+                                                                                  .white))),
+                                                                  SizedBox(
+                                                                    height: 3,
+                                                                  ),
+                                                                  // Text("UP TO 30% OFF",
+                                                                  //     style: GoogleFonts.inriaSans(
+                                                                  //         textStyle: const TextStyle(
+                                                                  //             fontSize: 10,
+                                                                  //             color: AppColors
+                                                                  //                 .white))),
+                                                                  // SizedBox(
+                                                                  //   height: 3,
+                                                                  // ),
+                                                                  Text(
+                                                                    "An exclusive range of Luxurious wedding wear",
+                                                                    style: GoogleFonts.inriaSans(
+                                                                        textStyle:
+                                                                        const TextStyle(
+                                                                            fontSize: 8,
+                                                                            color: AppColors
+                                                                                .white)),
+                                                                    textAlign:
+                                                                    TextAlign.center,
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 5,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            )),
+                                                      ],
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                // return Padding(
+                                //   padding: const EdgeInsets.only(
+                                //       left: 5.0, bottom: 3, right: 5.0),
+                                //   child: PopulorProduct(
+                                //     products: bestSellerProductsData,
+                                //     imageUrl: imageUrl,
+                                //   ),
+                                // );
+                              }
+                            } else {
+                              return Container(
+                                height: 200,
+                                // child: Center(child: CircularProgressIndicator(color: Style.Colors.appColor))
+                              );
+                            }
+                          }),
+
                           // SizedBox(height: 0,),
                           // Padding(
                           //   padding: const EdgeInsets.only(left: AppSizes.sidePadding),
@@ -2842,7 +3073,7 @@ class _HomeState extends State<Home> {
                                                                             bestSellerProductsData[index]
                                                                                 .productName!,
                                                                         variantCode:
-                                                                            bestSellerProductsData[index].variantCode!),
+                                                                            bestSellerProductsData[index].variantCode),
                                                                     // article: articles[index],
                                                                   )));
 
@@ -3797,16 +4028,16 @@ class _HomeState extends State<Home> {
                           // ),
 
                           Obx(() {
-                            if (homeController.isLoadingNewLaunch.value !=
+                            if (homeController.isLoadingFestiveFashion.value !=
                                 true) {
                               MainResponse? mainResponse =
-                                  homeController.newLaunchObj.value;
-                              List<NewLaunch>? newLaunchData = [];
+                                  homeController.getFestiveFashionObj.value;
+                              List<FestiveFashionModel>? getFestiveFashionData = [];
                               // print(
                               //     "bestSellerProductObj.data! ${mainResponse.data!}");
                               if (mainResponse.data != null) {
                                 mainResponse.data!.forEach((v) {
-                                  newLaunchData.add(NewLaunch.fromJson(v));
+                                  getFestiveFashionData.add(FestiveFashionModel.fromJson(v));
                                 });
                               }
                               // mainResponse.data!.map((e) => customerProfileData!.add(UpdateCustomerPasswordData.fromJson(e))).toList();
@@ -3814,7 +4045,7 @@ class _HomeState extends State<Home> {
                               String? imageUrl = mainResponse.imageUrl ?? "";
                               String? message = mainResponse.message ??
                                   AppConstants.noInternetConn;
-                              if (newLaunchData.isEmpty) {
+                              if (getFestiveFashionData.isEmpty) {
                                 return Container();
                               } else {
                                 return Container(
@@ -3841,7 +4072,7 @@ class _HomeState extends State<Home> {
                                           physics:
                                               const NeverScrollableScrollPhysics(),
                                           shrinkWrap: true,
-                                          itemCount: 6,
+                                          itemCount: getFestiveFashionData.length,
                                           gridDelegate:
                                               SliverGridDelegateWithFixedCrossAxisCount(
                                                   // crossAxisCount: 2,
@@ -3857,53 +4088,59 @@ class _HomeState extends State<Home> {
                                                           : 3),
                                           itemBuilder: (BuildContext context,
                                               int index) {
-                                            return Column(
-                                              children: [
-                                                Container(
-                                                  width: 110,
-                                                  height: 170,
-                                                  decoration: const BoxDecoration(
-                                                    color: AppColors.white,
-                                                    borderRadius:
-                                                        const BorderRadius.only(
-                                                      topRight:
-                                                          const Radius.circular(
-                                                              100),
-                                                      topLeft: Radius.circular(100),
-                                                      bottomLeft:
-                                                          Radius.circular(10),
-                                                      bottomRight:
-                                                          Radius.circular(10),
+                                            return InkWell(
+                                              onTap: () async {
+                                                SharedPreferences
+                                                sharedPreferences =
+                                                    await SharedPreferences
+                                                    .getInstance();
+                                                var chooseType =
+                                                sharedPreferences
+                                                    .getString(
+                                                    AppConstants
+                                                        .chooseType!);
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => CommonProductListScreen(title: getFestiveFashionData[index].categoryName,
+                                                      apiType: 'categoryProduct',
+                                                      id: getFestiveFashionData[index].categoryId,
+                                                      offerId: "",
+                                                      chooseType: chooseType,
                                                     ),
                                                   ),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(3.0),
-                                                    child: Column(
-                                                      children: [
-                                                        Container(
-                                                          height: 100,
-                                                          width: 100,
+                                                );
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    width: 110,
+                                                    height: 170,
+                                                    decoration: const BoxDecoration(
+                                                      color: AppColors.white,
+                                                      borderRadius:
+                                                          const BorderRadius.only(
+                                                        topRight:
+                                                            const Radius.circular(
+                                                                100),
+                                                        topLeft: Radius.circular(100),
+                                                        bottomLeft:
+                                                            Radius.circular(10),
+                                                        bottomRight:
+                                                            Radius.circular(10),
+                                                      ),
+                                                    ),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(3.0),
+                                                      child: Column(
+                                                        children: [
+                                                          Container(
+                                                            height: 100,
+                                                            width: 100,
 
-                                                          decoration: BoxDecoration(
-                                                            color: Colors.red,
-                                                            borderRadius:
-                                                                const BorderRadius
-                                                                    .only(
-                                                              topRight: const Radius
-                                                                  .circular(100),
-                                                              topLeft: const Radius
-                                                                  .circular(100),
-                                                              bottomLeft:
-                                                                  const Radius
-                                                                      .circular(0),
-                                                              bottomRight:
-                                                                  Radius.circular(
-                                                                      0),
-                                                            ),
-                                                          ),
-                                                          // width: 200,
-                                                          child: ClipRRect(
+                                                            decoration: BoxDecoration(
+                                                              color: Colors.red,
                                                               borderRadius:
                                                                   const BorderRadius
                                                                       .only(
@@ -3918,91 +4155,111 @@ class _HomeState extends State<Home> {
                                                                     Radius.circular(
                                                                         0),
                                                               ),
-                                                              // borderRadius:
-                                                              // BorderRadius.circular(15),
-                                                              child: Image.asset(
-                                                                  homeController
-                                                                      .finestList[
-                                                                          index]
-                                                                      .categoryImage!,
-                                                                  fit:
+                                                            ),
+                                                            // width: 200,
+                                                            child: ClipRRect(
+                                                                borderRadius:
+                                                                    const BorderRadius
+                                                                        .only(
+                                                                  topRight: const Radius
+                                                                      .circular(100),
+                                                                  topLeft: const Radius
+                                                                      .circular(100),
+                                                                  bottomLeft:
+                                                                      const Radius
+                                                                          .circular(0),
+                                                                  bottomRight:
+                                                                      Radius.circular(
+                                                                          0),
+                                                                ),
+                                                                // borderRadius:
+                                                                // BorderRadius.circular(15),
+                                                                child: Image.network(
+                                                                    imageUrl+getFestiveFashionData[
+                                                                            index]
+                                                                        .categoryImage!,
+                                                                    fit:
 
-                                                                  BoxFit
-                                                                      .cover,
-                                                                  width: double
-                                                                      .infinity
-                                                              )),
-                                                        ),
-                                                        // const SizedBox(height: 8,),
-
-                                                        Expanded(
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                  homeController
-                                                                      .finestList[
-                                                                          index]
-                                                                      .categoryName!,
-                                                                  style: GoogleFonts.inriaSans(
-                                                                      textStyle: const TextStyle(
-                                                                          fontSize:
-                                                                              12,
-                                                                          fontWeight:
-                                                                              FontWeight
-                                                                                  .normal,
-                                                                          color: AppColors
-                                                                              .appText))),
-                                                              const SizedBox(
-                                                                height: 5,
-                                                              ),
-                                                              Container(
-                                                                height: 1.5,
-                                                                color: AppColors
-                                                                    .finestFestiveFashion,
-                                                                width: 60,
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 5,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Text("UP TO ",
-                                                                      style: GoogleFonts.inriaSans(
-                                                                          textStyle: const TextStyle(
-                                                                              fontSize:
-                                                                                  12,
-                                                                              fontWeight: FontWeight
-                                                                                  .w400,
-                                                                              color:
-                                                                                  AppColors.appText))),
-                                                                  Text("40% OFF",
-                                                                      style: GoogleFonts.inriaSans(
-                                                                          textStyle: const TextStyle(
-                                                                              fontSize:
-                                                                                  12,
-                                                                              fontWeight: FontWeight
-                                                                                  .bold,
-                                                                              color:
-                                                                                  AppColors.appText))),
-                                                                ],
-                                                              )
-                                                            ],
+                                                                    BoxFit
+                                                                        .cover,
+                                                                    width: double
+                                                                        .infinity
+                                                                )),
                                                           ),
-                                                        )
-                                                      ],
+                                                          // const SizedBox(height: 8,),
+
+                                                          Expanded(
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+
+                                                                    getFestiveFashionData[
+                                                                            index]
+                                                                        .categoryName!,
+                                                                    maxLines: 1,
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                    textAlign: TextAlign.center,
+                                                                    style: GoogleFonts.inriaSans(
+                                                                        textStyle: const TextStyle(
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight
+                                                                                    .normal,
+                                                                            color: AppColors
+                                                                                .appText))),
+                                                                const SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                Container(
+                                                                  height: 1.5,
+                                                                  color: AppColors
+                                                                      .finestFestiveFashion,
+                                                                  width: 60,
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Text("UP TO ",
+                                                                        style: GoogleFonts.inriaSans(
+                                                                            textStyle: const TextStyle(
+                                                                                fontSize:
+                                                                                    12,
+                                                                                fontWeight: FontWeight
+                                                                                    .w400,
+                                                                                color:
+                                                                                    AppColors.appText))),
+                                                                    Text("40% OFF",
+                                                                        style: GoogleFonts.inriaSans(
+                                                                            textStyle: const TextStyle(
+                                                                                fontSize:
+                                                                                    12,
+                                                                                fontWeight: FontWeight
+                                                                                    .bold,
+                                                                                color:
+                                                                                    AppColors.appText))),
+                                                                  ],
+                                                                )
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             );
                                           },
                                         ),

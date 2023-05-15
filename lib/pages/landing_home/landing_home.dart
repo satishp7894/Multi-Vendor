@@ -292,82 +292,55 @@ class _LandingHomeState extends State<LandingHome> with TickerProviderStateMixin
               child: Container(
 
 
-                child: Stack(
-                  children: [
-                    // Container(
-                    //   // height: 200,
-                    //
-                    //   decoration: BoxDecoration(
-                    //     // color: AppColors.appGreen,
-                    //     boxShadow: [BoxShadow(color: Colors.grey,blurRadius: 8,offset: Offset(3,5))],
-                    //   ),
-                    //   width: MediaQuery.of(context).size.width,
-                    //   // padding: const EdgeInsets.only(top: 80.0),
-                    //   child: CustomPaint(
-                    //     painter: ProfileCardPainter(
-                    //         color: AppColors.white, avatarRadius: 100), //3
-                    //   ),
-                    // ),
-                    // // Image.asset('assets/img/circle_clipper.png',width: MediaQuery.of(context).size.width),
-                    // ClipPath(
-                    //   clipper:  DolDurmaClipper(right:  (MediaQuery.of(context).size.width - 70) / 2, holeRadius: 72),
-                    //   child: Container(
-                    //     height: 90,
-                    //     color: Colors.black.withOpacity(0.1),
-                    //     // child: Center(
-                    //     //     child: Text("WaveClipperTwo(flip: true,reverse: true)")),
-                    //   ),
-                    // ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0,right: 10.0),
-                      child: Row( //children inside bottom appbar
-                        // mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
+                // color: Colors.grey,
 
-                          IconButton(icon: homeController.tabIndex == 0 ? Image.asset('assets/img/select_home.png',fit: BoxFit.fill,height: 20,width: 20,):Image.asset('assets/img/home.png',fit: BoxFit.fill,height: 20,width: 20,), onPressed: () {
-                            homeController.changeTabIndex(0);
-                            homeController.tabIndex = 0;
-                          },),
-                          IconButton(icon: homeController.tabIndex == 1 ? Image.asset('assets/img/select_category.png',fit: BoxFit.fill,height: 20,width: 20,):Image.asset('assets/img/category.png',fit: BoxFit.fill,height: 20,width: 20,), onPressed: () {
-                            homeController.changeTabIndex(1);
-                            homeController.tabIndex = 1;
-                          },),
-                          IconButton( icon:Image.asset('assets/img/bag.png',fit: BoxFit.fill,height: 20,width: 20,), onPressed: () {
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0,right: 10.0),
+                  child: Row( //children inside bottom appbar
+                    // mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+
+                      IconButton(icon: homeController.tabIndex == 0 ? Image.asset('assets/img/select_home.png',fit: BoxFit.fill,height: 20,width: 20,):Image.asset('assets/img/home.png',fit: BoxFit.fill,height: 20,width: 20,), onPressed: () {
+                        homeController.changeTabIndex(0);
+                        homeController.tabIndex = 0;
+                      },),
+                      IconButton(icon: homeController.tabIndex == 1 ? Image.asset('assets/img/select_category.png',fit: BoxFit.fill,height: 20,width: 20,):Image.asset('assets/img/category.png',fit: BoxFit.fill,height: 20,width: 20,), onPressed: () {
+                        homeController.changeTabIndex(1);
+                        homeController.tabIndex = 1;
+                      },),
+                      IconButton( icon:Image.asset('assets/img/bag.png',fit: BoxFit.fill,height: 20,width: 20,), onPressed: () {
           // IconButton(icon: homeController.tabIndex == 2 ? Image.asset('assets/img/select_bag.png',):Image.asset('assets/img/bag.png',), onPressed: () {
-                            // homeController.changeTabIndex(2);
-                            // homeController.tabIndex = 2;
-                            print("homeController.customerId.value =======================> ${homeController.customerId.value}");
-                            if(homeController.customerId.value != ""){
-                              Get.toNamed(Routes.cart);
-                            }else{
-                              showModalBottomSheet(
-                                context: context,
-                                // isDismissible:false,
-                                isScrollControlled: true,
-                                transitionAnimationController: controller,
-                                builder: (BuildContext context) {
+                        // homeController.changeTabIndex(2);
+                        // homeController.tabIndex = 2;
+                        print("homeController.customerId.value =======================> ${homeController.customerId.value}");
+                        if(homeController.customerId.value != ""){
+                          Get.toNamed(Routes.cart);
+                        }else{
+                          showModalBottomSheet(
+                            context: context,
+                            // isDismissible:false,
+                            isScrollControlled: true,
+                            transitionAnimationController: controller,
+                            builder: (BuildContext context) {
 
-                                  return LoginDialog(mobile: mobile,);
+                              return LoginDialog(mobile: mobile,);
 
-                                },
-                              );
-                            }
-
-
-                          },),
-                          IconButton(icon: homeController.tabIndex == 2 ? Image.asset('assets/img/select_profile.png',fit: BoxFit.fill,height: 20,width: 20,):Image.asset('assets/img/profile.png',fit: BoxFit.fill,height: 20,width: 20,), onPressed: () {
-                            homeController.changeTabIndex(2);
-                            homeController.tabIndex = 2;
-                          },),
-                        ],
-                      ),
-                    ),
+                            },
+                          );
+                        }
 
 
-                  ],
+                      },),
+                      IconButton(icon: homeController.tabIndex == 2 ? Image.asset('assets/img/select_profile.png',fit: BoxFit.fill,height: 20,width: 20,):Image.asset('assets/img/profile.png',fit: BoxFit.fill,height: 20,width: 20,), onPressed: () {
+                        homeController.changeTabIndex(2);
+                        homeController.tabIndex = 2;
+                      },),
+                    ],
+                  ),
                 ),
-                height: 65,
+                height: 60,
               ),
             ),
             // bottomNavigationBar: Container(
@@ -1220,6 +1193,7 @@ class _CustomFabState extends State<CustomFab>
           color: AppColors.white,
           borderRadius: const BorderRadius.all(
               const Radius.circular(100)
+
           ),
           border: Border.all(
             width: 1,
@@ -1330,7 +1304,6 @@ class _CustomFabState extends State<CustomFab>
     return Container(
       // color: Colors.red,
       child: Stack(
-
         fit: StackFit.loose,
         children: [
           Positioned(

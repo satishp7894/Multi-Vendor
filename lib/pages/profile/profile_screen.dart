@@ -6,6 +6,7 @@ import 'package:eshoperapp/routes/navigation.dart';
 import 'package:eshoperapp/style/theme.dart' as Style;
 import 'package:eshoperapp/utils/alert_dialog.dart';
 import 'package:eshoperapp/utils/check_internet.dart';
+import 'package:eshoperapp/utils/webview_screen.dart';
 import 'package:eshoperapp/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -731,14 +732,14 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                               Get.toNamed(Routes.wishList);
                             },
                           ),
-                          ListItemCart(
-                            iconPath: "assets/img/help_center.png",
-                            title: 'Help Center',
-                            subTitle: "Raise a concern",
-                            onPressed: () {
-                              Get.toNamed(Routes.helpCenter);
-                            },
-                          ),
+                          // ListItemCart(
+                          //   iconPath: "assets/img/help_center.png",
+                          //   title: 'Help Center',
+                          //   subTitle: "Raise a concern",
+                          //   onPressed: () {
+                          //     Get.toNamed(Routes.helpCenter);
+                          //   },
+                          // ),
                           ListItemCart(
                             iconPath: "assets/img/setting.png",
                             title: 'Coupons',
@@ -1100,53 +1101,86 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                "FAQ",
-                                style: GoogleFonts.inriaSans(
-                                    textStyle: TextStyle(
-                                        fontSize: 14,
-                                        color: AppColors.white,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                              Text(
-                                "S",
-                                style: GoogleFonts.inriaSans(
-                                    textStyle: TextStyle(
-                                        fontSize: 12,
-                                        color: AppColors.white,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ],
+                          InkWell(
+
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "FAQ",
+                                  style: GoogleFonts.inriaSans(
+                                      textStyle: TextStyle(
+                                          fontSize: 14,
+                                          color: AppColors.white,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                Text(
+                                  "S",
+                                  style: GoogleFonts.inriaSans(
+                                      textStyle: TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.white,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            ),
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const WebViewScreen(title: "FAQs",webUrl: "https://loccon.in/privacy.html",)),
+                              );
+                            },
                           ),
                           SizedBox(height: 8,),
-                          Text(
-                            "ABOUT US",
-                            style: GoogleFonts.inriaSans(
-                                textStyle: TextStyle(
-                                    fontSize: 14,
-                                    color: AppColors.white,
-                                    fontWeight: FontWeight.bold)),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const WebViewScreen(title: "ABOUT US",webUrl: "https://loccon.in/privacy.html",)),
+                              );
+                            },
+                            child: Text(
+                              "ABOUT US",
+                              style: GoogleFonts.inriaSans(
+                                  textStyle: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.bold)),
+                            ),
                           ),
                           SizedBox(height: 8,),
-                          Text(
-                            "TERMS OF USE",
-                            style: GoogleFonts.inriaSans(
-                                textStyle: TextStyle(
-                                    fontSize: 14,
-                                    color: AppColors.white,
-                                    fontWeight: FontWeight.bold)),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const WebViewScreen(title: "TERMS OF USE",webUrl: "https://loccon.in/privacy.html",)),
+                              );
+                            },
+                            child: Text(
+                              "TERMS OF USE",
+                              style: GoogleFonts.inriaSans(
+                                  textStyle: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.bold)),
+                            ),
                           ),
                           SizedBox(height: 8,),
-                          Text(
-                            "PRIVACY POLICY",
-                            style: GoogleFonts.inriaSans(
-                                textStyle: TextStyle(
-                                    fontSize: 14,
-                                    color: AppColors.white,
-                                    fontWeight: FontWeight.bold)),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const WebViewScreen(title: "PRIVACY POLICY",webUrl: "https://loccon.in/privacy.html",)),
+                              );
+                            },
+                            child: Text(
+                              "PRIVACY POLICY",
+                              style: GoogleFonts.inriaSans(
+                                  textStyle: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.bold)),
+                            ),
                           ),
                         ],
                       ),

@@ -355,7 +355,7 @@ class ProductDetailsController extends GetxController {
       if (result == true) {
         Get.snackbar(
             initbool.value
-                ? 'Add item to favorit list successfully!'
+                ? 'Add item to favorite list successfully!'
                 : 'Remove from favorite',
             '',
             snackPosition: SnackPosition.BOTTOM,

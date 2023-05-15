@@ -31,6 +31,11 @@ abstract class ApiRepositoryInterface {
   Future<MainResponse?> getRecentsearchkeywords(String chooseType, String customerId);
   Future<MainResponse?> chooseColor(String? chooseType );
   Future<MainResponse?> getNewLaunch(String? chooseType);
+  Future<MainResponse?> getHomeCategory(String? chooseType);
+  Future<MainResponse?> getHomeDesigner(String? chooseType);
+  Future<MainResponse?> getCategoryByAge(String? chooseType);
+  Future<MainResponse?> getFestiveFashion(String? chooseType);
+  Future<MainResponse?> getCouponList(String? couponId);
   Future<MainResponse?> getTrendingBrand(String? chooseType);
   Future<MainResponse?> getOfferWithCategoryList(String? chooseType);
   Future<MainResponse?> getChildCategory(String? chooseType);
@@ -72,6 +77,7 @@ abstract class ApiRepositoryInterface {
 
   Future<MainResponse?> getAddress(String customerId);
   Future<MainResponse?> addAddress(AddressRequest addressRequest, String customerId);
+  Future<MainResponse?> submitHelpCenter(String textIssue, String customerId);
   Future<MainResponse?> editAddress(AddressRequest addressRequest, String addressId, String customerId);
   Future<MainResponse?> deleteAddress(String customerId, String addressId);
   Future<MainResponse?> changeDeliveryAddress(String customerId, String addressId);

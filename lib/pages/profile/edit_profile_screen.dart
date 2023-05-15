@@ -131,21 +131,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
 
                 if (customerProfileData.isNotEmpty) {
-                  print("customerProfileData[0].gender! ============> ${customerProfileData[0].gender!}");
+                  // print("customerProfileData[0].gender! ============> ${customerProfileData[0].gender!}");
                   print("isFlag ============> ${isFlag}");
                   if(isFlag!){
-                    genderValue = customerProfileData[0].gender!;
+                    genderValue = customerProfileData[0].gender ?? "";
                     profileController!.emailTextController = TextEditingController(text: customerProfileData[0].email);
-                    profileController!.genderTexcontroller = TextEditingController(text: customerProfileData[0].gender);
+                    profileController!.genderTexcontroller = TextEditingController(text: customerProfileData[0].gender ?? "");
                     profileController!.nameTexcontroller = TextEditingController(text: customerProfileData[0].customerName);
                     profileController!.mobileTextController = TextEditingController(text: customerProfileData[0].mobile);
-                    final DateFormat formatter = DateFormat('dd-MM-yyyy');
-                    String? birthDate = formatter.format(DateTime.parse(customerProfileData[0].birthDate!));
-                    // if(widget.birthday != null){
-                    profileController!.birthdateTexcontroller!.text = date!;
-                    profileController!.birthdateTexcontroller = TextEditingController(text: birthDate);
+
+                    if(customerProfileData[0].birthDate != null){
+                      final DateFormat formatter = DateFormat('dd-MM-yyyy');
+                      String? birthDate = formatter.format(DateTime.parse(customerProfileData[0].birthDate!));
+                    profileController!.birthdateTexcontroller!.text = birthDate;
+                    }
+                    // profileController!.birthdateTexcontroller = TextEditingController(text: birthDate);
                     profileController!.locationTextController = TextEditingController();
-                    profileController!.numberTexcontroller = TextEditingController(text: customerProfileData[0].alterNateNUmber);
+                    if(customerProfileData[0].alterNateNUmber != null){
+                      profileController!.numberTexcontroller = TextEditingController(text: customerProfileData[0].alterNateNUmber);
+                    }else{
+                      profileController!.numberTexcontroller = TextEditingController();
+                    }
+
                     profileController!.hintTextController = TextEditingController();
                     isFlag = false;
                   }else{
@@ -270,59 +277,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextFormField(
-              // autofillHints: [AutofillHints.email],
-              textInputAction: TextInputAction.next,
-              controller: profileController!.nameTexcontroller,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  setState(() {
-                    nameBool = true;
-                  });
-                  return 'This field is required';
-                }
-                setState(() {
-                  nameBool = false;
-                });
-              },
-              style: GoogleFonts.inriaSans(textStyle: TextStyle(fontSize: 15)),
-              cursorColor: AppColors.appText1,
-              decoration: InputDecoration(
-                  labelStyle:
-                      TextStyle(color: AppColors.appText1, fontSize: 12),
-                  contentPadding: EdgeInsets.only(top: 25, left: 15),
-                  hintStyle:
-                      GoogleFonts.inriaSans(textStyle: TextStyle(fontSize: 15)),
-                  hintText: 'Full Name',
-                  labelText: 'Full Name',
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: AppColors.appText1, width: 1.0),
-                    borderRadius: BorderRadius.circular(2.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: AppColors.appText1, width: 1.0),
-                    borderRadius: BorderRadius.circular(2.0),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(2.0),
-                    borderSide:
-                        const BorderSide(color: AppColors.appText1, width: 1.0),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(2.0),
-                    borderSide:
-                        const BorderSide(color: AppColors.appText1, width: 1.0),
-                  )),
-            ),
-            nameBool == false
-                ? const SizedBox(
-                    height: 20,
-                  )
-                : const SizedBox(
-                    height: 16,
-                  ),
+
+            SizedBox(height: 20,),
+            // nameBool == false
+            //     ? const SizedBox(
+            //         height: 20,
+            //       )
+            //     : const SizedBox(
+            //         height: 16,
+            //       ),
             TextFormField(
               textInputAction: TextInputAction.next,
               controller: profileController!.emailTextController,
@@ -1013,7 +976,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(2015, 8),
+      firstDate: DateTime(1799, 8),
       lastDate: DateTime(2099, 8),
     );
 

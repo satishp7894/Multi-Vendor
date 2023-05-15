@@ -63,6 +63,18 @@ class HomeController extends GetxController {
   RxBool isLoadingNewLaunch = false.obs;
   var newLaunchObj = MainResponse().obs;
 
+  RxBool isLoadingHomeCategory = false.obs;
+  var getHomeCategoryObj = MainResponse().obs;
+
+  RxBool isLoadingHomeDesigner = false.obs;
+  var getHomeDesignerObj = MainResponse().obs;
+
+  RxBool isLoadingCategoryByAge = false.obs;
+  var getCategoryByAgeObj = MainResponse().obs;
+
+  RxBool isLoadingFestiveFashion = false.obs;
+  var getFestiveFashionObj = MainResponse().obs;
+
   RxBool isLoadingTrendingBrand = false.obs;
   var trendingBrandObj = MainResponse().obs;
 
@@ -459,6 +471,55 @@ class HomeController extends GetxController {
     }
   }
 
+
+  getHomeCategory(String chooseType) async {
+    try {
+      isLoadingHomeCategory(true);
+      await apiRepositoryInterface.getHomeCategory(chooseType).then((value) {
+        getHomeCategoryObj(value);
+      });
+    } finally {
+
+      isLoadingHomeCategory(false);
+    }
+  }
+
+  getHomeDesigner(String chooseType) async {
+    try {
+      isLoadingHomeDesigner(true);
+      await apiRepositoryInterface.getHomeDesigner(chooseType).then((value) {
+        getHomeDesignerObj(value);
+      });
+    } finally {
+
+      isLoadingHomeDesigner(false);
+    }
+  }
+
+  getCategoryByAge(String chooseType) async {
+    try {
+      isLoadingCategoryByAge(true);
+      await apiRepositoryInterface.getCategoryByAge(chooseType).then((value) {
+        getCategoryByAgeObj(value);
+      });
+    } finally {
+
+      isLoadingCategoryByAge(false);
+    }
+  }
+
+  getFestiveFashion(String chooseType) async {
+    try {
+      isLoadingFestiveFashion(true);
+      await apiRepositoryInterface.getFestiveFashion(chooseType).then((value) {
+        getFestiveFashionObj(value);
+      });
+    } finally {
+
+      isLoadingFestiveFashion(false);
+    }
+  }
+
   getTrendingBrand(String chooseType) async {
     try {
       isLoadingTrendingBrand(true);
@@ -687,7 +748,8 @@ class HomeController extends GetxController {
   }
 
    addOrder(String paymentType,productId) async {
-    // var result = await apiRepositoryInterface.updateProductQty(token, id, quantity);
+    // var result = await apiRepositoryInterface.u
+     // pdateProductQty(token, id, quantity);
 
     MainResponse? mainResponse  = await apiRepositoryInterface.addOrder(customerId.value,productId, paymentType);
     if (mainResponse!.status!) {
@@ -740,6 +802,10 @@ class HomeController extends GetxController {
     getSlider();
     // getBrand();
      if(chooseType != null){
+       getHomeCategory(chooseType!);
+       getHomeDesigner(chooseType!);
+       getCategoryByAge(chooseType!);
+       getFestiveFashion(chooseType!);
        getNewLaunch(chooseType!);
        getTrendingBrand(chooseType!);
        getOfferWithCategoryList(chooseType!);

@@ -381,60 +381,60 @@ class _SavedCardScreenState extends State<SavedCardScreen> {
                 // }
                 // openCheckout();
 
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Dialog(
-
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.circular(0.0)),
-                       //this right here
-                        child: Container(
-                          height: 85,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: Center(child: Text("Are you sure you want to Logout?",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.black,fontWeight: FontWeight.w400,fontSize: 16))))),
-                                  Icon(Icons.close,color: AppColors.black,)
-
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0,right: 8.0),
-                                child: Container(height: 1,width: MediaQuery.of(context).size.width,color: AppColors.appLine,),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5.0,bottom: 5.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    InkWell(
-
-                                      child: Text("NO",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.appLine,fontWeight: FontWeight.w700,fontSize: 14))),
-
-                                       ),
-                                    Container(height: 22,width: 1.5,color: AppColors.appLine,),
-                                    InkWell(
-                                      child: Text("YES",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.appRed,fontWeight: FontWeight.w700,fontSize: 14)),
-                                      ),
-                                      onTap: (){
-
-                                      },
-                                    )
-                                  ],),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    });
+                // showDialog(
+                //     context: context,
+                //     builder: (BuildContext context) {
+                //       return Dialog(
+                //
+                //           shape: RoundedRectangleBorder(
+                //               borderRadius:
+                //               BorderRadius.circular(0.0)),
+                //        //this right here
+                //         child: Container(
+                //           height: 85,
+                //           child: Column(
+                //             mainAxisAlignment: MainAxisAlignment.center,
+                //             crossAxisAlignment: CrossAxisAlignment.center,
+                //             children: [
+                //               Padding(
+                //                 padding: const EdgeInsets.all(8.0),
+                //                 child: Row(
+                //                   children: [
+                //                     Expanded(child: Center(child: Text("Are you sure you want to Logout?",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.black,fontWeight: FontWeight.w400,fontSize: 16))))),
+                //                   Icon(Icons.close,color: AppColors.black,)
+                //
+                //                   ],
+                //                 ),
+                //               ),
+                //               Padding(
+                //                 padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                //                 child: Container(height: 1,width: MediaQuery.of(context).size.width,color: AppColors.appLine,),
+                //               ),
+                //               Padding(
+                //                 padding: const EdgeInsets.only(top: 5.0,bottom: 5.0),
+                //                 child: Row(
+                //                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //                   children: [
+                //                     InkWell(
+                //
+                //                       child: Text("NO",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.appLine,fontWeight: FontWeight.w700,fontSize: 14))),
+                //
+                //                        ),
+                //                     Container(height: 22,width: 1.5,color: AppColors.appLine,),
+                //                     InkWell(
+                //                       child: Text("YES",style: GoogleFonts.inriaSans(textStyle: TextStyle(color: AppColors.appRed,fontWeight: FontWeight.w700,fontSize: 14)),
+                //                       ),
+                //                       onTap: (){
+                //
+                //                       },
+                //                     )
+                //                   ],),
+                //               )
+                //             ],
+                //           ),
+                //         ),
+                //       );
+                //     });
 
               },
             ),

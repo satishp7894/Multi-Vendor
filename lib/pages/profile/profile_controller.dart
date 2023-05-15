@@ -29,7 +29,11 @@ class ProfileController extends GetxController {
   RxString customerId = "".obs;
   var customerProfileObj = MainResponse().obs;
 
+  RxBool isLoadingCouponList = false.obs;
+  var getCouponListObj = MainResponse().obs;
+
   RxBool isUserDataRefresh = false.obs;
+  RxBool isLoadingSubmitHelpCenter= false.obs;
 
   var isLoading = false.obs;
   RxBool showCurrentPassword = true.obs;
@@ -52,12 +56,15 @@ class ProfileController extends GetxController {
   TextEditingController? newPasswordTexcontroller;
   TextEditingController? confirmPasswordTexcontroller;
 
+  TextEditingController? textIssueTextController;
+
   @override
   void onInit() {
     passwordTextController = TextEditingController();
     currentPasswordTexcontroller = TextEditingController();
     newPasswordTexcontroller = TextEditingController();
     confirmPasswordTexcontroller = TextEditingController();
+    textIssueTextController = TextEditingController();
 
 
     // customerProfile();
@@ -104,6 +111,7 @@ class ProfileController extends GetxController {
       // } else{
       //   isLoading(false);
       //
+
       //   return false;
       // }
 
@@ -165,6 +173,17 @@ class ProfileController extends GetxController {
       isLoadingCustomerProfile(false);
 
       return MainResponse();
+    }
+  }
+
+  getCouponList(String couponId) async {
+    try {
+      isLoadingCouponList(true);
+      await apiRepositoryInterface.getCouponList(couponId).then((value) {
+        getCouponListObj(value);
+      });
+    } finally {
+      isLoadingCouponList(false);
     }
   }
 
@@ -278,5 +297,32 @@ class ProfileController extends GetxController {
     //   isLoading(false);
     //   return false;
     // }
+  }
+
+
+  Future<MainResponse> submitHelpCenter() async {
+    print("customerId ${customerId}");
+    final textIssue = textIssueTextController!.text;
+    print("textIssue ${textIssue}");
+    try {
+      isLoadingSubmitHelpCenter(true);
+      final submitHelpCenterResponse = await apiRepositoryInterface.submitHelpCenter(textIssue,customerId.value);
+
+
+
+      print("submitHelpCenterResponse ${submitHelpCenterResponse!.message}");
+      print("submitHelpCenterResponse ${submitHelpCenterResponse.status}");
+      if (submitHelpCenterResponse.data != null){
+        // print("loginResponse ${addAddressResponse.data![0]}");
+
+        //  await localRepositoryInterface.saveUser(addAddressResponse.data![0]);
+        return submitHelpCenterResponse;
+      }else{
+        isLoadingSubmitHelpCenter(false);
+        return submitHelpCenterResponse;
+      }
+    } finally {
+      isLoadingSubmitHelpCenter(false);
+    }
   }
 }
